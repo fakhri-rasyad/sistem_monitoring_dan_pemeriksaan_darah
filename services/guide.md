@@ -1,0 +1,1 @@
+Folder yang akan menjadi lokasi pendefinisian file services. Services akan menjadi file yang menghubungkan antara controllers dan repositories. Biasanya berfungsi dalam memproses data lebih lanjut sebelum diteruskan ke controller maupun repositories.
