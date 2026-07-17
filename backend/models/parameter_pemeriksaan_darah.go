@@ -1,13 +1,12 @@
 package models
 
 type ParameterPemeriksaanDarah struct {
-  ModelBase
+	ModelBase
 
-  Nama        string      `gorm:"column:nama"`
-  Satuan      string      `gorm:"column:nama"`
-
+	Nama   string `gorm:"column:nama"`
+	Satuan string `gorm:"column:satuan"`
 }
 
 func (k *ParameterPemeriksaanDarah) TableName() string {
-  return "parameter_pemeriksaan_darahs"
+	return "parameter_pemeriksaan_darahs"
 }
