@@ -1,0 +1,12 @@
+CREATE TABLE IF NOT EXISTS "pekerjaans" (
+	"internal_id" INTEGER NOT NULL,
+	"public_id" UUID NOT NULL DEFAULT gen_random_uuid(),
+	"nama" VARCHAR(255) NOT NULL,
+	"created_at" TIMESTAMPTZ NOT NULL DEFAULT now(),
+	"updated_at" TIMESTAMPTZ NOT NULL DEFAULT now(),
+	"deleted_at" TIMESTAMPTZ,
+	PRIMARY KEY("internal_id")
+);
+
+CREATE INDEX "pekerjaans_nama_idx"
+ON "pekerjaans" ("nama");
