@@ -6,10 +6,17 @@ import (
 )
 
 func ToDataLabBase(model *models.DataLab) *dto.DataLab {
-  return &dto.DataLab{
-    DTOBase: *Map(&model.ModelBase, ToNewDTOBase),
+  dto := &dto.DataLab{
     Nilai: model.Nilai,
-    Kunjungan: *Map(&model.Kunjungan, ToKunjungan),
-    Parameter: *Map(&model.Parameter, ToPPDarah),
   }
+
+  if dtoBase := Map(&model.ModelBase, ToNewDTOBase); dtoBase != nil {
+    dto.DTOBase = *dtoBase
+  }
+
+  if parameter := Map(&model.Parameter, ToPPDarah); parameter != nil {
+    dto.Parameter = *parameter
+  }
+
+  return dto
 }

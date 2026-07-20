@@ -9,5 +9,7 @@ type Kunjungan struct {
 	Sistol  int       `json:"tensi_sistol"`
 	Diastol int       `json:"tensi_diastol"`
 
-	Pasien Pasien `json:"pasien"`
+  KomposisiTubuh KomposisiTubuh  `json:"komposisi_tubuh"`
+  DataLabs   []DataLab    `json:"data_lab"`
+  Pemeriksaan Pemeriksaan `json:"pemeriksaan"`
 }

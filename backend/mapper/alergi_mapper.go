@@ -6,8 +6,13 @@ import (
 )
 
 func ToAlergiBase(model *models.Alergi) *dto.Alergi {
-  return &dto.Alergi{
-    DTOBase: *ToNewDTOBase(&model.ModelBase),
+  dto := &dto.Alergi{
     Nama: model.Nama,
   }
+
+  if dtoBase := Map(&model.ModelBase, ToNewDTOBase); dtoBase != nil {
+    dto.DTOBase = *dtoBase
+  }
+
+  return dto
 }

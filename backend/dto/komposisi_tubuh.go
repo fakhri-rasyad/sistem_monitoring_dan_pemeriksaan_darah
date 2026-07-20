@@ -12,6 +12,4 @@ type KomposisiTubuh struct {
 
 	AirTubuh        float64 `json:"air_tubuh"`
 	IndeksMassaTubh float64 `json:"indeks_massa_tubuh"`
-
-	Kunjungan Kunjungan `json:"kunjungan"`
 }

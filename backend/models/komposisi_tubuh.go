@@ -13,8 +13,7 @@ type KomposisiTubuh struct {
 	AirTubuh        float64 `gorm:"column:air_tubuh"`
 	IndeksMassaTubh float64 `gorm:"column:indeks_massa_tubuh"`
 
-	KunjunganID int       `gorm:"column:kunjungan_id"`
-	Kunjungan   Kunjungan `gorm:"foreignKey:KunjunganID;references:InternalID"`
+	KunjunganID int `gorm:"column:kunjungan_id"`
 }
 
 func (d *KomposisiTubuh) TableName() string {

@@ -12,5 +12,8 @@ type Pasien struct {
 	NomorHP      string    `json:"nomor_hp"`
 	Email        string    `json:"email"`
 
-	Pekerjaan Pekerjaan `json:"pekerjaan"`
+	Pekerjaan         Pekerjaan           `json:"pekerjaan"`
+  AlergiPasiens     []AlergiPasienBase  `json:"alergi_pasien"`
+  PantanganPasiens  []PantanganPasien   `json:"pantangan_pasien"`
+  Kunjungans        []Kunjungan         `json:"kunjungan"`
 }

@@ -13,6 +13,5 @@ func ToPemeriksaan(model *models.Pemeriksaan) *dto.Pemeriksaan {
     PlanningTerapi: model.PlanningTerapi,
     Evaluasi: model.Evaluasi,
     DiperiksaAt: model.DiperiksaAt,
-    Kunjungan: *Map(&model.Kunjungan, ToKunjungan),
   }
 }

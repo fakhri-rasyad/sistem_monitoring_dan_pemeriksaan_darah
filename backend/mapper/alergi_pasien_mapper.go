@@ -6,9 +6,15 @@ import (
 )
 
 func ToAlergiPasienBase(model *models.AlergiPasiens) *dto.AlergiPasienBase {
-	return &dto.AlergiPasienBase{
-    DTOBase: *Map(&model.ModelBase, ToNewDTOBase),
-    Pasien: *Map(&model.Pasien, ToPasien),
-    Alergi: *Map(&model.Alergi, ToAlergiBase),
+	dto := &dto.AlergiPasienBase{}
+
+  if dtoBase := Map(&model.ModelBase, ToNewDTOBase); dtoBase != nil {
+    dto.DTOBase = *dtoBase
   }
+
+  if alergi := Map(&model.Alergi, ToAlergiBase); alergi != nil {
+    dto.Alergi = *alergi
+  }
+
+  return dto
 }

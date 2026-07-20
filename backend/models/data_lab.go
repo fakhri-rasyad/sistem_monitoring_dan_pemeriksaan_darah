@@ -8,8 +8,8 @@ type DataLab struct {
 	KunjunganID int `gorm:"column:kunjungan_id"`
 	ParameterID int `gorm:"column:parameter_id"`
 
-	Kunjungan Kunjungan                 `gorm:"foreignKey:KunjunganID;references:InternalID"`
-	Parameter ParameterPemeriksaanDarah `gorm:"foreignKey:parameter_id;references:InternalID"`
+	// Kunjungan Kunjungan                 `gorm:"foreignKey:KunjunganID;references:InternalID"`
+	Parameter ParameterPemeriksaanDarah `gorm:"foreignKey:ParameterID"`
 }
 
 func (d *DataLab) TableName() string {

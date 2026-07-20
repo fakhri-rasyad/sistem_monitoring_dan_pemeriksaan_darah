@@ -6,8 +6,7 @@ import (
 )
 
 func ToKomposisiTubuh(model *models.KomposisiTubuh) *dto.KomposisiTubuh {
-  return &dto.KomposisiTubuh{
-    DTOBase: *ToNewDTOBase(&model.ModelBase),
+  dto :=  &dto.KomposisiTubuh{
     Berat: model.Berat,
     Tinggi: model.Tinggi,
 
@@ -17,7 +16,11 @@ func ToKomposisiTubuh(model *models.KomposisiTubuh) *dto.KomposisiTubuh {
 
     AirTubuh: model.AirTubuh,
     IndeksMassaTubh: model.IndeksMassaTubh,
-
-    Kunjungan: *ToKunjungan(&model.Kunjungan),
   }
+
+  if dtoBase := Map(&model.ModelBase, ToNewDTOBase); dtoBase != nil {
+    dto.DTOBase = *dtoBase
+  }
+
+  return dto
 }

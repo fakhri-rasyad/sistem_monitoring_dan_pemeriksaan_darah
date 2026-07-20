@@ -6,9 +6,17 @@ import (
 )
 
 func ToPantanganPasien(model *models.PantanganPasien) *dto.PantanganPasien {
-  return &dto.PantanganPasien{
-    DTOBase: *Map(&model.ModelBase, ToNewDTOBase),
-    Pasien: *Map(&model.Pasien, ToPasien),
+  dto := &dto.PantanganPasien{
     Pantangan: *Map(&model.Pantangan, ToPantanganBase),
   }
+
+  if dtoBase := Map(&model.ModelBase, ToNewDTOBase); dtoBase != nil {
+    dto.DTOBase = *dtoBase
+  }
+
+  if pantangan := Map(&model.Pantangan, ToPantanganBase); pantangan != nil {
+    dto.Pantangan = *pantangan
+  }
+
+  return dto
 }

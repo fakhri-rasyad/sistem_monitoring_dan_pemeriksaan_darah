@@ -10,7 +10,5 @@ type Pemeriksaan struct {
 	PlanningTerapi string `json:"planning_terapi"`
 	Evaluasi       string `json:"evaluasi"`
 	DiperiksaAt    time.Time  `json:"diperiksa_at"`
-
-	Kunjungan   Kunjungan `json:"kunjungan"`
 }
 

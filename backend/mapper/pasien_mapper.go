@@ -6,7 +6,7 @@ import (
 )
 
 func ToPasien(model *models.Pasien) *dto.Pasien {
-  return &dto.Pasien{
+  dto := &dto.Pasien{
     DTOBase: *Map(&model.ModelBase, ToNewDTOBase),
     Nama: model.Nama,
     Alamat: model.Alamat,
@@ -15,6 +15,23 @@ func ToPasien(model *models.Pasien) *dto.Pasien {
     NomorHP: model.NomorHP,
     Email: model.Email,
 
-    Pekerjaan: *Map(&model.Pekerjaan, ToPekerjaan),
   }
+
+  if pekerjaan := Map(&model.Pekerjaan, ToPekerjaan); pekerjaan != nil {
+    dto.Pekerjaan = *pekerjaan
+  }
+
+  if kunjungan := MapSlice(model.Kunjungan, ToKunjungan); kunjungan != nil {
+    dto.Kunjungans = kunjungan
+  }
+
+  if alergiPasiens := MapSlice(model.AlergiPasiens, ToAlergiPasienBase); alergiPasiens != nil {
+    dto.AlergiPasiens = alergiPasiens
+  }
+
+  if pantanganPasien := MapSlice(model.PantanganPasien, ToPantanganPasien); pantanganPasien != nil {
+    dto.PantanganPasiens = pantanganPasien
+  }
+
+  return dto
 }

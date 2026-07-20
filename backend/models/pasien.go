@@ -18,6 +18,12 @@ type Pasien struct {
 
   Pekerjaan     Pekerjaan   `gorm:"foreignKey:PekerjaanID;references:InternalID"`
 
+  Kunjungan []Kunjungan    `gorm:"foreignKey:PasienID;references:InternalID"`
+
+  AlergiPasiens []AlergiPasiens `gorm:"foreignKey:PasienID;references:InternalID"`
+
+  PantanganPasien []PantanganPasien `gorm:"foreignKey:PasienID;references:InternalID"`
+
 }
 
 func (p *Pasien) TableName() string {

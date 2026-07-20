@@ -12,7 +12,7 @@ type Pemeriksaan struct {
 	DiperiksaAt    time.Time  `gorm:"column:diperiksa_at"`
 
 	KunjunganID int       `gorm:"column:kunjungan_id"`
-	Kunjungan   Kunjungan `gorm:"foreignKey:KunjunganID;references:InternalID"`
+	// Kunjungan   Kunjungan `gorm:"foreignKey:KunjunganID;references:InternalID"`
 }
 
 func (p *Pemeriksaan) TableName() string {
