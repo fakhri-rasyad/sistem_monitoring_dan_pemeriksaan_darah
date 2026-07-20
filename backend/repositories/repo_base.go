@@ -6,7 +6,6 @@ import (
 )
 
 type RepoBase[T any] interface {
-  GetDB(tx *gorm.DB) *gorm.DB
 	Create(tx *gorm.DB, entity *T) (*T, error)
   GetByPublicID(tx *gorm.DB, uuid uuid.UUID) (*T, error)
   GetAll(tx *gorm.DB) ([]T, error)

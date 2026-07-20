@@ -12,3 +12,11 @@ type Pemeriksaan struct {
 	DiperiksaAt    time.Time  `json:"diperiksa_at"`
 }
 
+type PemeriksaanCreate struct {
+  Subjective     string     `json:"subjective"`
+	Objective      string     `json:"objective"`
+	PlanningTerapi string     `json:"planning_terapi"`
+	Evaluasi       string     `json:"evaluasi"`
+	DiperiksaAt    time.Time  `json:"diperiksa_at"`
+}
+
