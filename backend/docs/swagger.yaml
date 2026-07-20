@@ -1,0 +1,152 @@
+basePath: /
+definitions:
+  dto.AlergiPasienCreate:
+    properties:
+      alergi_public_id:
+        type: string
+    type: object
+  dto.DataLabCreate:
+    properties:
+      nilai:
+        type: number
+      parameter_public_id:
+        type: string
+    type: object
+  dto.KomposisiTubuhCreate:
+    properties:
+      air_tubuh:
+        type: number
+      berat_badan:
+        type: number
+      indeks_massa_tubuh:
+        type: number
+      massa_lemak:
+        type: number
+      massa_otot:
+        type: number
+      massa_tulang:
+        type: number
+      tinggi_badan:
+        type: number
+    type: object
+  dto.KunjunganCreate:
+    properties:
+      tanggal:
+        type: string
+      tensi_diastol:
+        type: integer
+      tensi_sistol:
+        type: integer
+    type: object
+  dto.PantanganPasienCreate:
+    properties:
+      pantangan_public_id:
+        type: string
+    type: object
+  dto.PasienCreate:
+    properties:
+      alamat:
+        type: string
+      email:
+        type: string
+      nama:
+        type: string
+      nomor_hp:
+        type: string
+      pekerjaan_public_id:
+        type: string
+      tanggal_lahir:
+        type: string
+      tempat_lahir:
+        type: string
+    type: object
+  dto.PasienReference:
+    properties:
+      pasien_create:
+        $ref: '#/definitions/dto.PasienCreate'
+      pasien_public_id:
+        type: string
+    type: object
+  dto.PemeriksaanCreate:
+    properties:
+      diperiksa_at:
+        type: string
+      evaluasi:
+        type: string
+      objective:
+        type: string
+      planning_terapi:
+        type: string
+      subjective:
+        type: string
+    type: object
+  dto.SubmissionCreate:
+    properties:
+      alergi_pasiens:
+        items:
+          $ref: '#/definitions/dto.AlergiPasienCreate'
+        type: array
+      data_labs:
+        items:
+          $ref: '#/definitions/dto.DataLabCreate'
+        type: array
+      komposisi_tubuh:
+        $ref: '#/definitions/dto.KomposisiTubuhCreate'
+      kunjungan:
+        $ref: '#/definitions/dto.KunjunganCreate'
+      pantangan_pasiens:
+        items:
+          $ref: '#/definitions/dto.PantanganPasienCreate'
+        type: array
+      pasien:
+        $ref: '#/definitions/dto.PasienReference'
+      pemeriksaan:
+        $ref: '#/definitions/dto.PemeriksaanCreate'
+    type: object
+externalDocs:
+  description: OpenAPI
+  url: https://swagger.io/resources/open-api/
+host: localhost:3200
+info:
+  contact:
+    email: support@swagger.io
+    name: API Support
+    url: http://www.swagger.io/support
+  description: API untuk sistem integrasi monitoring dan logging hasil pemeriksaan
+    darah
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: http://swagger.io/terms/
+  title: Blood checkup monitoring system
+  version: "1.0"
+paths:
+  /api/v1/checkup:
+    post:
+      consumes:
+      - application/json
+      description: Endpoint checkup data
+      parameters:
+      - description: Data checkup
+        in: body
+        name: submit
+        required: true
+        schema:
+          $ref: '#/definitions/dto.SubmissionCreate'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: CreateSubmission
+      tags:
+      - Checkup
+securityDefinitions:
+  ApiKeyAuth:
+    description: Type "Bearer" followed by a space and JWT token.
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"
