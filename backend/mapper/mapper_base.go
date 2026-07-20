@@ -1,6 +1,6 @@
 package mapper
 
-func Map[M any, R any](model M, fx func(M) R) R {
+func Map[M any, R any](model *M, fx func(*M) *R) *R {
 	return fx(model)
 }
 

@@ -1,6 +1,6 @@
 package dto
 
-type AlergiBase struct {
+type AlergiPasienBase struct {
 	DTOBase
 
 	Pasien Pasien `json:"pasien"`
