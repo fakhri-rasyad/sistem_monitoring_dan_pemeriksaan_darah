@@ -9,5 +9,6 @@ type AlergiPasienBase struct {
 }
 
 type AlergiPasienCreate struct {
+  PublicID       uuid.UUID  `json:"public_id"`
 	AlergiPublicID uuid.UUID `json:"alergi_public_id"`
 }

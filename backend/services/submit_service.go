@@ -7,6 +7,7 @@ import (
 	"fakhri-rasyad/sistem_monitoring_darah/repositories"
 	"fmt"
 
+	"github.com/google/uuid"
 	"gorm.io/gorm"
 )
 
@@ -15,21 +16,45 @@ type SubmitService interface {
 }
 
 type SubmitServiceImpl struct {
-  pekerjaRepo repositories.PekerjaanRepoImpl
-  pasienRepo repositories.PasienRepoImpl
-  alergiRepo repositories.AlergiRepoImpl
-  pantangRepo repositories.PantanganRepoImpl
-  alrgPasRepo repositories.AlergiPasienRepoImpl
-  pntgPasRepo repositories.PantanganPasienRepoImpl
-  kunjungRepo repositories.KunjunganRepoImpl
-  kompTubRepo repositories.KomposisiTubuhRepoImpl
-  parametRepo repositories.ParameterPemeriksaanDarahImpl
-  dataLabRepo repositories.DataLabRepoImpl
-  pemerikRepo repositories.PemeriksaanRepoImpl
+  pekerjaRepo repositories.RepoBase[models.Pekerjaan]
+  pasienRepo  repositories.RepoBase[models.Pasien]
+  alergiRepo  repositories.RepoBase[models.Alergi]
+  pantangRepo repositories.RepoBase[models.Pantangan]
+  alrgPasRepo repositories.RepoBase[models.AlergiPasiens]
+  pntgPasRepo repositories.RepoBase[models.PantanganPasien]
+  kunjungRepo repositories.RepoBase[models.Kunjungan]
+  kompTubRepo repositories.RepoBase[models.KomposisiTubuh]
+  parametRepo repositories.RepoBase[models.ParameterPemeriksaanDarah]
+  dataLabRepo repositories.RepoBase[models.DataLab]
+  pemerikRepo repositories.RepoBase[models.Pemeriksaan]
 }
 
-func NewSubmitService() SubmitService {
-	return &SubmitServiceImpl{}
+func NewSubmitService(
+  pekerjaRepo repositories.RepoBase[models.Pekerjaan],
+  pasienRepo  repositories.RepoBase[models.Pasien],
+  alergiRepo  repositories.RepoBase[models.Alergi],
+  pantangRepo repositories.RepoBase[models.Pantangan],
+  alrgPasRepo repositories.RepoBase[models.AlergiPasiens],
+  pntgPasRepo repositories.RepoBase[models.PantanganPasien],
+  kunjungRepo repositories.RepoBase[models.Kunjungan],
+  kompTubRepo repositories.RepoBase[models.KomposisiTubuh],
+  parametRepo repositories.RepoBase[models.ParameterPemeriksaanDarah],
+  dataLabRepo repositories.RepoBase[models.DataLab],
+  pemerikRepo repositories.RepoBase[models.Pemeriksaan],
+) SubmitService {
+	return &SubmitServiceImpl{
+  pekerjaRepo : pekerjaRepo,
+  pasienRepo  : pasienRepo ,
+  alergiRepo  : alergiRepo ,
+  pantangRepo : pantangRepo,
+  alrgPasRepo : alrgPasRepo,
+  pntgPasRepo : pntgPasRepo,
+  kunjungRepo : kunjungRepo,
+  kompTubRepo : kompTubRepo,
+  parametRepo : parametRepo,
+  dataLabRepo : dataLabRepo,
+  pemerikRepo : pemerikRepo,
+  }
 }
 
 func (s *SubmitServiceImpl) Create(submission *dto.SubmissionCreate) error {
@@ -62,6 +87,7 @@ func (s *SubmitServiceImpl) Create(submission *dto.SubmissionCreate) error {
     for i := range submission.PantanganPasiens{
       err := s.resolvePantanganPasien(wf.tx, pasien.InternalID, &submission.PantanganPasiens[i])
       if err != nil {
+        wf.Rollback()
         return err
       }
     }
@@ -79,7 +105,25 @@ func (s *SubmitServiceImpl) Create(submission *dto.SubmissionCreate) error {
     return err
   }
 
-  panic("Unimplemented")
+  if len(submission.DataLabs) != 0 {
+    for i := range submission.DataLabs{
+      err := s.resolveDataLab(wf.tx, kunjungan.InternalID, &submission.DataLabs[i])
+      if err != nil {
+        wf.Rollback()
+        return err
+      }
+    }
+  }
+
+  if err := s.resolvePemeriksaan(wf.tx, kunjungan.InternalID, &submission.Pemeriksaan); err != nil {
+    wf.Rollback()
+    return err
+  }
+
+  if err := wf.Commit(); err != nil {
+    return err
+  }
+  return nil
 }
 
 func (s *SubmitServiceImpl) resolvePasien(tx *gorm.DB, ref *dto.PasienReference) (*models.Pasien ,error) {
@@ -116,6 +160,10 @@ func (s *SubmitServiceImpl) resolvePasien(tx *gorm.DB, ref *dto.PasienReference)
 }
 
 func (s *SubmitServiceImpl) resolveAlergiPasien(tx *gorm.DB, pasienID int, ref *dto.AlergiPasienCreate) (error) {
+  if ref.PublicID != uuid.Nil {
+    return nil
+  }
+
   alergi, err := s.alergiRepo.GetByPublicID(tx, ref.AlergiPublicID)
 
   if err != nil {
@@ -137,6 +185,9 @@ func (s *SubmitServiceImpl) resolveAlergiPasien(tx *gorm.DB, pasienID int, ref *
 }
 
 func (s *SubmitServiceImpl) resolvePantanganPasien(tx *gorm.DB, pasienID int, ref *dto.PantanganPasienCreate) (error) {
+  if ref.PublicID != uuid.Nil {
+    return nil
+  }
   alergi, err := s.pantangRepo.GetByPublicID(tx, ref.PantanganPublicID)
 
   if err != nil {
@@ -191,6 +242,47 @@ func (s *SubmitServiceImpl) resolveKomposisiTubuh(tx *gorm.DB, kunjunganID int, 
   }
 
   if _, err := s.kompTubRepo.Create(tx, gormModel); err != nil {
+    return err
+  } else {
+    return nil
+  }
+}
+
+func (s *SubmitServiceImpl) resolveDataLab(tx *gorm.DB, kunjunganID int, ref *dto.DataLabCreate)(error) {
+  parameter, err := s.parametRepo.GetByPublicID(tx, ref.ParameterPublicID)
+
+  if err != nil {
+    return err
+  }
+
+  gormModel := &models.DataLab{
+    Nilai: ref.Nilai,
+    KunjunganID: kunjunganID,
+    ParameterID: parameter.InternalID,
+  }
+
+  _, err = s.dataLabRepo.Create(tx, gormModel)
+  if err != nil {
+    return err
+  } else {
+    return nil
+  }
+}
+
+func (s *SubmitServiceImpl) resolvePemeriksaan(tx *gorm.DB, kunjunganID int, ref *dto.PemeriksaanCreate) (error){
+  gormModel := &models.Pemeriksaan{
+    Subjective: ref.Subjective,
+    Objective: ref.Objective,
+    PlanningTerapi: ref.PlanningTerapi,
+    Evaluasi: ref.Evaluasi,
+    DiperiksaAt: ref.DiperiksaAt,
+
+    KunjunganID: kunjunganID,
+  }
+
+  _, err := s.pemerikRepo.Create(tx, gormModel)
+
+  if err != nil {
     return err
   } else {
     return nil
