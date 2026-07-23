@@ -5,3 +5,7 @@ type Alergi struct {
 
 	Nama string `json:"nama"`
 }
+
+type AlergiCreate struct {
+	Nama string `json:"nama"`
+}

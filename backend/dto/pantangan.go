@@ -5,3 +5,7 @@ type Pantangan struct {
 
 	Nama string `json:"nama"`
 }
+
+type PantanganCreate struct {
+	Nama string `json:"nama"`
+}

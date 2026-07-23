@@ -6,3 +6,8 @@ type ParameterPemeriksaanDarah struct {
 	Nama   string `json:"nama"`
 	Satuan string `json:"satuan"`
 }
+
+type ParameterPemeriksaanDarahCreate struct {
+	Nama   string `json:"nama"`
+	Satuan string `json:"satuan"`
+}

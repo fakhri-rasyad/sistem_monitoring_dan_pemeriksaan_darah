@@ -16,3 +16,4 @@ func ToAlergiBase(model *models.Alergi) *dto.Alergi {
 
   return dto
 }
+
