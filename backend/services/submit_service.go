@@ -67,6 +67,18 @@ func (s *SubmitServiceImpl) Create(submission *dto.SubmissionCreate) error {
     }
   }
 
+  kunjungan, err := s.resolveKunjungan(wf.tx, pasien.InternalID, &submission.Kunjungan)
+
+  if err != nil {
+    wf.Rollback()
+    return err
+  }
+
+  if err := s.resolveKomposisiTubuh(wf.tx, kunjungan.InternalID, &submission.KomposisiTubuh); err != nil {
+    wf.Rollback()
+    return err
+  }
+
   panic("Unimplemented")
 }
 
@@ -145,3 +157,42 @@ func (s *SubmitServiceImpl) resolvePantanganPasien(tx *gorm.DB, pasienID int, re
   }
 }
 
+func (s *SubmitServiceImpl) resolveKunjungan(tx *gorm.DB, pasienID int, ref *dto.KunjunganCreate) (*models.Kunjungan ,error) {
+  gormModel := &models.Kunjungan{
+    Sistol: ref.Sistol,
+    Diastol: ref.Diastol,
+    Tanggal: ref.Tanggal,
+
+    PasienID: pasienID,
+  }
+
+  model, err := s.kunjungRepo.Create(tx, gormModel)
+
+  if err != nil {
+    return nil, err
+  }
+
+  return model, nil
+}
+
+func (s *SubmitServiceImpl) resolveKomposisiTubuh(tx *gorm.DB, kunjunganID int, ref *dto.KomposisiTubuhCreate) (error) {
+  gormModel := &models.KomposisiTubuh{
+    Berat: ref.Berat,
+    Tinggi: ref.Tinggi,
+
+    MassaOtot: ref.MassaOtot,
+    MassaLemak: ref.MassaLemak,
+    MassaTulang: ref.MassaTulang,
+
+    AirTubuh: ref.AirTubuh,
+    IndeksMassaTubh: ref.IndeksMassaTubh,
+
+    KunjunganID: kunjunganID,
+  }
+
+  if _, err := s.kompTubRepo.Create(tx, gormModel); err != nil {
+    return err
+  } else {
+    return nil
+  }
+}
