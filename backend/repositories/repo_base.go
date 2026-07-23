@@ -27,8 +27,13 @@ func (r *RepoBaseImpl[T]) getDB(tx *gorm.DB) *gorm.DB {
   return r.db
 }
 
-func (r *RepoBaseImpl[T]) Create(tx *gorm.DB, entity *T) error {
-    return r.getDB(tx).Create(entity).Error
+func (r *RepoBaseImpl[T]) Create(tx *gorm.DB, entity *T) (*T, error) {
+
+  if err := r.getDB(tx).Create(entity).Error; err != nil {
+    return nil, err
+  }
+
+  return entity, nil
 }
 
 func (r *RepoBaseImpl[T]) GetByPublicID(tx *gorm.DB, uuid uuid.UUID) (*T, error) {

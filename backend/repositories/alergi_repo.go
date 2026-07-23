@@ -6,8 +6,6 @@ import (
 	"gorm.io/gorm"
 )
 
-type AlergiRepo interface{}
-
 type AlergiRepoImpl struct {
 	*RepoBaseImpl[models.Alergi]
 }
