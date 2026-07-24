@@ -2,6 +2,10 @@ package main
 
 import (
 	"fakhri-rasyad/sistem_monitoring_darah/config"
+	"fakhri-rasyad/sistem_monitoring_darah/controllers"
+	"fakhri-rasyad/sistem_monitoring_darah/repositories"
+	"fakhri-rasyad/sistem_monitoring_darah/routes"
+	"fakhri-rasyad/sistem_monitoring_darah/services"
 	"log"
 
 	_ "fakhri-rasyad/sistem_monitoring_darah/docs"
@@ -47,10 +51,57 @@ func main() {
         OAuth2RedirectUrl: "http://localhost:3100/swagger/oauth2-redirect.html",
     }))
 
-  // #### Routing ####
-  // routes.Setup(
-  //   app,
-  // )
+
+  alergiRepo := repositories.NewAlergiRepo(config.DB)
+  alePasRepo := repositories.NewAlergiPasienRepo(config.DB)
+  pantanRepo := repositories.NewPantanganRepo(config.DB)
+  panPasRepo := repositories.NewPantanganPasienRepo(config.DB)
+  pemeDhRepo := repositories.NewParameterPemeriksaanDarah(config.DB)
+  pekerjRepo := repositories.NewPekerjaanRepo(config.DB)
+  pasienRepo := repositories.NewPasienRepo(config.DB)
+  kunjunRepo := repositories.NewKunjunganRepo(config.DB)
+  komposRepo := repositories.NewKomposisiTubuhRepo(config.DB)
+  pemeriRepo := repositories.NewPemeriksaanRepo(config.DB)
+  dataLbRepo := repositories.NewDataLabRepo(config.DB)
+
+  submitServ := services.NewSubmitService(
+    pekerjRepo,
+    pasienRepo,
+    alergiRepo,
+    pantanRepo,
+    alePasRepo,
+    panPasRepo,
+    kunjunRepo,
+    komposRepo,
+    pemeDhRepo,
+    dataLbRepo,
+    pemeriRepo,
+  )
+  alergiServ := services.NewAlergiService(alergiRepo)
+  pantanServ := services.NewPantanganService(pantanRepo)
+  pekerjServ := services.NewPekerjaanService(pekerjRepo)
+  pasienServ := services.NewPasienService(pasienRepo)
+  kunjugServ := services.NewKunjunganService(kunjunRepo)
+  parmDhServ := services.NewParameterPemeriksaanDarahService(pemeDhRepo)
+
+  submitCont := controllers.NewSubmissionCont(submitServ)
+  alergiCont := controllers.NewAlergiController(alergiServ)
+  pantanCont := controllers.NewPantanganController(pantanServ)
+  pekerjCont := controllers.NewPekerjaanController(pekerjServ)
+  pasienCont := controllers.NewPasienController(pasienServ)
+  kunjugCont := controllers.NewKunjunganController(kunjugServ)
+  paramDCont := controllers.NewParameterPemeriksaanDarahController(parmDhServ)
+
+  routes.Setup(
+    app,
+    submitCont,
+    alergiCont,
+    pantanCont,
+    pekerjCont,
+    pasienCont,
+    kunjugCont,
+    paramDCont,
+  )
 
   port := config.APPConfig.APPPort
   log.Print("App running on port: ", port)

@@ -15,6 +15,12 @@ import (
 func Setup(
 	app *fiber.App,
   submitCont controllers.SubmissionController,
+  alergiCont controllers.AlergiController,
+  pantanCont controllers.PantanganController,
+  pekerjCont controllers.PekerjaanController,
+  pasienCont controllers.PasienController,
+  kunjugCont controllers.KunjunganController,
+  paramDCont controllers.ParameterPemeriksaanDarahController,
 ){
   err := godotenv.Load(".env")
   if err != nil {

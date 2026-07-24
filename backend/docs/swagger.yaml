@@ -1,8 +1,15 @@
 basePath: /
 definitions:
+  dto.AlergiCreate:
+    properties:
+      nama:
+        type: string
+    type: object
   dto.AlergiPasienCreate:
     properties:
       alergi_public_id:
+        type: string
+      public_id:
         type: string
     type: object
   dto.DataLabCreate:
@@ -38,9 +45,23 @@ definitions:
       tensi_sistol:
         type: integer
     type: object
+  dto.PantanganCreate:
+    properties:
+      nama:
+        type: string
+    type: object
   dto.PantanganPasienCreate:
     properties:
       pantangan_public_id:
+        type: string
+      public_id:
+        type: string
+    type: object
+  dto.ParameterPemeriksaanDarahCreate:
+    properties:
+      nama:
+        type: string
+      satuan:
         type: string
     type: object
   dto.PasienCreate:
@@ -65,6 +86,11 @@ definitions:
       pasien_create:
         $ref: '#/definitions/dto.PasienCreate'
       pasien_public_id:
+        type: string
+    type: object
+  dto.PekerjaanCreate:
+    properties:
+      nama:
         type: string
     type: object
   dto.PemeriksaanCreate:
@@ -103,6 +129,31 @@ definitions:
       pemeriksaan:
         $ref: '#/definitions/dto.PemeriksaanCreate'
     type: object
+  utils.CreationSuccessResponse:
+    properties:
+      data: {}
+      message:
+        example: Sukses menambahkan X
+        type: string
+      status:
+        example: 201 Creation Success
+        type: string
+      status_code:
+        example: 201
+        type: integer
+    type: object
+  utils.Response:
+    properties:
+      data: {}
+      error:
+        type: string
+      message:
+        type: string
+      status:
+        type: string
+      statusCode:
+        type: integer
+    type: object
 externalDocs:
   description: OpenAPI
   url: https://swagger.io/resources/open-api/
@@ -121,6 +172,42 @@ info:
   title: Blood checkup monitoring system
   version: "1.0"
 paths:
+  /api/v1/alergi:
+    get:
+      consumes:
+      - application/json
+      description: Endpoint penambahan alergi
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/utils.Response'
+      summary: CreateAlergi
+      tags:
+      - Checkup
+    post:
+      consumes:
+      - application/json
+      description: Endpoint penambahan alergi
+      parameters:
+      - description: Data alergi
+        in: body
+        name: alergi
+        required: true
+        schema:
+          $ref: '#/definitions/dto.AlergiCreate'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/utils.CreationSuccessResponse'
+      summary: CreateAlergi
+      tags:
+      - Checkup
   /api/v1/checkup:
     post:
       consumes:
@@ -143,6 +230,171 @@ paths:
       summary: CreateSubmission
       tags:
       - Checkup
+  /api/v1/kunjungan:
+    get:
+      consumes:
+      - application/json
+      description: Endpoint penambahan Kunjungan
+      parameters:
+      - description: Public ID Kunjungan
+        in: path
+        name: public_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/utils.CreationSuccessResponse'
+      summary: GetKunjunganByPublicID
+      tags:
+      - Kunjungan
+  /api/v1/pantangan:
+    get:
+      consumes:
+      - application/json
+      description: Endpoint penambahan Pantangan
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/utils.Response'
+      summary: CreatePantangan
+      tags:
+      - Pantangan
+    post:
+      consumes:
+      - application/json
+      description: Endpoint penambahan Pantangan
+      parameters:
+      - description: Data Pantangan
+        in: body
+        name: Pantangan
+        required: true
+        schema:
+          $ref: '#/definitions/dto.PantanganCreate'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/utils.CreationSuccessResponse'
+      summary: CreatePantangan
+      tags:
+      - Pantangan
+  /api/v1/pasien:
+    get:
+      consumes:
+      - application/json
+      description: Endpoint penambahan Pasien
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/utils.Response'
+      summary: CreatePasien
+      tags:
+      - Pasien
+    post:
+      consumes:
+      - application/json
+      description: Endpoint penambahan Pasien
+      parameters:
+      - description: Data Pasien
+        in: body
+        name: Pasien
+        required: true
+        schema:
+          $ref: '#/definitions/dto.PasienCreate'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/utils.CreationSuccessResponse'
+      summary: CreatePasien
+      tags:
+      - Pasien
+  /api/v1/pekerjaan:
+    get:
+      consumes:
+      - application/json
+      description: Endpoint penambahan Pekerjaan
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/utils.Response'
+      summary: CreatePekerjaan
+      tags:
+      - Pekerjaan
+    post:
+      consumes:
+      - application/json
+      description: Endpoint penambahan Pekerjaan
+      parameters:
+      - description: Data Pekerjaan
+        in: body
+        name: Pekerjaan
+        required: true
+        schema:
+          $ref: '#/definitions/dto.PekerjaanCreate'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/utils.CreationSuccessResponse'
+      summary: CreatePekerjaan
+      tags:
+      - Pekerjaan
+  /api/v1/ppdh:
+    get:
+      consumes:
+      - application/json
+      description: Endpoint penambahan ParameterPemeriksaanDarah
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/utils.Response'
+      summary: CreateParameterPemeriksaanDarah
+      tags:
+      - Parameter Pemeriksaan Darah
+    post:
+      consumes:
+      - application/json
+      description: Endpoint penambahan ParameterPemeriksaanDarah
+      parameters:
+      - description: Data ParameterPemeriksaanDarah
+        in: body
+        name: ParameterPemeriksaanDarah
+        required: true
+        schema:
+          $ref: '#/definitions/dto.ParameterPemeriksaanDarahCreate'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/utils.CreationSuccessResponse'
+      summary: CreateParameterPemeriksaanDarah
+      tags:
+      - Parameter Pemeriksaan Darah
 securityDefinitions:
   ApiKeyAuth:
     description: Type "Bearer" followed by a space and JWT token.

@@ -24,6 +24,61 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/api/v1/alergi": {
+            "get": {
+                "description": "Endpoint penambahan alergi",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Checkup"
+                ],
+                "summary": "CreateAlergi",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/utils.Response"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Endpoint penambahan alergi",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Checkup"
+                ],
+                "summary": "CreateAlergi",
+                "parameters": [
+                    {
+                        "description": "Data alergi",
+                        "name": "alergi",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.AlergiCreate"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/utils.CreationSuccessResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/api/v1/checkup": {
             "post": {
                 "description": "Endpoint checkup data",
@@ -57,13 +112,276 @@ const docTemplate = `{
                     }
                 }
             }
+        },
+        "/api/v1/kunjungan": {
+            "get": {
+                "description": "Endpoint penambahan Kunjungan",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Kunjungan"
+                ],
+                "summary": "GetKunjunganByPublicID",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Public ID Kunjungan",
+                        "name": "public_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/utils.CreationSuccessResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/pantangan": {
+            "get": {
+                "description": "Endpoint penambahan Pantangan",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Pantangan"
+                ],
+                "summary": "CreatePantangan",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/utils.Response"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Endpoint penambahan Pantangan",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Pantangan"
+                ],
+                "summary": "CreatePantangan",
+                "parameters": [
+                    {
+                        "description": "Data Pantangan",
+                        "name": "Pantangan",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.PantanganCreate"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/utils.CreationSuccessResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/pasien": {
+            "get": {
+                "description": "Endpoint penambahan Pasien",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Pasien"
+                ],
+                "summary": "CreatePasien",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/utils.Response"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Endpoint penambahan Pasien",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Pasien"
+                ],
+                "summary": "CreatePasien",
+                "parameters": [
+                    {
+                        "description": "Data Pasien",
+                        "name": "Pasien",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.PasienCreate"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/utils.CreationSuccessResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/pekerjaan": {
+            "get": {
+                "description": "Endpoint penambahan Pekerjaan",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Pekerjaan"
+                ],
+                "summary": "CreatePekerjaan",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/utils.Response"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Endpoint penambahan Pekerjaan",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Pekerjaan"
+                ],
+                "summary": "CreatePekerjaan",
+                "parameters": [
+                    {
+                        "description": "Data Pekerjaan",
+                        "name": "Pekerjaan",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.PekerjaanCreate"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/utils.CreationSuccessResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/ppdh": {
+            "get": {
+                "description": "Endpoint penambahan ParameterPemeriksaanDarah",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Parameter Pemeriksaan Darah"
+                ],
+                "summary": "CreateParameterPemeriksaanDarah",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/utils.Response"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Endpoint penambahan ParameterPemeriksaanDarah",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Parameter Pemeriksaan Darah"
+                ],
+                "summary": "CreateParameterPemeriksaanDarah",
+                "parameters": [
+                    {
+                        "description": "Data ParameterPemeriksaanDarah",
+                        "name": "ParameterPemeriksaanDarah",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.ParameterPemeriksaanDarahCreate"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/utils.CreationSuccessResponse"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
+        "dto.AlergiCreate": {
+            "type": "object",
+            "properties": {
+                "nama": {
+                    "type": "string"
+                }
+            }
+        },
         "dto.AlergiPasienCreate": {
             "type": "object",
             "properties": {
                 "alergi_public_id": {
+                    "type": "string"
+                },
+                "public_id": {
                     "type": "string"
                 }
             }
@@ -119,10 +437,32 @@ const docTemplate = `{
                 }
             }
         },
+        "dto.PantanganCreate": {
+            "type": "object",
+            "properties": {
+                "nama": {
+                    "type": "string"
+                }
+            }
+        },
         "dto.PantanganPasienCreate": {
             "type": "object",
             "properties": {
                 "pantangan_public_id": {
+                    "type": "string"
+                },
+                "public_id": {
+                    "type": "string"
+                }
+            }
+        },
+        "dto.ParameterPemeriksaanDarahCreate": {
+            "type": "object",
+            "properties": {
+                "nama": {
+                    "type": "string"
+                },
+                "satuan": {
                     "type": "string"
                 }
             }
@@ -160,6 +500,14 @@ const docTemplate = `{
                     "$ref": "#/definitions/dto.PasienCreate"
                 },
                 "pasien_public_id": {
+                    "type": "string"
+                }
+            }
+        },
+        "dto.PekerjaanCreate": {
+            "type": "object",
+            "properties": {
+                "nama": {
                     "type": "string"
                 }
             }
@@ -216,6 +564,42 @@ const docTemplate = `{
                 },
                 "pemeriksaan": {
                     "$ref": "#/definitions/dto.PemeriksaanCreate"
+                }
+            }
+        },
+        "utils.CreationSuccessResponse": {
+            "type": "object",
+            "properties": {
+                "data": {},
+                "message": {
+                    "type": "string",
+                    "example": "Sukses menambahkan X"
+                },
+                "status": {
+                    "type": "string",
+                    "example": "201 Creation Success"
+                },
+                "status_code": {
+                    "type": "integer",
+                    "example": 201
+                }
+            }
+        },
+        "utils.Response": {
+            "type": "object",
+            "properties": {
+                "data": {},
+                "error": {
+                    "type": "string"
+                },
+                "message": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string"
+                },
+                "statusCode": {
+                    "type": "integer"
                 }
             }
         }
