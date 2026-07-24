@@ -1,14 +1,10 @@
 package routes
 
 import (
-	"fakhri-rasyad/sistem_monitoring_darah/config"
 	"fakhri-rasyad/sistem_monitoring_darah/controllers"
-	"fakhri-rasyad/sistem_monitoring_darah/utils"
 	"log"
 
-	jwtware "github.com/gofiber/contrib/v3/jwt"
 	"github.com/gofiber/fiber/v3"
-	"github.com/gofiber/fiber/v3/extractors"
 	"github.com/joho/godotenv"
 )
 
@@ -28,13 +24,20 @@ func Setup(
   }
 
   api := app.Group("/api/v1")
-  api.Use(jwtware.New(jwtware.Config{
-      SigningKey: jwtware.SigningKey{Key: []byte(config.APPConfig.JWTSecret)},
-      Extractor: extractors.FromAuthHeader("Bearer"),
-      ErrorHandler: func(c fiber.Ctx, err error) error {
-          return utils.UnauthorizedReponse(c, "User unauthorized", err)
-      },
-  }))
+  // api.Use(jwtware.New(jwtware.Config{
+  //     SigningKey: jwtware.SigningKey{Key: []byte(config.APPConfig.JWTSecret)},
+  //     Extractor: extractors.FromAuthHeader("Bearer"),
+  //     ErrorHandler: func(c fiber.Ctx, err error) error {
+  //         return utils.UnauthorizedReponse(c, "User unauthorized", err)
+  //     },
+  // }))
+
+  api.Get("/pekerjaan", pekerjCont.GetPekerjaan)
+  api.Get("/alergi", alergiCont.GetAlergi)
+  api.Get("/pantangan", pantanCont.GetPantangan)
+  api.Get("/ppdh", paramDCont.GetParameterPemeriksaanDarah)
+  api.Get("/pasien", pasienCont.GetPasien)
+
 
   // Submission
   api.Post("/checkup", submitCont.Create)

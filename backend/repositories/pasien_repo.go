@@ -13,6 +13,5 @@ type PasienRepoImpl struct {
 func NewPasienRepo(db *gorm.DB) PasienRepoImpl {
   return PasienRepoImpl{
     RepoBaseImpl: (*RepoBaseImpl[models.Pasien])(NewRepoBaseImpl[models.Pasien](db)),
-
   }
 }

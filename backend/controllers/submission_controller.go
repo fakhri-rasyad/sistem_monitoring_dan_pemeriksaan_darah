@@ -1,9 +1,9 @@
 package controllers
 
 import (
-	"errors"
 	"fakhri-rasyad/sistem_monitoring_darah/dto"
 	"fakhri-rasyad/sistem_monitoring_darah/services"
+	"fakhri-rasyad/sistem_monitoring_darah/utils"
 
 	"github.com/gofiber/fiber/v3"
 )
@@ -31,10 +31,13 @@ func NewSubmissionCont(s services.SubmitService) SubmissionController {
 // @Router      /api/v1/checkup [post]
 func (c *SubmissionControllerImpl) Create(ctx fiber.Ctx) error {
   submit := &dto.SubmissionCreate{}
-
   if err := ctx.Bind().Body(submit); err != nil {
-    return errors.New("Placeholder")
+    return utils.BadRequest(ctx, "Input submit tidak valid", err)
   }
 
-  return nil
+  if err := c.s.Create(submit); err != nil {
+    return utils.InternalError(ctx, "Gagal menambahkan kunjungan", err)
+  }
+
+  return utils.CreationSuccess(ctx, "Kunjungan berhasil ditambahkan", nil)
 }

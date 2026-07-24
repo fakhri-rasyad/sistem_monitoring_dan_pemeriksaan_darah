@@ -9,6 +9,7 @@ CREATE TABLE IF NOT EXISTS "pemeriksaans" (
 	"diperiksa_at" TIMESTAMPTZ NOT NULL DEFAULT now(),
 	"created_at" TIMESTAMPTZ NOT NULL DEFAULT now(),
 	"updated_at" TIMESTAMPTZ NOT NULL DEFAULT now(),
+  "deleted_at" TIMESTAMPTZ,
   CONSTRAINT "pemeriksaan_kunjungan_fk" FOREIGN KEY ("kunjungan_id") REFERENCES "kunjungans"("internal_id"),
 	PRIMARY KEY("internal_id")
 );

@@ -1,6 +1,8 @@
 package repositories
 
 import (
+	"fakhri-rasyad/sistem_monitoring_darah/utils"
+
 	"github.com/google/uuid"
 	"gorm.io/gorm"
 )
@@ -30,7 +32,7 @@ func (r *RepoBaseImpl[T]) getDB(tx *gorm.DB) *gorm.DB {
 func (r *RepoBaseImpl[T]) Create(tx *gorm.DB, entity *T) (*T, error) {
 
   if err := r.getDB(tx).Create(entity).Error; err != nil {
-    return nil, err
+    return nil, utils.ParseGormError(err)
   }
 
   return entity, nil
@@ -45,7 +47,7 @@ func (r *RepoBaseImpl[T]) GetByPublicID(tx *gorm.DB, uuid uuid.UUID) (*T, error)
         Error
 
     if err != nil {
-        return nil, err
+        return nil,  utils.ParseGormError(err)
     }
 
     return &entity, nil
@@ -58,5 +60,10 @@ func (r *RepoBaseImpl[T]) GetAll(tx *gorm.DB) ([]T, error) {
         Find(&entities).
         Error
 
-    return entities, err
+
+    if err != nil {
+      return nil,  utils.ParseGormError(err)
+    }
+
+    return entities, nil
 }

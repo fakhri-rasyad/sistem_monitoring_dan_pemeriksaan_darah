@@ -2,6 +2,7 @@ package utils
 
 import (
 	"errors"
+	"fmt"
 	"strings"
 
 	"gorm.io/gorm"
@@ -25,4 +26,19 @@ func ParseDBError(err error) error {
     }
 
     return err
+}
+
+func ParseGormError(err error) error {
+	switch {
+	case err == nil:
+		return nil
+	case errors.Is(err, gorm.ErrRecordNotFound):
+		return fmt.Errorf("data not found")
+	case errors.Is(err, gorm.ErrDuplicatedKey):
+		return fmt.Errorf("duplicate data")
+	case errors.Is(err, gorm.ErrForeignKeyViolated):
+		return fmt.Errorf("referenced data does not exist")
+	default:
+		return err
+	}
 }
