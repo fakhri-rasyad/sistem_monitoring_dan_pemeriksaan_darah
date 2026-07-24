@@ -38,6 +38,8 @@ func Setup(
   api.Get("/ppdh", paramDCont.GetParameterPemeriksaanDarah)
   api.Get("/pasien", pasienCont.GetPasien)
 
+  api.Get("/pasien/:public_id", pasienCont.GetPasienByPublicIDWithPreload)
+
 
   // Submission
   api.Post("/checkup", submitCont.Create)

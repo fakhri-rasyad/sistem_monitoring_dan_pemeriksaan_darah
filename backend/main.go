@@ -80,7 +80,7 @@ func main() {
   alergiServ := services.NewAlergiService(alergiRepo)
   pantanServ := services.NewPantanganService(pantanRepo)
   pekerjServ := services.NewPekerjaanService(pekerjRepo)
-  pasienServ := services.NewPasienService(pasienRepo)
+  pasienServ := services.NewPasienService(pasienRepo, pekerjRepo)
   kunjugServ := services.NewKunjunganService(kunjunRepo)
   parmDhServ := services.NewParameterPemeriksaanDarahService(pemeDhRepo)
 

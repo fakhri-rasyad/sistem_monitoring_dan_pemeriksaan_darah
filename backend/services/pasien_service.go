@@ -12,11 +12,12 @@ import (
 type PasienService interface {
 	Create(create *dto.PasienCreate) error
 	GetByPublicID(publicID uuid.UUID) (*dto.Pasien, error)
+  GetByPublicIDWithPreload(publicID uuid.UUID) (*dto.Pasien, error)
 	GetAll() ([]dto.Pasien, error)
 }
 
 type PasienServiceImpl struct {
-	r repositories.RepoBase[models.Pasien]
+	r repositories.PasienRepo
   pr repositories.RepoBase[models.Pekerjaan]
 }
 
@@ -65,8 +66,21 @@ func (a *PasienServiceImpl) GetByPublicID(publicID uuid.UUID) (*dto.Pasien, erro
   return mapper.Map(data, mapper.ToPasien), nil
 }
 
-func NewPasienService(r repositories.RepoBase[models.Pasien]) PasienService {
+func (a *PasienServiceImpl) GetByPublicIDWithPreload(publicID uuid.UUID) (*dto.Pasien, error) {
+  data, err := a.r.GetByPublicIDWithPreload(publicID)
+  if err != nil {
+    return nil, err
+  }
+
+  return mapper.Map(data, mapper.ToPasien), nil
+}
+
+func NewPasienService(
+  r repositories.PasienRepo,
+  pr repositories.RepoBase[models.Pekerjaan],
+  ) PasienService {
 	return &PasienServiceImpl{
 		r: r,
+    pr: pr,
 	}
 }
