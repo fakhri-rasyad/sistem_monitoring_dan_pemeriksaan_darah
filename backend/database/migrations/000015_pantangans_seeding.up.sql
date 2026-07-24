@@ -1,0 +1,10 @@
+insert into pantangans (nama) values ('Stone');
+insert into pantangans (nama) values ('Wood');
+insert into pantangans (nama) values ('Granite');
+insert into pantangans (nama) values ('Brass');
+insert into pantangans (nama) values ('Brass');
+insert into pantangans (nama) values ('Granite');
+insert into pantangans (nama) values ('Granite');
+insert into pantangans (nama) values ('Aluminum');
+insert into pantangans (nama) values ('Wood');
+insert into pantangans (nama) values ('Brass');

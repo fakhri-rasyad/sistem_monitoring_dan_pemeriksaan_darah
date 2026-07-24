@@ -1,0 +1,10 @@
+insert into alergis (nama) values ('architecture');
+insert into alergis (nama) values ('fresh-thinking');
+insert into alergis (nama) values ('Multi-layered');
+insert into alergis (nama) values ('solution-oriented');
+insert into alergis (nama) values ('Business-focused');
+insert into alergis (nama) values ('process improvement');
+insert into alergis (nama) values ('Adaptive');
+insert into alergis (nama) values ('De-engineered');
+insert into alergis (nama) values ('content-based');
+insert into alergis (nama) values ('Expanded');

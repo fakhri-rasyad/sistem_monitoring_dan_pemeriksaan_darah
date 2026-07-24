@@ -1,0 +1,10 @@
+insert into pekerjaans (nama) values ('Systems Administrator II');
+insert into pekerjaans (nama) values ('Speech Pathologist');
+insert into pekerjaans (nama) values ('Staff Accountant III');
+insert into pekerjaans (nama) values ('Marketing Assistant');
+insert into pekerjaans (nama) values ('Assistant Media Planner');
+insert into pekerjaans (nama) values ('Internal Auditor');
+insert into pekerjaans (nama) values ('Web Developer IV');
+insert into pekerjaans (nama) values ('Librarian');
+insert into pekerjaans (nama) values ('Data Coordinator');
+insert into pekerjaans (nama) values ('Civil Engineer');

@@ -1,0 +1,10 @@
+insert into parameter_pemeriksaan_darahs (nama, satuan) values ('Stone', 'biz');
+insert into parameter_pemeriksaan_darahs (nama, satuan) values ('Rubber', 'mil');
+insert into parameter_pemeriksaan_darahs (nama, satuan) values ('Vinyl', 'org');
+insert into parameter_pemeriksaan_darahs (nama, satuan) values ('Vinyl', 'biz');
+insert into parameter_pemeriksaan_darahs (nama, satuan) values ('Rubber', 'biz');
+insert into parameter_pemeriksaan_darahs (nama, satuan) values ('Plastic', 'biz');
+insert into parameter_pemeriksaan_darahs (nama, satuan) values ('Stone', 'gov');
+insert into parameter_pemeriksaan_darahs (nama, satuan) values ('Vinyl', 'info');
+insert into parameter_pemeriksaan_darahs (nama, satuan) values ('Plexiglass', 'com');
+insert into parameter_pemeriksaan_darahs (nama, satuan) values ('Glass', 'com');
