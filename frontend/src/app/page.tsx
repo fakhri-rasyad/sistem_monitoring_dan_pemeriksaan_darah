@@ -4,11 +4,6 @@ import Image from "next/image";
 
 export default function Home() {
   return (
-    <SidebarProvider>
-      <AppSidebar />
-      <main>
-        <h1>Content</h1>
-      </main>
-    </SidebarProvider>
+    <h1>Naviagte after this</h1>
   );
 }

@@ -1,0 +1,48 @@
+"use client";
+
+import { useCallback, useEffect, useState } from "react";
+
+import DataTables from "@/components/layouts/data-table";
+import {
+  PasienColumns,
+  PasienData,
+} from "@/features/dashboard/types/pasien_data_column";
+import { PasienMapper } from "@/features/dashboard/utils/pasien_mapper";
+import { getPasien } from "@/services/pasien";
+
+export default function DashboardPage() {
+  const [pasienData, setPasienData] = useState<PasienData[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+const refreshData = useCallback(async () => {
+  setIsLoading(true);
+
+  try {
+    const pasien = await getPasien();
+    setPasienData(pasien.map(PasienMapper));
+  } catch (err) {
+    console.error(err);
+    setPasienData([]);
+  } finally {
+    setIsLoading(false);
+  }
+}, []);
+
+  useEffect(() => {
+    refreshData();
+  }, [refreshData]);
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  return (
+    <div className="container mx-auto py-10 px-24">
+      <DataTables
+        columns={PasienColumns}
+        data={pasienData}
+        tableName="Pasien"
+      />
+    </div>
+  );
+}

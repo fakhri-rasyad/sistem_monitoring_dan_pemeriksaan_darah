@@ -3,6 +3,7 @@ package repositories
 import (
 	"fakhri-rasyad/sistem_monitoring_darah/models"
 	"fakhri-rasyad/sistem_monitoring_darah/utils"
+	"log"
 
 	"github.com/google/uuid"
 	"gorm.io/gorm"
@@ -13,6 +14,7 @@ type PasienRepo interface {
 
   GetByPublicIDWithPreload(publicID uuid.UUID)(*models.Pasien, error)
   GetByNama(nama string) ([]models.Pasien, error)
+  GetAllWithPreload()([]models.Pasien, error)
 }
 
 type PasienRepoImpl struct {
@@ -51,4 +53,16 @@ func (r *PasienRepoImpl) GetByNama(nama string) ([]models.Pasien, error) {
   }
 
   return data, nil
+}
+func (r *PasienRepoImpl) GetAllWithPreload() ([]models.Pasien, error) {
+  var listData []models.Pasien
+
+
+  if err := r.getDB(nil).Preload("Pekerjaan").Find(&listData).Error; err != nil {
+    return nil, err
+  }
+
+  log.Println(listData[0].Pekerjaan.Nama)
+
+  return listData, nil
 }

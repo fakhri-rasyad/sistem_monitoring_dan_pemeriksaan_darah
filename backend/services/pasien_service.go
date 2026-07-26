@@ -14,6 +14,7 @@ type PasienService interface {
 	GetByPublicID(publicID uuid.UUID) (*dto.Pasien, error)
   GetByPublicIDWithPreload(publicID uuid.UUID) (*dto.Pasien, error)
 	GetAll() ([]dto.Pasien, error)
+  GetAllWithPreload()([]dto.Pasien, error)
 }
 
 type PasienServiceImpl struct {
@@ -73,6 +74,15 @@ func (a *PasienServiceImpl) GetByPublicIDWithPreload(publicID uuid.UUID) (*dto.P
   }
 
   return mapper.Map(data, mapper.ToPasien), nil
+}
+
+func (a *PasienServiceImpl) GetAllWithPreload()([]dto.Pasien, error){
+  data, err := a.r.GetAllWithPreload()
+  if err != nil {
+    return nil, err
+  }
+
+  return mapper.MapSlice(data, mapper.ToPasien), nil
 }
 
 func NewPasienService(

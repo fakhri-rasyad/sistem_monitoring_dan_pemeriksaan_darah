@@ -5,6 +5,7 @@ import (
 	"log"
 
 	"github.com/gofiber/fiber/v3"
+	"github.com/gofiber/fiber/v3/middleware/cors"
 	"github.com/joho/godotenv"
 )
 
@@ -32,11 +33,18 @@ func Setup(
   //     },
   // }))
 
+  api.Use(cors.New(
+    cors.Config{
+      AllowOrigins: []string{"http://localhost:3000"},
+      AllowMethods: []string{"GET", "POST"},
+    },
+  ))
+
   api.Get("/pekerjaan", pekerjCont.GetPekerjaan)
   api.Get("/alergi", alergiCont.GetAlergi)
   api.Get("/pantangan", pantanCont.GetPantangan)
   api.Get("/ppdh", paramDCont.GetParameterPemeriksaanDarah)
-  api.Get("/pasien", pasienCont.GetPasien)
+  api.Get("/pasien", pasienCont.GetAllWithPreload)
 
   api.Get("/pasien/:public_id", pasienCont.GetPasienByPublicIDWithPreload)
 

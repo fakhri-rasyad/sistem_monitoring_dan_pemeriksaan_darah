@@ -15,6 +15,7 @@ type PasienController interface {
 	GetPasien(ctx fiber.Ctx) error
 	GetPasienByPublicID(ctx fiber.Ctx) error
   GetPasienByPublicIDWithPreload(ctx fiber.Ctx) error
+  GetAllWithPreload(ctx fiber.Ctx) error
 }
 
 type PasienControllerImpl struct {
@@ -111,6 +112,13 @@ func (c *PasienControllerImpl) GetPasienByPublicIDWithPreload(ctx fiber.Ctx) err
 	return utils.SuccessResponse(ctx, "Sukses mengambil data Pasien", data)
 }
 
+func (c *PasienControllerImpl) GetAllWithPreload(ctx fiber.Ctx) error {
+  data, err := c.s.GetAllWithPreload()
+	if err != nil {
+		return utils.InternalError(ctx, "Gagal mengambil data Pasien", err)
+	}
+	return utils.SuccessResponse(ctx, "Sukses mengambil data Pasien", data)
+}
 
 func NewPasienController(s services.PasienService) PasienController {
 	return &PasienControllerImpl{s: s}
