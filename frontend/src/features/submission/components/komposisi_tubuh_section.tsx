@@ -16,6 +16,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Controller, UseFormReturn } from "react-hook-form";
 import { PemeriksaanFormValues } from "../schema/pemeriksaan_schema";
+import { useEffect } from "react";
 
 interface KomposisiSectionProp {
   form: UseFormReturn<PemeriksaanFormValues>;
@@ -27,12 +28,19 @@ export default function KomposisiTubuhSection({ form }: KomposisiSectionProp) {
   const beratBadan = watch("komposisi_tubuh.berat_badan");
   const tinggiBadan = watch("komposisi_tubuh.tinggi_badan");
 
-  const indeks = beratBadan / ((tinggiBadan / 100) * (tinggiBadan / 100));
+  useEffect(() => {
+    if (!beratBadan || !tinggiBadan) {
+      setValue("komposisi_tubuh.indeks_massa_tubuh", 0);
+      return;
+    }
 
-  setValue(
-    "komposisi_tubuh.indeks_massa_tubuh",
-    Math.round(indeks * 100) / 100,
-  );
+    const bmi = beratBadan / Math.pow(tinggiBadan / 100, 2);
+
+    setValue("komposisi_tubuh.indeks_massa_tubuh", Number(bmi.toFixed(2)), {
+      shouldValidate: true,
+      shouldDirty: true,
+    });
+  }, [beratBadan, tinggiBadan, setValue]);
 
   return (
     <Card>

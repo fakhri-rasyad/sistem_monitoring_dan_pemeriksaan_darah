@@ -47,17 +47,17 @@ export default function PemeriksaanForm() {
         tensi_diastol: 0,
       },
 
-      // pemeriksaan: {
-      //     diperiksa_at: "",
-      //     subjective: "",
-      //     objective: "",
-      //     evaluasi: "",
-      //     planning_terapi: "",
-      // },
+      pemeriksaan: {
+        diperiksa_at: "",
+        subjective: "",
+        objective: "",
+        evaluasi: "",
+        planning_terapi: "",
+      },
 
       komposisi_tubuh: {
-        berat_badan: 0,
-        tinggi_badan: 0,
+        berat_badan: 1,
+        tinggi_badan: 1,
         indeks_massa_tubuh: 0,
         air_tubuh: 0,
         massa_lemak: 0,
@@ -92,15 +92,7 @@ export default function PemeriksaanForm() {
           <KomposisiTubuhSection form={form} />
         </div>
 
-        <Card>
-          <CardHeader>
-            <CardTitle>Pemeriksaan</CardTitle>
-          </CardHeader>
-
-          <CardContent>
-            <PemeriksaanSection />
-          </CardContent>
-        </Card>
+        <PemeriksaanSection form={form} />
 
         <Card>
           <CardHeader>

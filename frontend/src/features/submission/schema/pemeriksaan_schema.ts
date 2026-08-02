@@ -40,7 +40,7 @@ const PemeriksaanSchema = z.object({
 
   evaluasi: z.string().min(1, "Wajib diisi. Isi dengan - jika tidak ada"),
 
-  planning_terapi: z.string(),
+  planning_terapi: z.string().optional(),
 });
 
 const KomposisiTubuhSchema = z.object({
@@ -106,7 +106,7 @@ export const PemeriksaanFormSchema = z
 
     // data_labs: z.array(DataLabSchema),
 
-    // pemeriksaan: PemeriksaanSchema,
+    pemeriksaan: PemeriksaanSchema,
   });
 
 export type PemeriksaanFormValues = z.infer<
