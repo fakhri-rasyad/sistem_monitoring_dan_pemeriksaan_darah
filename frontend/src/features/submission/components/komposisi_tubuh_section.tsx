@@ -29,7 +29,10 @@ export default function KomposisiTubuhSection({ form }: KomposisiSectionProp) {
 
   const indeks = beratBadan / ((tinggiBadan / 100) * (tinggiBadan / 100));
 
-  setValue("komposisi_tubuh.indeks_massa_tubuh", indeks);
+  setValue(
+    "komposisi_tubuh.indeks_massa_tubuh",
+    Math.round(indeks * 100) / 100,
+  );
 
   return (
     <Card>
@@ -89,6 +92,7 @@ export default function KomposisiTubuhSection({ form }: KomposisiSectionProp) {
                 <Field>
                   <FieldLabel>BMI (Kg/m²)</FieldLabel>
                   <Input
+                    step="0.01"
                     {...register("komposisi_tubuh.indeks_massa_tubuh", {
                       valueAsNumber: true,
                     })}

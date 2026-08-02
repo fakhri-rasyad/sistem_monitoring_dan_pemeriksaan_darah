@@ -104,7 +104,7 @@ export const PemeriksaanFormSchema = z
 
     komposisi_tubuh: KomposisiTubuhSchema,
 
-    data_labs: z.array(DataLabSchema),
+    // data_labs: z.array(DataLabSchema),
 
     // pemeriksaan: PemeriksaanSchema,
   });
