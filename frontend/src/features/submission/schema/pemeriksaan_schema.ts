@@ -98,9 +98,9 @@ export const PemeriksaanFormSchema = z
   .object({
     pasien: PasienSchema,
 
-    // alergi_pasiens: z.array(AlergiPasienSchema),
+    alergi_pasiens: z.array(AlergiPasienSchema),
 
-    // pantangan_pasiens: z.array(PantanganPasienSchema),
+    pantangan_pasiens: z.array(PantanganPasienSchema),
 
     // kunjungan: KunjunganSchema,
 

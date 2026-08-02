@@ -15,135 +15,132 @@ import KunjunganSection from "./kunjungan_section";
 import PemeriksaanSection from "./pemeriksaan_section";
 import KomposisiTubuhSection from "./komposisi_tubuh_section";
 import DataLabSection from "./data_lab_section";
-import { PemeriksaanFormSchema, PemeriksaanFormValues} from "../schema/pemeriksaan_schema";
-
+import {
+  PemeriksaanFormSchema,
+  PemeriksaanFormValues,
+} from "../schema/pemeriksaan_schema";
 
 export default function PemeriksaanForm() {
-    const form = useForm<PemeriksaanFormValues>({
-        resolver: zodResolver(PemeriksaanFormSchema),
+  const form = useForm<PemeriksaanFormValues>({
+    resolver: zodResolver(PemeriksaanFormSchema),
 
-        defaultValues: {
-            pasien: {
-              pasien_create: {
-                nama: "",
-                alamat: "",
-                tempat_lahir: "",
-                tanggal_lahir: "",
-                nomor_hp: "",
-                email: "",
-                pekerjaan_public_id: "",
-              },
-              pasien_public_id: ""
-            },
-
-            // alergi_pasiens: [],
-            // pantangan_pasiens: [],
-
-            // kunjungan: {
-            //     tanggal: "",
-            //     tensi_sistol: 0,
-            //     tensi_diastol: 0,
-            // },
-
-            // pemeriksaan: {
-            //     diperiksa_at: "",
-            //     subjective: "",
-            //     objective: "",
-            //     evaluasi: "",
-            //     planning_terapi: "",
-            // },
-
-            // komposisi_tubuh: {
-            //     berat_badan: 0,
-            //     tinggi_badan: 0,
-            //     indeks_massa_tubuh: 0,
-            //     air_tubuh: 0,
-            //     massa_lemak: 0,
-            //     massa_otot: 0,
-            //     massa_tulang: 0,
-            // },
-
-            // data_labs: [],
+    defaultValues: {
+      pasien: {
+        pasien_create: {
+          nama: "",
+          alamat: "",
+          tempat_lahir: "",
+          tanggal_lahir: "",
+          nomor_hp: "",
+          email: "",
+          pekerjaan_public_id: "",
         },
-    });
+        pasien_public_id: "",
+      },
 
-    async function onSubmit(values: PemeriksaanFormValues) {
-        // const payload = toPayload(values);
-        console.log("ran")
-        console.log(values);
+      alergi_pasiens: [],
+      pantangan_pasiens: [],
 
-        // await createPemeriksaan(payload)
-    }
+      // kunjungan: {
+      //     tanggal: "",
+      //     tensi_sistol: 0,
+      //     tensi_diastol: 0,
+      // },
 
-    return (
-        <FormProvider {...form}>
-            <form
-                onSubmit={form.handleSubmit(onSubmit, (error) => {
-                  console.log(error)
-                })}
-                className="mx-auto max-w-7xl space-y-6 p-6"
-            >
-                <Card>
-                    <CardHeader>
-                        <CardTitle>Pasien</CardTitle>
-                    </CardHeader>
+      // pemeriksaan: {
+      //     diperiksa_at: "",
+      //     subjective: "",
+      //     objective: "",
+      //     evaluasi: "",
+      //     planning_terapi: "",
+      // },
 
-                    <CardContent>
-                        <PatientSection
-                          form={form}
-                        />
-                    </CardContent>
-                </Card>
+      // komposisi_tubuh: {
+      //     berat_badan: 0,
+      //     tinggi_badan: 0,
+      //     indeks_massa_tubuh: 0,
+      //     air_tubuh: 0,
+      //     massa_lemak: 0,
+      //     massa_otot: 0,
+      //     massa_tulang: 0,
+      // },
 
-                <Card>
-                    <CardHeader>
-                        <CardTitle>Kunjungan</CardTitle>
-                    </CardHeader>
+      // data_labs: [],
+    },
+  });
 
-                    <CardContent>
-                        <KunjunganSection />
-                    </CardContent>
-                </Card>
+  async function onSubmit(values: PemeriksaanFormValues) {
+    // const payload = toPayload(values);
+    console.log("ran");
+    console.log(values);
 
-                <Card>
-                    <CardHeader>
-                        <CardTitle>Pemeriksaan</CardTitle>
-                    </CardHeader>
+    // await createPemeriksaan(payload)
+  }
 
-                    <CardContent>
-                        <PemeriksaanSection />
-                    </CardContent>
-                </Card>
+  return (
+    <FormProvider {...form}>
+      <form
+        onSubmit={form.handleSubmit(onSubmit, (error) => {
+          console.log(error);
+        })}
+        className="mx-auto max-w-7xl space-y-6 p-6"
+      >
+        <Card>
+          <CardHeader>
+            <CardTitle>Pasien</CardTitle>
+          </CardHeader>
 
-                <Card>
-                    <CardHeader>
-                        <CardTitle>Komposisi Tubuh</CardTitle>
-                    </CardHeader>
+          <CardContent>
+            <PatientSection form={form} />
+          </CardContent>
+        </Card>
 
-                    <CardContent>
-                        <KomposisiTubuhSection />
-                    </CardContent>
-                </Card>
+        <Card>
+          <CardHeader>
+            <CardTitle>Kunjungan</CardTitle>
+          </CardHeader>
 
-                <Card>
-                    <CardHeader>
-                        <CardTitle>Data Laboratorium</CardTitle>
-                    </CardHeader>
+          <CardContent>
+            <KunjunganSection />
+          </CardContent>
+        </Card>
 
-                    <CardContent>
-                        <DataLabSection />
-                    </CardContent>
-                </Card>
+        <Card>
+          <CardHeader>
+            <CardTitle>Pemeriksaan</CardTitle>
+          </CardHeader>
 
-                <div className="flex justify-end">
-                    <Button
-                        type="submit"
-                        size="lg"
-                    >
-                        Simpan Pemeriksaan
-                    </Button>
-                </div>
-            </form>
-        </FormProvider>
-    );
+          <CardContent>
+            <PemeriksaanSection />
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Komposisi Tubuh</CardTitle>
+          </CardHeader>
+
+          <CardContent>
+            <KomposisiTubuhSection />
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Data Laboratorium</CardTitle>
+          </CardHeader>
+
+          <CardContent>
+            <DataLabSection />
+          </CardContent>
+        </Card>
+
+        <div className="flex justify-end">
+          <Button type="submit" size="lg">
+            Simpan Pemeriksaan
+          </Button>
+        </div>
+      </form>
+    </FormProvider>
+  );
 }
