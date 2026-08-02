@@ -85,15 +85,7 @@ export default function PemeriksaanForm() {
         })}
         className="mx-auto max-w-7xl space-y-6 p-6"
       >
-        <Card>
-          <CardHeader>
-            <CardTitle>Pasien</CardTitle>
-          </CardHeader>
-
-          <CardContent>
-            <PatientSection form={form} />
-          </CardContent>
-        </Card>
+        <PatientSection form={form} />
 
         <div className="grid grid-cols-2 gap-4">
           <KunjunganSection form={form} />
