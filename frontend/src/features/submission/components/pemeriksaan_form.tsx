@@ -41,11 +41,11 @@ export default function PemeriksaanForm() {
       alergi_pasiens: [],
       pantangan_pasiens: [],
 
-      // kunjungan: {
-      //     tanggal: "",
-      //     tensi_sistol: 0,
-      //     tensi_diastol: 0,
-      // },
+      kunjungan: {
+        tanggal: "",
+        tensi_sistol: 0,
+        tensi_diastol: 0,
+      },
 
       // pemeriksaan: {
       //     diperiksa_at: "",
@@ -101,7 +101,7 @@ export default function PemeriksaanForm() {
           </CardHeader>
 
           <CardContent>
-            <KunjunganSection />
+            <KunjunganSection form={form} />
           </CardContent>
         </Card>
 

@@ -23,14 +23,12 @@ const KunjunganSchema = z.object({
   tanggal: z.string().min(1, "Tanggal wajib diisi").transform(value => new Date(value).toISOString()),
 
   tensi_sistol: z
-    .number()
-    .min(0)
-    .max(300),
+    .number("Nilai sistol harus bulat dan lebih dari -1")
+    .min(0, "Nilai sistol harus bulat dan lebih dari -1"),
 
   tensi_diastol: z
-    .number()
-    .min(0)
-    .max(300),
+    .number("Nilai diastol harus bulat dan lebih dari -1")
+    .min(0, "Nilai diastol harus bulat dan lebih dari -1")
 });
 
 const PemeriksaanSchema = z.object({
@@ -102,7 +100,7 @@ export const PemeriksaanFormSchema = z
 
     pantangan_pasiens: z.array(PantanganPasienSchema),
 
-    // kunjungan: KunjunganSchema,
+    kunjungan: KunjunganSchema,
 
     // pemeriksaan: PemeriksaanSchema,
 
