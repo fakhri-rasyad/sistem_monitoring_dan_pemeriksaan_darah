@@ -9,13 +9,13 @@ import { useForm } from "react-hook-form";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 
-import { toPayload } from "../mapper/toPayload";
-import { PemeriksaanFormSchema, PemeriksaanFormValues } from "../schema/pemeriksaan_schema";
+// import { toPayload } from "../mapper/toPayload";
 import PatientSection from "./pasien_section";
 import KunjunganSection from "./kunjungan_section";
 import PemeriksaanSection from "./pemeriksaan_section";
 import KomposisiTubuhSection from "./komposisi_tubuh_section";
 import DataLabSection from "./data_lab_section";
+import { PemeriksaanFormSchema, PemeriksaanFormValues} from "../schema/pemeriksaan_schema";
 
 
 export default function PemeriksaanForm() {
@@ -23,55 +23,54 @@ export default function PemeriksaanForm() {
         resolver: zodResolver(PemeriksaanFormSchema),
 
         defaultValues: {
-            patientMode: "existing",
-
-            pasienPublicID: "",
-
             pasien: {
+              pasien_create: {
                 nama: "",
                 alamat: "",
-                tempatLahir: "",
-                tanggalLahir: undefined,
-                nomorHP: "",
+                tempat_lahir: "",
+                tanggal_lahir: "",
+                nomor_hp: "",
                 email: "",
-                pekerjaanPublicID: "",
+                pekerjaan_public_id: "",
+              },
+              pasien_public_id: ""
             },
 
-            alergi: [],
-            pantangan: [],
+            // alergi_pasiens: [],
+            // pantangan_pasiens: [],
 
-            kunjungan: {
-                tanggal: new Date(),
-                tensiSistol: 0,
-                tensiDiastol: 0,
-            },
+            // kunjungan: {
+            //     tanggal: "",
+            //     tensi_sistol: 0,
+            //     tensi_diastol: 0,
+            // },
 
-            pemeriksaan: {
-                diperiksaAt: new Date(),
-                subjective: "",
-                objective: "",
-                evaluasi: "",
-                planningTerapi: "",
-            },
+            // pemeriksaan: {
+            //     diperiksa_at: "",
+            //     subjective: "",
+            //     objective: "",
+            //     evaluasi: "",
+            //     planning_terapi: "",
+            // },
 
-            komposisiTubuh: {
-                beratBadan: 0,
-                tinggiBadan: 0,
-                indeksMassaTubuh: 0,
-                airTubuh: 0,
-                massaLemak: 0,
-                massaOtot: 0,
-                massaTulang: 0,
-            },
+            // komposisi_tubuh: {
+            //     berat_badan: 0,
+            //     tinggi_badan: 0,
+            //     indeks_massa_tubuh: 0,
+            //     air_tubuh: 0,
+            //     massa_lemak: 0,
+            //     massa_otot: 0,
+            //     massa_tulang: 0,
+            // },
 
-            dataLabs: [],
+            // data_labs: [],
         },
     });
 
     async function onSubmit(values: PemeriksaanFormValues) {
-        const payload = toPayload(values);
-
-        console.log(payload);
+        // const payload = toPayload(values);
+        console.log("ran")
+        console.log(values);
 
         // await createPemeriksaan(payload)
     }
@@ -79,7 +78,9 @@ export default function PemeriksaanForm() {
     return (
         <FormProvider {...form}>
             <form
-                onSubmit={form.handleSubmit(onSubmit)}
+                onSubmit={form.handleSubmit(onSubmit, (error) => {
+                  console.log(error)
+                })}
                 className="mx-auto max-w-7xl space-y-6 p-6"
             >
                 <Card>
@@ -88,7 +89,9 @@ export default function PemeriksaanForm() {
                     </CardHeader>
 
                     <CardContent>
-                        <PatientSection />
+                        <PatientSection
+                          form={form}
+                        />
                     </CardContent>
                 </Card>
 

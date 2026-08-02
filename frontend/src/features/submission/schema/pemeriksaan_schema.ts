@@ -6,35 +6,35 @@ const PasienSchema = z.object({
 
     alamat: z.string().min(1, "Alamat wajib diisi"),
 
-    tempatLahir: z.string().min(1, "Tempat lahir wajib diisi"),
+    tempat_lahir: z.string().min(1, "Tempat lahir wajib diisi"),
 
-    tanggalLahir: z.string().min(1, "Tanggal lahir wajib diisi").transform(value => new Date(value).toISOString()),
+    tanggal_lahir: z.string().min(1, "Tanggal lahir wajib diisi").transform(value => new Date(value).toISOString()),
 
-    nomorHP: z.e164("Nomor handphone dengan awal (+62)").min(8, "Nomor HP tidak valid"),
+    nomor_hp: z.e164("Nomor handphone dengan awal (+62)").min(8, "Nomor HP tidak valid"),
 
     email: z.email("Email tidak valid"),
 
-    pekerjaanPublicID: z.guid("Pekerjaan wajib dipilih"),
+    pekerjaan_public_id: z.guid("Pekerjaan wajib dipilih"),
   }),
-  pasien_public_id: z.guid().optional()
+  pasien_public_id: z.string().optional()
 });
 
 const KunjunganSchema = z.object({
   tanggal: z.string().min(1, "Tanggal wajib diisi").transform(value => new Date(value).toISOString()),
 
-  tensiSistol: z
+  tensi_sistol: z
     .number()
     .min(0)
     .max(300),
 
-  tensiDiastol: z
+  tensi_diastol: z
     .number()
     .min(0)
     .max(300),
 });
 
 const PemeriksaanSchema = z.object({
-  diperiksaAt: z.string().min(1, "Tanggal wajib diisi").transform(value => new Date(value).toISOString()),
+  diperiksa_at: z.string().min(1, "Tanggal wajib diisi").transform(value => new Date(value).toISOString()),
 
   subjective: z.string().min(1, "Wajib diisi. Isi dengan - jika tidak ada"),
 
@@ -42,40 +42,40 @@ const PemeriksaanSchema = z.object({
 
   evaluasi: z.string().min(1, "Wajib diisi. Isi dengan - jika tidak ada"),
 
-  planningTerapi: z.string(),
+  planning_terapi: z.string(),
 });
 
 const KomposisiTubuhSchema = z.object({
-  beratBadan: z.number({
+  berat_badan: z.number({
     error: "Berat badan wajib diisi",
   })
     .positive(),
 
-  tinggiBadan: z.number({
+  tinggi_badan: z.number({
     error: "Tinggi badan wajib diisi",
   })
     .positive(),
 
-  indeksMassaTubuh: z.number({
+  indeks_massa_tubuh: z.number({
     error: "Indeks massa tubuh wajib diisi",
   })
     .positive(),
 
-  airTubuh: z.number({
+  air_tubuh: z.number({
     error: "Jumlah air tubuh wajib diisi",
   })
     .positive(),
 
-  massaLemak: z.number({
+  massa_lemak: z.number({
     error: "Jumlah massa lemak wajib diisi",
   })
     .positive(),
 
-  massaOtot: z.number({
+  massa_otot: z.number({
     error: "Jumlah massa otot wajib diisi",
   })
     .positive(),
-  massaTulang: z.number({
+  massa_tulang: z.number({
     error: "Jumlah massa tulang wajib diisi",
   })
     .positive(),
@@ -98,17 +98,17 @@ export const PemeriksaanFormSchema = z
   .object({
     pasien: PasienSchema,
 
-    alergi_pasiens: z.array(AlergiPasienSchema),
+    // alergi_pasiens: z.array(AlergiPasienSchema),
 
-    pantangan_pasiens: z.array(PantanganPasienSchema),
+    // pantangan_pasiens: z.array(PantanganPasienSchema),
 
-    kunjungan: KunjunganSchema,
+    // kunjungan: KunjunganSchema,
 
-    pemeriksaan: PemeriksaanSchema,
+    // pemeriksaan: PemeriksaanSchema,
 
-    komposisi_tubuh: KomposisiTubuhSchema,
+    // komposisi_tubuh: KomposisiTubuhSchema,
 
-    data_labs: z.array(DataLabSchema),
+    // data_labs: z.array(DataLabSchema),
   });
 
 export type PemeriksaanFormValues = z.infer<
