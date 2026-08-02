@@ -46,13 +46,13 @@ const PemeriksaanSchema = z.object({
 const KomposisiTubuhSchema = z.object({
   berat_badan: z.number({
     error: "Berat badan wajib diisi",
-  })
-    .positive(),
+  }).min(1, "Berat badan tidak boleh kosong")
+    .positive("Berat badan tidak bisa minus"),
 
   tinggi_badan: z.number({
     error: "Tinggi badan wajib diisi",
-  })
-    .positive(),
+  }).min(1, "Tinggi badan tidak boleh kosong")
+    .positive("Tinggi badan tidak bisa minus"),
 
   indeks_massa_tubuh: z.number({
     error: "Indeks massa tubuh wajib diisi",
@@ -102,11 +102,11 @@ export const PemeriksaanFormSchema = z
 
     kunjungan: KunjunganSchema,
 
+    komposisi_tubuh: KomposisiTubuhSchema,
+
+    data_labs: z.array(DataLabSchema),
+
     // pemeriksaan: PemeriksaanSchema,
-
-    // komposisi_tubuh: KomposisiTubuhSchema,
-
-    // data_labs: z.array(DataLabSchema),
   });
 
 export type PemeriksaanFormValues = z.infer<

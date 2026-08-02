@@ -55,15 +55,15 @@ export default function PemeriksaanForm() {
       //     planning_terapi: "",
       // },
 
-      // komposisi_tubuh: {
-      //     berat_badan: 0,
-      //     tinggi_badan: 0,
-      //     indeks_massa_tubuh: 0,
-      //     air_tubuh: 0,
-      //     massa_lemak: 0,
-      //     massa_otot: 0,
-      //     massa_tulang: 0,
-      // },
+      komposisi_tubuh: {
+        berat_badan: 0,
+        tinggi_badan: 0,
+        indeks_massa_tubuh: 0,
+        air_tubuh: 0,
+        massa_lemak: 0,
+        massa_otot: 0,
+        massa_tulang: 0,
+      },
 
       // data_labs: [],
     },
@@ -95,15 +95,10 @@ export default function PemeriksaanForm() {
           </CardContent>
         </Card>
 
-        <Card>
-          <CardHeader>
-            <CardTitle>Kunjungan</CardTitle>
-          </CardHeader>
-
-          <CardContent>
-            <KunjunganSection form={form} />
-          </CardContent>
-        </Card>
+        <div className="grid grid-cols-2 gap-4">
+          <KunjunganSection form={form} />
+          <KomposisiTubuhSection form={form} />
+        </div>
 
         <Card>
           <CardHeader>
@@ -112,16 +107,6 @@ export default function PemeriksaanForm() {
 
           <CardContent>
             <PemeriksaanSection />
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle>Komposisi Tubuh</CardTitle>
-          </CardHeader>
-
-          <CardContent>
-            <KomposisiTubuhSection />
           </CardContent>
         </Card>
 
