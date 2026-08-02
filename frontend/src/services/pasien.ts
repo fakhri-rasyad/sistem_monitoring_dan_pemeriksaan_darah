@@ -20,3 +20,28 @@ export async function getPasien(): Promise<PasienResponse[]> {
     throw err;
   }
 }
+
+export interface PatientOption {
+  public_id: string;
+  nama: string;
+  nomor_hp: string;
+}
+
+export async function searchPasien(
+  query: string
+): Promise<PatientOption[]> {
+
+  if (!query.trim()) return [];
+
+  const res =
+    await api.get<ApiResponse<PatientOption[]>>(
+      "/api/v1/pasien/search",
+      {
+        params: {
+          q: query,
+        },
+      }
+    );
+
+  return res.data.Data;
+}

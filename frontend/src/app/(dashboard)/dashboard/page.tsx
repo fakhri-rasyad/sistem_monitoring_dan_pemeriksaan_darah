@@ -42,6 +42,7 @@ const refreshData = useCallback(async () => {
         columns={PasienColumns}
         data={pasienData}
         tableName="Pasien"
+        actionLink={"/submission"}
       />
     </div>
   );

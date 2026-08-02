@@ -1,0 +1,55 @@
+{
+  "alergi_pasiens": [
+    {
+      "alergi_public_id": "12ab6a24-9972-48e1-9738-10ec97c4f2e5"
+    },
+    {
+      "alergi_public_id": "5c60b76c-5405-49fb-890c-7963a16a5d0d"
+    }
+  ],
+  "data_labs": [
+    {
+      "nilai": 20,
+      "parameter_public_id": "25998dbf-bb2c-47c3-baa2-b673e6d5c5b9"
+    }
+
+  ],
+  "komposisi_tubuh": {
+    "air_tubuh": 0,
+    "berat_badan": 0,
+    "indeks_massa_tubuh": 0,
+    "massa_lemak": 0,
+    "massa_otot": 0,
+    "massa_tulang": 0,
+    "tinggi_badan": 0
+  },
+  "kunjungan": {
+    "tanggal": "2026-05-14T19:31:35Z",
+    "tensi_diastol": 0,
+    "tensi_sistol": 0
+  },
+  "pantangan_pasiens": [
+    {
+      "pantangan_public_id": "8b74201a-7579-468b-a7ef-bf66257f52b1"
+    }
+  ],
+  "pasien": {
+    "pasien_create": {
+      "alamat": "Jl....",
+      "email": "sample2@email.com",
+      "nama": "sample",
+      "nomor_hp": "0811444052",
+      "pekerjaan_public_id": "4f7b7ea5-8548-460d-ba25-715547e39fea",
+      "tanggal_lahir": "2026-05-14T19:31:35Z",
+      "tempat_lahir": "Sample"
+    },
+    "pasien_public_id" : "99f33459-1f2f-4c59-82fa-4e5b6c74e18b"
+  },
+  "pemeriksaan": {
+    "diperiksa_at": "2026-05-14T19:31:35Z",
+    "evaluasi": "string",
+    "objective": "string",
+    "planning_terapi": "string",
+    "subjective": "string"
+  }
+}

@@ -18,18 +18,23 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import { Button } from "../ui/button"
+import { useRouter } from "next/navigation"
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[]
   tableName: string,
+  actionLink: string | null,
 }
 
 export default function DataTables<TData, TValue>({
   columns,
   data,
   tableName,
+  actionLink,
 }: DataTableProps<TData, TValue>){
+
+  const router = actionLink ? useRouter() : null
   const table = useReactTable({
     data,
     columns,
@@ -37,9 +42,16 @@ export default function DataTables<TData, TValue>({
     getPaginationRowModel: getPaginationRowModel()
   })
   return (
-    <div className="shadow-gray-600 shadow-sm rounded-md">
-      <div className="bg-teal-700 px-4 py-2 rounded-t-md">
+    <div className="data-table">
+      <div className="bg-blue-900 flex flex-row justify-between px-4 py-2 rounded-t-md">
         <h3 className="font-bold text-white">{tableName}</h3>
+        {(actionLink && router) && (
+          <Button
+            variant="outline"
+            onClick={() => router.push(actionLink)}
+          > + Tambah {tableName}
+          </Button>
+        )}
       </div>
       <div className="overflow-hidden rounded-b-md border">
       <Table>
