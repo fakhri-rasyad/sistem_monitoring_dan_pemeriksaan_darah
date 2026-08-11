@@ -93,13 +93,18 @@ export default function DataLabSection({ form }: Props) {
             onValueChange={setSelectedParameter}
           >
             <SelectTrigger>
-              <SelectValue placeholder="Pilih Parameter" />
+              <SelectValue placeholder="Pilih Parameter">
+                {
+                  parameters.find((item) => item.public_id == selectedParameter)
+                    ?.nama
+                }
+              </SelectValue>
             </SelectTrigger>
 
             <SelectContent>
               {parameters.map((item) => (
                 <SelectItem key={item.public_id} value={item.public_id}>
-                  {item.nama}
+                  {item.nama} - ({item.satuan})
                 </SelectItem>
               ))}
             </SelectContent>
