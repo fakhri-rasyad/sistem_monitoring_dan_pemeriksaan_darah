@@ -9,6 +9,5 @@ type PantanganPasien struct {
 }
 
 type PantanganPasienCreate struct {
-  PublicID       uuid.UUID  `json:"public_id"`
 	PantanganPublicID uuid.UUID `json:"pantangan_public_id"`
 }

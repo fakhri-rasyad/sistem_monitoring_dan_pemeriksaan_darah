@@ -16,7 +16,7 @@ const PasienSchema = z.object({
 
     pekerjaan_public_id: z.guid("Pekerjaan wajib dipilih"),
   }),
-  pasien_public_id: z.string().optional()
+  pasien_public_id: z.string().optional().nullable()
 });
 
 const KunjunganSchema = z.object({

@@ -13,11 +13,11 @@ type SubmissionController interface {
 }
 
 type SubmissionControllerImpl struct {
-  s services.SubmitService
+	s services.SubmitService
 }
 
 func NewSubmissionCont(s services.SubmitService) SubmissionController {
-  return &SubmissionControllerImpl{s: s}
+	return &SubmissionControllerImpl{s: s}
 }
 
 // CreateSubmit godoc
@@ -30,14 +30,14 @@ func NewSubmissionCont(s services.SubmitService) SubmissionController {
 // @Success     200 string Success
 // @Router      /api/v1/checkup [post]
 func (c *SubmissionControllerImpl) Create(ctx fiber.Ctx) error {
-  submit := &dto.SubmissionCreate{}
-  if err := ctx.Bind().Body(submit); err != nil {
-    return utils.BadRequest(ctx, "Input submit tidak valid", err)
-  }
+	submit := &dto.SubmissionCreate{}
+	if err := ctx.Bind().Body(submit); err != nil {
+		return utils.BadRequest(ctx, "Input submit tidak valid", err)
+	}
 
-  if err := c.s.Create(submit); err != nil {
-    return utils.InternalError(ctx, "Gagal menambahkan kunjungan", err)
-  }
+	if err := c.s.Create(submit); err != nil {
+		return utils.InternalError(ctx, "Gagal menambahkan kunjungan", err)
+	}
 
-  return utils.CreationSuccess(ctx, "Kunjungan berhasil ditambahkan", nil)
+	return utils.CreationSuccess(ctx, "Kunjungan berhasil ditambahkan", true)
 }

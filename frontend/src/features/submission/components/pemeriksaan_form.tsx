@@ -19,6 +19,7 @@ import {
   PemeriksaanFormSchema,
   PemeriksaanFormValues,
 } from "../schema/pemeriksaan_schema";
+import { postSubmit } from "@/services/submit";
 
 export default function PemeriksaanForm() {
   const form = useForm<PemeriksaanFormValues>({
@@ -35,7 +36,7 @@ export default function PemeriksaanForm() {
           email: "",
           pekerjaan_public_id: "",
         },
-        pasien_public_id: "",
+        pasien_public_id: null,
       },
 
       alergi_pasiens: [],
@@ -70,11 +71,15 @@ export default function PemeriksaanForm() {
   });
 
   async function onSubmit(values: PemeriksaanFormValues) {
-    // const payload = toPayload(values);
     console.log("ran");
     console.log(values);
-
-    // await createPemeriksaan(payload)
+    try {
+      const res = await postSubmit(values);
+      console.log(res.Message);
+    } catch (e) {
+      console.log(`error: ${e}`);
+      // await createPemeriksaan(payload)
+    }
   }
 
   return (
