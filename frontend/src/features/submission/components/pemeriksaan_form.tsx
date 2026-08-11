@@ -65,7 +65,7 @@ export default function PemeriksaanForm() {
         massa_tulang: 0,
       },
 
-      // data_labs: [],
+      data_labs: [],
     },
   });
 
@@ -94,15 +94,7 @@ export default function PemeriksaanForm() {
 
         <PemeriksaanSection form={form} />
 
-        <Card>
-          <CardHeader>
-            <CardTitle>Data Laboratorium</CardTitle>
-          </CardHeader>
-
-          <CardContent>
-            <DataLabSection />
-          </CardContent>
-        </Card>
+        <DataLabSection form={form} />
 
         <div className="flex justify-end">
           <Button type="submit" size="lg">

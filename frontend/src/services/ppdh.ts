@@ -2,10 +2,11 @@ import axios from "axios";
 import { api } from "./api";
 import { ApiResponse } from "./response";
 import { PekerjaanResponse } from "@/features/submission/types/pekerjaan_response";
+import { ParameterResponse } from "@/features/submission/types/api";
 
-export async function getPekerjaan(): Promise<PekerjaanResponse[]> {
+export async function getPPDH(): Promise<ParameterResponse[]> {
   try {
-    const res = await api.get<ApiResponse<PekerjaanResponse[]>>("/api/v1/ppdh");
+    const res = await api.get<ApiResponse<ParameterResponse[]>>("/api/v1/ppdh");
     return res.data.Data;
   } catch (err) {
     if (axios.isAxiosError(err)) {
