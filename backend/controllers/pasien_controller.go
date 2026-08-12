@@ -14,8 +14,8 @@ type PasienController interface {
 	CreatePasien(ctx fiber.Ctx) error
 	GetPasien(ctx fiber.Ctx) error
 	GetPasienByPublicID(ctx fiber.Ctx) error
-  GetPasienByPublicIDWithPreload(ctx fiber.Ctx) error
-  GetAllWithPreload(ctx fiber.Ctx) error
+	GetPasienByPublicIDWithPreload(ctx fiber.Ctx) error
+	GetAllWithPreload(ctx fiber.Ctx) error
 }
 
 type PasienControllerImpl struct {
@@ -32,22 +32,22 @@ type PasienControllerImpl struct {
 // @Success     200 string Success
 // @Router      /api/v1/pasien/:public_id [get]
 func (c *PasienControllerImpl) GetPasienByPublicID(ctx fiber.Ctx) error {
-	public_id := ctx.Params("public_id");
-  if public_id == "" {
-    return utils.BadRequest(ctx, "Public id tidak valid", errors.New("Failure in parsing public_id"))
-  }
+	public_id := ctx.Params("public_id")
+	if public_id == "" {
+		return utils.BadRequest(ctx, "Public id tidak valid", errors.New("Failure in parsing public_id"))
+	}
 
-  uuidValue, err := uuid.Parse(public_id)
+	uuidValue, err := uuid.Parse(public_id)
 
-  if err != nil {
-    return utils.BadRequest(ctx, "Gagal parsing publid id", err)
-  }
+	if err != nil {
+		return utils.BadRequest(ctx, "Gagal parsing publid id", err)
+	}
 
-  data, err := c.s.GetByPublicID(uuidValue)
+	data, err := c.s.GetByPublicID(uuidValue)
 
-  if err != nil {
-    return utils.BadRequest(ctx, "Gagal parsing publid id", err)
-  }
+	if err != nil {
+		return utils.BadRequest(ctx, "Gagal parsing publid id", err)
+	}
 
 	return utils.SuccessResponse(ctx, "Sukses mengambil data Pasien", data)
 }
@@ -90,30 +90,29 @@ func (c *PasienControllerImpl) GetPasien(ctx fiber.Ctx) error {
 	return utils.SuccessResponse(ctx, "Sukses mengambil data Pasien", data)
 }
 
-
 func (c *PasienControllerImpl) GetPasienByPublicIDWithPreload(ctx fiber.Ctx) error {
-	public_id := ctx.Params("public_id");
-  if public_id == "" {
-    return utils.BadRequest(ctx, "Public id tidak valid", errors.New("Failure in parsing public_id"))
-  }
+	public_id := ctx.Query("public_id")
+	if public_id == "" {
+		return utils.BadRequest(ctx, "Public id tidak valid", errors.New("Failure in parsing public_id"))
+	}
 
-  uuidValue, err := uuid.Parse(public_id)
+	uuidValue, err := uuid.Parse(public_id)
 
-  if err != nil {
-    return utils.BadRequest(ctx, "Gagal parsing publid id", err)
-  }
+	if err != nil {
+		return utils.BadRequest(ctx, "Gagal parsing publid id", err)
+	}
 
-  data, err := c.s.GetByPublicIDWithPreload(uuidValue)
+	data, err := c.s.GetByPublicIDWithPreload(uuidValue)
 
-  if err != nil {
-    return utils.BadRequest(ctx, "Gagal parsing publid id", err)
-  }
+	if err != nil {
+		return utils.BadRequest(ctx, "Gagal parsing publid id", err)
+	}
 
 	return utils.SuccessResponse(ctx, "Sukses mengambil data Pasien", data)
 }
 
 func (c *PasienControllerImpl) GetAllWithPreload(ctx fiber.Ctx) error {
-  data, err := c.s.GetAllWithPreload()
+	data, err := c.s.GetAllWithPreload()
 	if err != nil {
 		return utils.InternalError(ctx, "Gagal mengambil data Pasien", err)
 	}
