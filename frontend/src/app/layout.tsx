@@ -3,6 +3,7 @@ import { Geist, Geist_Mono, Roboto } from "next/font/google";
 import "./globals.css";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import AppSidebar from "@/components/layouts/app-sidebar";
+import { Toaster } from "@/components/ui/sonner";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -11,8 +12,8 @@ const geistSans = Geist({
 
 const robotoSans = Roboto({
   variable: "--font-roboto-sans",
-  subsets: ["latin"]
-})
+  subsets: ["latin"],
+});
 
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
@@ -29,18 +30,19 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html
-      lang="en"
-      className={`${robotoSans.variable} h-full antialiased`}
-    >
-      <body className="min-h-full flex flex-col">  <SidebarProvider>
-    <AppSidebar />
-    <SidebarInset>
-          <div>
-      {children}
-    </div>
-    </SidebarInset>
-  </SidebarProvider></body>
+    <html lang="en" className={`${robotoSans.variable} h-full antialiased`}>
+      <body className="min-h-full flex flex-col">
+        {" "}
+        <SidebarProvider>
+          <AppSidebar />
+          <SidebarInset>
+            <div>
+              {children}
+              <Toaster />
+            </div>
+          </SidebarInset>
+        </SidebarProvider>
+      </body>
     </html>
   );
 }

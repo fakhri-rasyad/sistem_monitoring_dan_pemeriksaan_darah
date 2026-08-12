@@ -20,6 +20,7 @@ import {
   PemeriksaanFormValues,
 } from "../schema/pemeriksaan_schema";
 import { postSubmit } from "@/services/submit";
+import { toast } from "sonner";
 
 export default function PemeriksaanForm() {
   const form = useForm<PemeriksaanFormValues>({
@@ -76,6 +77,11 @@ export default function PemeriksaanForm() {
     try {
       const res = await postSubmit(values);
       console.log(res.Message);
+      if (res.StatusCode >= 400) {
+        toast.error(res.Error);
+      } else {
+        toast.success(res.Message);
+      }
     } catch (e) {
       console.log(`error: ${e}`);
       // await createPemeriksaan(payload)

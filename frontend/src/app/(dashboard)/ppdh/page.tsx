@@ -4,28 +4,29 @@ import { useCallback, useEffect, useState } from "react";
 
 import DataTables from "@/components/layouts/data-table";
 import {
-  PasienColumns,
-  PasienData,
-} from "@/features/dashboard/types/pasien_data_column";
-import { PasienMapper } from "@/features/dashboard/utils/pasien_mapper";
-import { getPasien } from "@/services/pasien";
+  AlergiColumns,
+  AlergiData,
+} from "@/features/submission/types/alergi_data";
+import { getAlergi } from "@/services/alergi";
+import { toAlergiData } from "@/features/submission/utils/alergi_mapper";
+import { PpdhColumns, PpdhData } from "@/features/submission/types/ppdh_data";
+import { getPPDH } from "@/services/ppdh";
+import { toPpdhData } from "@/features/submission/utils/ppdh_mapper";
 import { Spinner } from "@/components/ui/spinner";
 
-export default function DashboardPage() {
-  const [pasienData, setPasienData] = useState<PasienData[]>([]);
+export default function PpdhPage() {
+  const [ppdhData, setPpdhData] = useState<PpdhData[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-
-  const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
   const refreshData = useCallback(async () => {
     setIsLoading(true);
 
     try {
-      const pasien = await getPasien();
-      setPasienData(pasien.map(PasienMapper));
+      const ppdh = await getPPDH();
+      setPpdhData(ppdh.map(toPpdhData));
     } catch (err) {
       console.error(err);
-      setPasienData([]);
+      setPpdhData([]);
     } finally {
       setIsLoading(false);
     }
@@ -46,10 +47,10 @@ export default function DashboardPage() {
   return (
     <div className="container mx-auto py-10 px-24">
       <DataTables
-        columns={PasienColumns}
-        data={pasienData}
-        tableName="Pasien"
-        actionLink={"/submission"}
+        columns={PpdhColumns}
+        data={ppdhData}
+        tableName="Parameter pemeriksaan darah"
+        actionLink={null}
       />
     </div>
   );

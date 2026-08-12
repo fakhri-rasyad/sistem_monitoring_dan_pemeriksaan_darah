@@ -24,11 +24,11 @@ const KunjunganSchema = z.object({
 
   tensi_sistol: z
     .number("Nilai sistol harus bulat dan lebih dari -1")
-    .min(0, "Nilai sistol harus bulat dan lebih dari -1"),
+    .positive("Nilai sistol harus bulat dan lebih dari 0"),
 
   tensi_diastol: z
     .number("Nilai diastol harus bulat dan lebih dari -1")
-    .min(0, "Nilai diastol harus bulat dan lebih dari -1")
+    .positive("Nilai diastol harus bulat dan lebih dari 0")
 });
 
 const PemeriksaanSchema = z.object({
@@ -62,21 +62,22 @@ const KomposisiTubuhSchema = z.object({
   air_tubuh: z.number({
     error: "Jumlah air tubuh wajib diisi",
   })
-    .positive(),
+    .positive("Nilai harus lebih dari 0"),
 
   massa_lemak: z.number({
     error: "Jumlah massa lemak wajib diisi",
   })
-    .positive(),
+    .positive("Nilai harus lebih dari 0"),
 
   massa_otot: z.number({
     error: "Jumlah massa otot wajib diisi",
   })
-    .positive(),
+    .positive("Nilai harus lebih dari 0"),
+
   massa_tulang: z.number({
     error: "Jumlah massa tulang wajib diisi",
   })
-    .positive(),
+    .positive("Nilai harus lebih dari 0"),
 });
 
 const AlergiPasienSchema = z.object({
