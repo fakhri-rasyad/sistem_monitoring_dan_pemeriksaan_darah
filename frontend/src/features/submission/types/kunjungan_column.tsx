@@ -24,3 +24,21 @@ export const KunjunganColumns: ColumnDef<KunjunganData>[] = [
     },
   },
 ];
+
+export const PasienDetailKunjunganColumns: ColumnDef<KunjunganData>[] = [
+  {
+    accessorKey: "tanggal",
+    header: "Tanggal Kunjungan",
+    cell: ({ row }) => {
+      return dateToSugar(row.getValue("tanggal"));
+    },
+  },
+  {
+    id: "action",
+    accessorKey: "public_id",
+    header: "Detail",
+    cell: ({ row }) => {
+      return <NavigationButton navigationLink="/" />;
+    },
+  },
+];
