@@ -8,6 +8,7 @@ import { useParams } from "next/navigation";
 import { getPasienDetail, PasienDetailResponse } from "@/services/pasien";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Spinner } from "@/components/ui/spinner";
 
 export default function PasienDetailPage({
   params,
@@ -38,7 +39,11 @@ export default function PasienDetailPage({
   }, [publicId]);
 
   if (loading) {
-    return <div className="p-6">Memuat data pasien...</div>;
+    return (
+      <div className="flex min-h-screen items-center justify-center">
+        <Spinner className="size-8" />
+      </div>
+    );
   }
 
   if (!pasien) {

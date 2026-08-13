@@ -31,7 +31,7 @@ import { Separator } from "@/components/ui/separator";
 const items = [
   {
     title: "Dashboard",
-    href: "/dashboard",
+    href: "/",
     icon: LayoutDashboard,
   },
   {
