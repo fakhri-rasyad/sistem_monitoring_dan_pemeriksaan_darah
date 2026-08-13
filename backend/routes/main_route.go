@@ -48,6 +48,8 @@ func Setup(
 
 	api.Get("/pasien/detail", pasienCont.GetPasienByPublicIDWithPreload)
 
+	api.Get("/kunjungan", kunjugCont.GetKunjunganList)
+
 	// Submission
 	api.Post("/checkup", submitCont.Create)
 

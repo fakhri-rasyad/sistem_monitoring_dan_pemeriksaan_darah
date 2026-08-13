@@ -3,25 +3,30 @@
 import { useCallback, useEffect, useState } from "react";
 
 import DataTables from "@/components/layouts/data-table";
-import { getPantangan } from "@/services/pantangan";
-import { toPantanganData } from "@/features/submission/utils/pantangan_mapper";
-import { PantanganColumns } from "@/features/submission/types/pantangan_data";
+import {
+  AlergiColumns,
+  AlergiData,
+} from "@/features/submission/types/alergi_data";
+import { getAlergi } from "@/services/alergi";
+import { toAlergiData } from "@/features/submission/utils/alergi_mapper";
 import { Spinner } from "@/components/ui/spinner";
-import { PantanganData } from "@/services/pasien";
+import { getKunjungan } from "@/services/kunjungan";
+import { KunjunganData } from "@/services/pasien";
+import { KunjunganColumns } from "@/features/submission/types/kunjungan_column";
 
-export default function PantanganiPage() {
-  const [pantanganData, setPantanganData] = useState<PantanganData[]>([]);
+export default function KunjunganPage() {
+  const [kunjunganData, setKunjunganData] = useState<KunjunganData[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   const refreshData = useCallback(async () => {
     setIsLoading(true);
 
     try {
-      const pantangan = await getPantangan();
-      setPantanganData(pantangan.map(toPantanganData));
+      const kunjungan = await getKunjungan();
+      setKunjunganData(kunjungan.Data);
     } catch (err) {
       console.error(err);
-      setPantanganData([]);
+      setKunjunganData([]);
     } finally {
       setIsLoading(false);
     }
@@ -42,9 +47,9 @@ export default function PantanganiPage() {
   return (
     <div className="container mx-auto py-10 px-24">
       <DataTables
-        columns={PantanganColumns}
-        data={pantanganData}
-        tableName="Daftar Pantangan"
+        columns={KunjunganColumns}
+        data={kunjunganData}
+        tableName="Daftar Kunjungan"
         actionLink={null}
       />
     </div>

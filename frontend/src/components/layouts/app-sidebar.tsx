@@ -9,6 +9,7 @@ import {
   Briefcase,
   Heart,
   Hospital,
+  HospitalIcon,
   LayoutDashboard,
   Stethoscope,
   UtensilsCrossed,
@@ -33,6 +34,11 @@ const items = [
     title: "Dashboard",
     href: "/",
     icon: LayoutDashboard,
+  },
+  {
+    title: "Kunjungan",
+    href: "/kunjungan",
+    icon: HospitalIcon,
   },
   {
     title: "Alergi",

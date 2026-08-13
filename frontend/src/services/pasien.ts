@@ -116,6 +116,7 @@ export interface KunjunganData {
   komposisi_tubuh: KomposisiTubuhData;
   data_lab: DataLabData[];
   pemeriksaan: PemeriksaanData;
+  pasien: PasienResponse
 }
 
 export interface PasienDetailResponse {
