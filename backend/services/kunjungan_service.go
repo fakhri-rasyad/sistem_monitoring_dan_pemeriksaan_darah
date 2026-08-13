@@ -29,7 +29,7 @@ func (a *KunjunganServiceImpl) GetAll() ([]dto.KunjunganWithPatient, error) {
 }
 
 func (a *KunjunganServiceImpl) GetByPublicID(publicID uuid.UUID) (*dto.Kunjungan, error) {
-	data, err := a.r.GetByPublicID(nil, publicID)
+	data, err := a.r.GetDetailWithPreload(nil, publicID)
 	if err != nil {
 		return nil, err
 	}

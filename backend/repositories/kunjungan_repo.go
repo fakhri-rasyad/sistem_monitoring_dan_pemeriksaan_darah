@@ -3,6 +3,7 @@ package repositories
 import (
 	"fakhri-rasyad/sistem_monitoring_darah/models"
 
+	"github.com/google/uuid"
 	"gorm.io/gorm"
 )
 
@@ -25,4 +26,15 @@ func (k *KunjunganRepoImpl) GetAllWithPreload(tx *gorm.DB) ([]models.Kunjungan, 
 	}
 
 	return kunjungans, nil
+}
+
+func (k *KunjunganRepoImpl) GetDetailWithPreload(tx *gorm.DB, publicID uuid.UUID) (*models.Kunjungan, error) {
+	kunjungan := &models.Kunjungan{}
+	err := k.getDB(tx).Where("public_id = ?", publicID).Preload("KomposisiTubuh").Preload("DataLabs").Preload("DataLabs.Parameter").Preload("Pemeriksaan").First(kunjungan).Error
+
+	if err != nil {
+		return nil, err
+	}
+
+	return kunjungan, nil
 }

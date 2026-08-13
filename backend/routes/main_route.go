@@ -48,6 +48,7 @@ func Setup(
 
 	api.Get("/pasien/detail", pasienCont.GetPasienByPublicIDWithPreload)
 
+	api.Get("/kunjungan/:public_id", kunjugCont.GetKunjunganByPublicID)
 	api.Get("/kunjungan", kunjugCont.GetKunjunganList)
 
 	// Submission

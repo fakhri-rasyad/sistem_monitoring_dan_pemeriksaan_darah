@@ -45,7 +45,7 @@ func (c *KunjunganControllerImpl) GetKunjunganByPublicID(ctx fiber.Ctx) error {
 		return utils.BadRequest(ctx, "Gagal parsing publid id", err)
 	}
 
-	return utils.SuccessResponse(ctx, "Sukses mengambil data Pasien", data)
+	return utils.SuccessResponse(ctx, "Sukses mengambil detail kunjungan", data)
 }
 
 func (c *KunjunganControllerImpl) GetKunjunganList(ctx fiber.Ctx) error {

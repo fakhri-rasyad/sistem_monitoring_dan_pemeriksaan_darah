@@ -20,7 +20,8 @@ export const KunjunganColumns: ColumnDef<KunjunganData>[] = [
     accessorKey: "public_id",
     header: "Detail",
     cell: ({ row }) => {
-      return <NavigationButton navigationLink="/" />;
+      const public_id = row.original.public_id;
+      return <NavigationButton navigationLink={`/kunjungan/${public_id}`} />;
     },
   },
 ];
@@ -38,7 +39,8 @@ export const PasienDetailKunjunganColumns: ColumnDef<KunjunganData>[] = [
     accessorKey: "public_id",
     header: "Detail",
     cell: ({ row }) => {
-      return <NavigationButton navigationLink="/" />;
+      const public_id = row.original.public_id;
+      return <NavigationButton navigationLink={`/kunjungan/${public_id}`} />;
     },
   },
 ];
