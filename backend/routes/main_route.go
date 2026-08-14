@@ -1,6 +1,7 @@
 package routes
 
 import (
+	"fakhri-rasyad/sistem_monitoring_darah/config"
 	"fakhri-rasyad/sistem_monitoring_darah/controllers"
 	"log"
 
@@ -35,8 +36,21 @@ func Setup(
 
 	api.Use(cors.New(
 		cors.Config{
-			AllowOrigins: []string{"http://localhost:3000"},
-			AllowMethods: []string{"GET", "POST"},
+			AllowOrigins: []string{config.APPConfig.FRONTENDUrl},
+			AllowMethods: []string{
+				"GET",
+				"POST",
+				"PUT",
+				"PATCH",
+				"DELETE",
+				"OPTIONS",
+			},
+			AllowHeaders: []string{
+				"Origin",
+				"Content-Type",
+				"Accept",
+				"Authorization",
+			},
 		},
 	))
 
@@ -44,8 +58,8 @@ func Setup(
 	api.Get("/alergi", alergiCont.GetAlergi)
 	api.Get("/pantangan", pantanCont.GetPantangan)
 	api.Get("/ppdh", paramDCont.GetParameterPemeriksaanDarah)
-	api.Get("/pasien", pasienCont.GetAllWithPreload)
 
+	api.Get("/pasien", pasienCont.GetAllWithPreload)
 	api.Get("/pasien/detail", pasienCont.GetPasienByPublicIDWithPreload)
 
 	api.Get("/kunjungan/:public_id", kunjugCont.GetKunjunganByPublicID)

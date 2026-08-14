@@ -1,0 +1,43 @@
+# Dependencies
+node_modules
+.pnpm-store
+.yarn
+.npm
+
+# Next.js build output
+.next
+out
+
+# Local environment files
+.env.local
+.env.*.local
+.env
+
+# Git
+.git
+.gitignore
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+
+# Testing / coverage
+coverage
+.nyc_output
+
+# IDE
+.vscode
+.idea
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Docker
+Dockerfile*
+docker-compose*
+.dockerignore
+
+# Documentation
+README.md

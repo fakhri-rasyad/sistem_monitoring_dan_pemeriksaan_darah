@@ -1,0 +1,89 @@
+services:
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+      args:
+        NEXT_PUBLIC_BACKEND_URL: ${NEXT_PUBLIC_BACKEND_URL}
+
+    container_name: monitoring-backend
+
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+
+    env_file:
+      - .env
+
+    ports:
+      - "${BACKEND_PORT}:3200"
+
+    restart: unless-stopped
+
+    networks:
+      - network
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        NEXT_PUBLIC_BACKEND_URL: ${NEXT_PUBLIC_BACKEND_URL}
+
+    container_name: monitoring-frontend
+
+    ports:
+      - "${PORT}:3000"
+
+    depends_on:
+      - backend
+
+    restart: unless-stopped
+
+    networks:
+      - network
+
+  migrate:
+    image: migrate/migrate
+
+    volumes:
+      - ./backend/database/migrations:/migrations
+
+    command: [ "-path", "/migrations", "-database", "postgres://${DB_USERNAME}:${DB_PASSWORD}@database:${DB_PORT}/${DB_NAME}?sslmode=disable", "up" ]
+
+    depends_on:
+      database:
+        condition: service_healthy
+
+    networks:
+      - network
+
+  database:
+    image: postgres:18-alpine3.24
+
+    container_name: monitoring-database
+
+    environment:
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+
+    volumes:
+      - ./postgres/data:/var/lib/postgresql
+
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U ${DB_USERNAME} -d ${DB_NAME}" ]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+    restart: unless-stopped
+
+    networks:
+      - network
+
+networks:
+  network:
+    driver: bridge

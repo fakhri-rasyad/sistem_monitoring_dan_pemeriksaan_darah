@@ -14,9 +14,6 @@ import { Spinner } from "@/components/ui/spinner";
 export default function DashboardPage() {
   const [pasienData, setPasienData] = useState<PasienData[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-
-  const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
-
   const refreshData = useCallback(async () => {
     setIsLoading(true);
 

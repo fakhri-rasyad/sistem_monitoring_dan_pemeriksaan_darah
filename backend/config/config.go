@@ -12,37 +12,38 @@ import (
 )
 
 var (
-	DB *gorm.DB
+	DB        *gorm.DB
 	APPConfig *Config
 )
 
-type Config struct{
-	APPPort string
-	DBHost string
-	DBPort string
-	DBUser string
-	DBPassword string
-	DBName string
-	APPUrl string
-	JWTSecret string
+type Config struct {
+	APPPort          string
+	DBHost           string
+	DBPort           string
+	DBUser           string
+	DBPassword       string
+	DBName           string
+	APPUrl           string
+	JWTSecret        string
 	JWTExpireMinutes string
-	JWTRefreshToken string
+	JWTRefreshToken  string
+	FRONTENDUrl      string
 }
 
-func LoadEnv(){
+func LoadEnv() {
 	godotenv.Load()
-
 	APPConfig = &Config{
-		APPPort: getEnv("PORT", "3200"),
-		DBHost : getEnv("DB_HOST", "localhost"),
-		DBPort: getEnv("DB_PORT", "5432"),
-		DBUser : getEnv("DB_USERNAME", "postgres"),
-		DBPassword : getEnv("DB_PASSWORD", "admin"),
-		DBName : getEnv("DB_NAME", "monitoring_darah"),
-		APPUrl : getEnv("APP_URL", "http://localhost:3200"),
-		JWTSecret : getEnv("JWT_SECRET", "supersecret"),
+		APPPort:          getEnv("BACKEND_PORT", "3200"),
+		DBHost:           getEnv("DB_HOST", "localhost"),
+		DBPort:           getEnv("DB_PORT", "5432"),
+		DBUser:           getEnv("DB_USERNAME", "postgres"),
+		DBPassword:       getEnv("DB_PASSWORD", "admin"),
+		DBName:           getEnv("DB_NAME", "monitoring_darah"),
+		APPUrl:           getEnv("APP_URL", "http://localhost:3200"),
+		JWTSecret:        getEnv("JWT_SECRET", "supersecret"),
 		JWTExpireMinutes: getEnv("JWT_EXPIRY_MINUTES", "1800"),
-		JWTRefreshToken: getEnv("REFRESH_TOKEN_EXPIRED", "24h"),
+		JWTRefreshToken:  getEnv("REFRESH_TOKEN_EXPIRED", "24h"),
+		FRONTENDUrl:      getEnv("FRONTEND_URL", "http://localhost:3000"),
 	}
 
 }
@@ -50,14 +51,14 @@ func LoadEnv(){
 func getEnv(key, fallback string) string {
 	value, exists := os.LookupEnv(key)
 
-	if exists{
+	if exists {
 		return value
 	} else {
 		return fallback
 	}
 }
 
-func ConnectToDB(){
+func ConnectToDB() {
 	cfg := APPConfig
 	dsn := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable", cfg.DBHost, cfg.DBPort, cfg.DBUser, cfg.DBPassword, cfg.DBName)
 
