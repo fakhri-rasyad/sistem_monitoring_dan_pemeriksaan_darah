@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Roboto } from "next/font/google";
 import "./globals.css";
-import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
+import { SidebarInset, SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import AppSidebar from "@/components/layouts/app-sidebar";
 import { Toaster } from "@/components/ui/sonner";
 
@@ -32,16 +32,18 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${robotoSans.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col">
-        {" "}
-        <SidebarProvider>
-          <AppSidebar />
-          <SidebarInset>
-            <div>
-              {children}
-              <Toaster />
-            </div>
-          </SidebarInset>
-        </SidebarProvider>
+      <SidebarProvider>
+        <AppSidebar />
+        <SidebarInset>
+          <header className="flex h-12 shrink-0 items-center border-b px-4">
+            <SidebarTrigger />
+          </header>
+          <main className="flex-1">
+            {children}
+          </main>
+          <Toaster />
+        </SidebarInset>
+      </SidebarProvider>
       </body>
     </html>
   );

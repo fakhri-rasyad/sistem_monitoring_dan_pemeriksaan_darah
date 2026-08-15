@@ -4,8 +4,6 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
-      args:
-        NEXT_PUBLIC_BACKEND_URL: ${NEXT_PUBLIC_BACKEND_URL}
 
     container_name: monitoring-backend
 
@@ -17,7 +15,7 @@ services:
       - .env
 
     ports:
-      - "${BACKEND_PORT}:3200"
+      - "${BACKEND_PORT}:${BACKEND_PORT}"
 
     restart: unless-stopped
 

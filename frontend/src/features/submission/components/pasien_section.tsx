@@ -77,7 +77,7 @@ export default function PatientSection({ form }: Props) {
       </CardHeader>
       <CardContent className="space-y-6">
         <FieldGroup>
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
             <Controller
               control={control}
               name={"pasien.pasien_create.nama"}
@@ -113,7 +113,7 @@ export default function PatientSection({ form }: Props) {
               )}
             />
           </div>
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
             <Controller
               name={"pasien.pasien_create.tempat_lahir"}
               control={control}
@@ -150,7 +150,7 @@ export default function PatientSection({ form }: Props) {
               )}
             />
           </div>
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
             <Controller
               name={"pasien.pasien_create.nomor_hp"}
               control={control}
@@ -218,7 +218,7 @@ export default function PatientSection({ form }: Props) {
               </Field>
             )}
           />
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
             <Controller
               name="alergi_pasiens"
               control={control}
@@ -232,7 +232,7 @@ export default function PatientSection({ form }: Props) {
 
                     <FieldGroup
                       data-slot="checkbox-group"
-                      className="grid grid-cols-3 gap-3"
+                      className="grid grid-cols-2 lg:grid-cols-3 gap-3"
                     >
                       {allergies.map((allergy) => (
                         <Field

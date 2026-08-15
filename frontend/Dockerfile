@@ -28,6 +28,6 @@ COPY --from=builder /app/public ./public
 
 RUN npm ci --omit=dev
 
-EXPOSE 3000
+EXPOSE 7000
 
 CMD ["npm", "start"]

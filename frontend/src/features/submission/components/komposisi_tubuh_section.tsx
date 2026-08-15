@@ -52,7 +52,7 @@ export default function KomposisiTubuhSection({ form }: KomposisiSectionProp) {
       </CardHeader>
       <CardContent>
         <FieldGroup>
-          <div className="grid grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
             <Controller
               control={control}
               name="komposisi_tubuh.berat_badan"
@@ -115,7 +115,7 @@ export default function KomposisiTubuhSection({ form }: KomposisiSectionProp) {
               )}
             />
           </div>
-          <div className="grid grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
             <Controller
               control={control}
               name="komposisi_tubuh.air_tubuh"

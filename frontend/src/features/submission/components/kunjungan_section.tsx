@@ -47,7 +47,7 @@ export default function KunjunganSection({ form }: KunjunganSectionProps) {
               </Field>
             )}
           />
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
             <Controller
               control={control}
               name="kunjungan.tensi_sistol"

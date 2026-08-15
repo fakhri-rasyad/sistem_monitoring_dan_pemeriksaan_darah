@@ -42,7 +42,7 @@ export default function AlergiPage() {
   }
 
   return (
-    <div className="container mx-auto py-10 px-24">
+    <div className="container mx-auto px-4 py-6 sm:px-6 lg:px-24 lg:py-10">
       <DataTables
         columns={AlergiColumns}
         data={alergiData}
