@@ -2,7 +2,7 @@ import axios from "axios";
 import { api } from "./api";
 import { ApiResponse } from "./response";
 import { PemeriksaanPayload } from "@/features/submission/types/payload";
-import { PemeriksaanFormValues } from "@/features/submission/schema/pemeriksaan_schema";
+import { PemeriksaanFormValues } from "@/features/submission/schema/pemeriksaan_form_schema";
 
 export async function postSubmit(data: PemeriksaanFormValues): Promise<ApiResponse<boolean>> {
   try {

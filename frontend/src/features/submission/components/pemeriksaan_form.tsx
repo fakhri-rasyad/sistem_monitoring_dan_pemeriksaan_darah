@@ -18,7 +18,7 @@ import DataLabSection from "./data_lab_section";
 import {
   PemeriksaanFormSchema,
   PemeriksaanFormValues,
-} from "../schema/pemeriksaan_schema";
+} from "../schema/pemeriksaan_form_schema";
 import { postSubmit } from "@/services/submit";
 import { toast } from "sonner";
 
@@ -99,11 +99,11 @@ export default function PemeriksaanForm() {
         <PatientSection form={form} />
 
         <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
-          <KunjunganSection form={form} />
-          <KomposisiTubuhSection form={form} />
+          <KunjunganSection />
+          <KomposisiTubuhSection />
         </div>
 
-        <PemeriksaanSection form={form} />
+        <PemeriksaanSection />
 
         <DataLabSection form={form} />
 

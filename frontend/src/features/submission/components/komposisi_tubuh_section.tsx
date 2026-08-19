@@ -14,16 +14,12 @@ import {
   FieldError,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { Controller, UseFormReturn } from "react-hook-form";
-import { PemeriksaanFormValues } from "../schema/pemeriksaan_schema";
+import { Controller, useFormContext, UseFormReturn } from "react-hook-form";
+import { PemeriksaanFormValues } from "../schema/pemeriksaan_form_schema";
 import { useEffect } from "react";
 
-interface KomposisiSectionProp {
-  form: UseFormReturn<PemeriksaanFormValues>;
-}
-
-export default function KomposisiTubuhSection({ form }: KomposisiSectionProp) {
-  const { control, register, setValue, watch } = form;
+export default function KomposisiTubuhSection() {
+  const { control, register, setValue, watch } = useFormContext();
 
   const beratBadan = watch("komposisi_tubuh.berat_badan");
   const tinggiBadan = watch("komposisi_tubuh.tinggi_badan");

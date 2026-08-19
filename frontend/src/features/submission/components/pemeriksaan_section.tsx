@@ -15,16 +15,23 @@ import {
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { register } from "module";
-import { Controller, UseFormReturn } from "react-hook-form";
-import { PemeriksaanFormValues } from "../schema/pemeriksaan_schema";
+import { Controller, useFormContext, UseFormReturn } from "react-hook-form";
+import { PemeriksaanFormValues } from "../schema/pemeriksaan_form_schema";
 import { Textarea } from "@/components/ui/textarea";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Button } from "@/components/ui/button";
+import { LucideCalendar } from "lucide-react";
+import { Calendar } from "@/components/ui/calendar";
+import { useState } from "react";
 
-interface PemeriksaanSectionProps {
-  form: UseFormReturn<PemeriksaanFormValues>;
-}
+export default function PemeriksaanSection() {
+  const { control, register } = useFormContext();
+  const [open, setOpen] = useState(false);
 
-export default function PemeriksaanSection({ form }: PemeriksaanSectionProps) {
-  const { control, register } = form;
   return (
     <Card>
       <CardHeader>
@@ -108,6 +115,85 @@ export default function PemeriksaanSection({ form }: PemeriksaanSectionProps) {
           <Controller
             name={"pemeriksaan.diperiksa_at"}
             control={control}
+            render={({ field, fieldState }) => {
+              const today = new Date();
+              today.setHours(23, 59, 59, 999);
+
+              return (
+                <Field data-invalid={fieldState.invalid}>
+                  <FieldLabel htmlFor="pemeriksaan.diperiksa_at">
+                    Tanggal Pemeriksaan
+                  </FieldLabel>
+
+                  <Popover open={open} onOpenChange={setOpen}>
+                    <PopoverTrigger
+                      render={
+                        <Button
+                          variant="outline"
+                          id="ayah.create.tanggal_lahir"
+                          className="w-full justify-start"
+                          aria-invalid={fieldState.invalid}
+                        >
+                          <LucideCalendar data-icon="inline-start" />
+                          {field.value
+                            ? new Date(field.value).toLocaleDateString(
+                                "id-ID",
+                                {
+                                  timeZone: "Asia/Makassar",
+                                },
+                              )
+                            : "Pilih tanggal pemeriksaan"}
+                        </Button>
+                      }
+                    />
+
+                    <PopoverContent
+                      className="w-auto overflow-hidden p-0"
+                      align="start"
+                    >
+                      <Calendar
+                        mode="single"
+                        selected={
+                          field.value ? new Date(field.value) : undefined
+                        }
+                        onSelect={(date) => {
+                          if (!date) return;
+
+                          const isoDate = new Date(
+                            Date.UTC(
+                              date.getFullYear(),
+                              date.getMonth(),
+                              date.getDate(),
+                            ),
+                          ).toISOString();
+
+                          field.onChange(isoDate);
+                          setOpen(false);
+                        }}
+                        disabled={[
+                          {
+                            before: new Date(1920, 0, 1),
+                          },
+                          {
+                            after: today,
+                          },
+                        ]}
+                        captionLayout="dropdown"
+                      />
+                    </PopoverContent>
+                  </Popover>
+
+                  {fieldState.invalid && (
+                    <FieldError errors={[fieldState.error]} />
+                  )}
+                </Field>
+              );
+            }}
+          />
+
+          {/* <Controller
+            name={"pemeriksaan.diperiksa_at"}
+            control={control}
             render={({ field, fieldState }) => (
               <Field data-invalid={fieldState.invalid}>
                 <FieldLabel>Tanggal Pemeriksaan</FieldLabel>
@@ -122,7 +208,7 @@ export default function PemeriksaanSection({ form }: PemeriksaanSectionProps) {
                 )}
               </Field>
             )}
-          />
+          /> */}
         </FieldGroup>
       </CardContent>
     </Card>

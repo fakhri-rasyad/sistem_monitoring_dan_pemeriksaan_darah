@@ -135,7 +135,6 @@ export default function PasienDetailPage({
         </Card>
       </div>
 
-      {/* RIWAYAT KUNJUNGAN */}
       <div className="container mx-auto">
         <DataTables
           columns={PasienDetailKunjunganColumns}

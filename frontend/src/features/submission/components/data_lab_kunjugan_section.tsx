@@ -35,12 +35,13 @@ import { Trash2 } from "lucide-react";
 import { ParameterResponse } from "../types/api";
 import { getPPDH } from "@/services/ppdh";
 import { PemeriksaanFormValues } from "../schema/pemeriksaan_form_schema";
+import { KunjunganFormValue } from "../schema/kunjungan_form_schema";
 
 interface Props {
-  form: UseFormReturn<PemeriksaanFormValues>;
+  form: UseFormReturn<KunjunganFormValue>;
 }
 
-export default function DataLabSection({ form }: Props) {
+export default function KunjunganDataLabSection({ form }: Props) {
   const { control } = form;
 
   const { fields, append, remove } = useFieldArray({

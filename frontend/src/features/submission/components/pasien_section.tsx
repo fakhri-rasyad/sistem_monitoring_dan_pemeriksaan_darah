@@ -28,7 +28,7 @@ import {
   FieldDescription,
   FieldSeparator,
 } from "@/components/ui/field";
-import { PemeriksaanFormValues } from "../schema/pemeriksaan_schema";
+import { PemeriksaanFormValues } from "../schema/pemeriksaan_form_schema";
 import { toPekerjaanData } from "../utils/pekerjaan_mapper";
 import { toAlergiData } from "../utils/alergi_mapper";
 import { toPantanganData } from "../utils/pantangan_mapper";
@@ -37,6 +37,14 @@ import { AlergiResponse } from "../types/alergi_response";
 import { PantanganResponse } from "../types/pantangan_response";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Separator } from "@/components/ui/separator";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Button } from "@/components/ui/button";
+import { LucideCalendar } from "lucide-react";
+import { Calendar } from "@/components/ui/calendar";
 
 interface Props {
   form: UseFormReturn<PemeriksaanFormValues>;
@@ -48,6 +56,7 @@ export default function PatientSection({ form }: Props) {
   const [jobs, setJobs] = useState<PekerjaanResponse[]>([]);
   const [allergies, setAllergies] = useState<AlergiResponse[]>([]);
   const [pantangan, setPantangan] = useState<PantanganResponse[]>([]);
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
     async function load() {
@@ -131,7 +140,7 @@ export default function PatientSection({ form }: Props) {
                 </Field>
               )}
             />
-            <Controller
+            {/* <Controller
               name={"pasien.pasien_create.tanggal_lahir"}
               control={control}
               render={({ field, fieldState }) => (
@@ -148,6 +157,84 @@ export default function PatientSection({ form }: Props) {
                   )}
                 </Field>
               )}
+            /> */}
+            <Controller
+              name={"pasien.pasien_create.tanggal_lahir"}
+              control={control}
+              render={({ field, fieldState }) => {
+                const today = new Date();
+                today.setHours(23, 59, 59, 999);
+
+                return (
+                  <Field data-invalid={fieldState.invalid}>
+                    <FieldLabel htmlFor="ayah.create.tanggal_lahir">
+                      Tanggal Lahir
+                    </FieldLabel>
+
+                    <Popover open={open} onOpenChange={setOpen}>
+                      <PopoverTrigger
+                        render={
+                          <Button
+                            variant="outline"
+                            id="ayah.create.tanggal_lahir"
+                            className="w-full justify-start"
+                            aria-invalid={fieldState.invalid}
+                          >
+                            <LucideCalendar data-icon="inline-start" />
+                            {field.value
+                              ? new Date(field.value).toLocaleDateString(
+                                  "id-ID",
+                                  {
+                                    timeZone: "Asia/Makassar",
+                                  },
+                                )
+                              : "Pilih tanggal lahir"}
+                          </Button>
+                        }
+                      />
+
+                      <PopoverContent
+                        className="w-auto overflow-hidden p-0"
+                        align="start"
+                      >
+                        <Calendar
+                          mode="single"
+                          selected={
+                            field.value ? new Date(field.value) : undefined
+                          }
+                          onSelect={(date) => {
+                            if (!date) return;
+
+                            const isoDate = new Date(
+                              Date.UTC(
+                                date.getFullYear(),
+                                date.getMonth(),
+                                date.getDate(),
+                              ),
+                            ).toISOString();
+
+                            field.onChange(isoDate);
+                            setOpen(false);
+                          }}
+                          disabled={[
+                            {
+                              before: new Date(1920, 0, 1),
+                            },
+                            {
+                              after: today,
+                            },
+                          ]}
+                          captionLayout="dropdown"
+                        />
+                      </PopoverContent>
+                    </Popover>
+
+                    {fieldState.invalid && (
+                      <FieldError errors={[fieldState.error]} />
+                    )}
+                  </Field>
+                );
+              }}
             />
           </div>
           <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
