@@ -55,6 +55,7 @@ func Setup(
 	))
 
 	api.Get("/pekerjaan", pekerjCont.GetPekerjaan)
+	api.Post("/pekerjaan", pekerjCont.CreatePekerjaan)
 	api.Get("/alergi", alergiCont.GetAlergi)
 	api.Get("/pantangan", pantanCont.GetPantangan)
 	api.Get("/ppdh", paramDCont.GetParameterPemeriksaanDarah)

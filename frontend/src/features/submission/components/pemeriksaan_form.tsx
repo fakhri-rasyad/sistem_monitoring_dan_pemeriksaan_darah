@@ -21,6 +21,7 @@ import {
 } from "../schema/pemeriksaan_form_schema";
 import { postSubmit } from "@/services/submit";
 import { toast } from "sonner";
+import { Dialog } from "@/components/ui/dialog";
 
 export default function PemeriksaanForm() {
   const form = useForm<PemeriksaanFormValues>({
@@ -90,29 +91,31 @@ export default function PemeriksaanForm() {
 
   return (
     <FormProvider {...form}>
-      <form
-        onSubmit={form.handleSubmit(onSubmit, (error) => {
-          console.log(error);
-        })}
-        className="mx-auto max-w-7xl space-y-6 p-4 sm:p-6"
-      >
-        <PatientSection form={form} />
+      <Dialog>
+        <form
+          onSubmit={form.handleSubmit(onSubmit, (error) => {
+            console.log(error);
+          })}
+          className="mx-auto max-w-7xl space-y-6 p-4 sm:p-6"
+        >
+          <PatientSection form={form} />
 
-        <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
-          <KunjunganSection />
-          <KomposisiTubuhSection />
-        </div>
+          <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+            <KunjunganSection />
+            <KomposisiTubuhSection />
+          </div>
 
-        <PemeriksaanSection />
+          <PemeriksaanSection />
 
-        <DataLabSection form={form} />
+          <DataLabSection form={form} />
 
-        <div className="flex justify-end">
-          <Button type="submit" size="lg">
-            Simpan Pemeriksaan
-          </Button>
-        </div>
-      </form>
+          <div className="flex justify-end">
+            <Button type="submit" size="lg">
+              Simpan Pemeriksaan
+            </Button>
+          </div>
+        </form>
+      </Dialog>
     </FormProvider>
   );
 }

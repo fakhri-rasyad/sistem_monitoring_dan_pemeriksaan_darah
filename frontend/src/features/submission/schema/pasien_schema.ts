@@ -11,7 +11,7 @@ export const PasienSchema = z.object({
     tanggal_lahir: z
       .iso.datetime("Tanggal lahir wajib diisi"),
 
-    nomor_hp: z.e164("Nomor handphone dengan awal (+62)").min(8, "Nomor HP tidak valid"),
+    nomor_hp: z.string("Nomor tidak boleh kosong").min(8, "Nomor HP tidak valid"),
 
     email: z.email("Email tidak valid"),
 
