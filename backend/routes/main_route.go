@@ -56,9 +56,15 @@ func Setup(
 
 	api.Get("/pekerjaan", pekerjCont.GetPekerjaan)
 	api.Post("/pekerjaan", pekerjCont.CreatePekerjaan)
+
 	api.Get("/alergi", alergiCont.GetAlergi)
+	api.Post("/alergi", alergiCont.CreateAlergi)
+
 	api.Get("/pantangan", pantanCont.GetPantangan)
+	api.Post("/pantangan", pantanCont.CreatePantangan)
+
 	api.Get("/ppdh", paramDCont.GetParameterPemeriksaanDarah)
+	api.Post("/ppdh", paramDCont.CreateParameterPemeriksaanDarah)
 
 	api.Get("/pasien", pasienCont.GetAllWithPreload)
 	api.Get("/pasien/detail", pasienCont.GetPasienByPublicIDWithPreload)

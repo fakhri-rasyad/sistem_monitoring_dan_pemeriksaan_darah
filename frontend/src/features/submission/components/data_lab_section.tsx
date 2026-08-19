@@ -9,6 +9,7 @@ import {
   CardTitle,
   CardDescription,
   CardContent,
+  CardAction,
 } from "@/components/ui/card";
 
 import { Button } from "@/components/ui/button";
@@ -31,10 +32,21 @@ import {
   TableCell,
 } from "@/components/ui/table";
 
-import { Trash2 } from "lucide-react";
+import { PlusIcon, Trash2 } from "lucide-react";
 import { ParameterResponse } from "../types/api";
-import { getPPDH } from "@/services/ppdh";
+import { AddPPDH, getPPDH } from "@/services/ppdh";
 import { PemeriksaanFormValues } from "../schema/pemeriksaan_form_schema";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Field, FieldLabel } from "@/components/ui/field";
+import { toast } from "sonner";
 
 interface Props {
   form: UseFormReturn<PemeriksaanFormValues>;
@@ -48,12 +60,59 @@ export default function DataLabSection({ form }: Props) {
     name: "data_labs",
   });
 
-  const [parameters, setParameters] = useState<ParameterResponse[]>([]);
-
   const [selectedParameter, setSelectedParameter] = useState<string | null>(
     null,
   );
+
+  const [parameters, setParameters] = useState<ParameterResponse[]>([]);
+  const [namaParameterBaru, setNamaParameterBaur] = useState<string>("");
+  const [satuanParameterBaru, setSatuanParameterBaru] = useState<string>("");
+  const [openParameter, setParameterOpen] = useState<boolean>(false);
+
+  async function addParameter() {
+    const nama = namaParameterBaru.trim();
+
+    if (!nama) {
+      toast.error("Nama parameter tidak boleh kosong");
+      return;
+    }
+
+    const satuan = satuanParameterBaru.trim();
+    if (!satuan) {
+      toast.error("Satuan parameter tidak boleh kosong");
+      return;
+    }
+
+    try {
+      const res = await AddPPDH(nama, satuan);
+
+      toast.success(res.Message);
+
+      setParameters((current) => [...current, res.Data]);
+
+      setNamaParameterBaur("");
+      setSatuanParameterBaru("");
+      setParameterOpen(false);
+    } catch (e) {
+      toast.error(
+        e instanceof Error
+          ? e.message
+          : "Terjadi kesalahan saat menambah parameter",
+      );
+    }
+  }
+
   const [nilai, setNilai] = useState("");
+  const handleNamaParameterChange = (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    setNamaParameterBaur(event.target.value);
+  };
+  const handleSatuanParameterChange = (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    setSatuanParameterBaru(event.target.value);
+  };
 
   useEffect(() => {
     async function load() {
@@ -83,10 +142,56 @@ export default function DataLabSection({ form }: Props) {
         <CardDescription>
           Tambahkan hasil pemeriksaan laboratorium pasien.
         </CardDescription>
+        <CardAction>
+          <Dialog open={openParameter} onOpenChange={setParameterOpen}>
+            <DialogTrigger
+              render={
+                <Button type="button" variant="outline">
+                  <PlusIcon data-icon="inline-start" /> Tambah Parameter
+                </Button>
+              }
+            />
+
+            <DialogContent className="sm:max-w-sm">
+              <DialogHeader>
+                <DialogTitle>Tambah Parameter</DialogTitle>
+              </DialogHeader>
+
+              <Field>
+                <FieldLabel htmlFor="nama-parameter">Nama Parameter</FieldLabel>
+                <Input
+                  id="nama-parameter"
+                  value={namaParameterBaru}
+                  onChange={handleNamaParameterChange}
+                  placeholder="Tambahkan nama parameter di sini"
+                />
+                <Input
+                  id="satuan-parameter"
+                  value={satuanParameterBaru}
+                  onChange={handleSatuanParameterChange}
+                  placeholder="Tambahkan satuan parameter di sini"
+                />
+              </Field>
+
+              <DialogFooter>
+                <DialogClose
+                  render={
+                    <Button type="button" variant="outline">
+                      Batal
+                    </Button>
+                  }
+                />
+
+                <Button type="button" onClick={addParameter}>
+                  Simpan
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+        </CardAction>
       </CardHeader>
 
       <CardContent className="space-y-6">
-        {/* Input */}
         <div className="grid grid-cols-[2fr_1fr_auto] gap-3">
           <Select
             value={selectedParameter}
@@ -122,7 +227,6 @@ export default function DataLabSection({ form }: Props) {
           </Button>
         </div>
 
-        {/* Table */}
         <Table>
           <TableHeader>
             <TableRow>

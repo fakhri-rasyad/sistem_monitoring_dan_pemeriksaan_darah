@@ -28,15 +28,16 @@ type PantanganControllerImpl struct {
 // @Router      /api/v1/pantangan [post]
 func (c *PantanganControllerImpl) CreatePantangan(ctx fiber.Ctx) error {
 	PantanganCreate := &dto.PantanganCreate{}
-  if err := ctx.Bind().Body(PantanganCreate); err != nil {
-    return utils.BadRequest(ctx, "Input Pantangan tidak valid", err)
-  }
+	if err := ctx.Bind().Body(PantanganCreate); err != nil {
+		return utils.BadRequest(ctx, "Input Pantangan tidak valid", err)
+	}
 
-  if err := c.s.Create(PantanganCreate); err != nil {
-    return utils.InternalError(ctx, "Gagal menambahkan Pantangan", err)
-  }
+	data, err := c.s.Create(PantanganCreate)
+	if err != nil {
+		return utils.InternalError(ctx, "Gagal menambahkan Pantangan", err)
+	}
 
-  return utils.CreationSuccess(ctx, "Pantangan berhasil ditambahkan", nil)
+	return utils.CreationSuccess(ctx, "Pantangan berhasil ditambahkan", data)
 }
 
 // CreateSubmit godoc
@@ -48,11 +49,11 @@ func (c *PantanganControllerImpl) CreatePantangan(ctx fiber.Ctx) error {
 // @Success     200 {object} utils.Response
 // @Router      /api/v1/pantangan [get]
 func (c *PantanganControllerImpl) GetPantangan(ctx fiber.Ctx) error {
-  data, err := c.s.GetAll()
-  if err != nil {
-    return utils.InternalError(ctx, "Gagal mengambil data Pantangan", err)
-  }
-  return utils.SuccessResponse(ctx, "Sukses mengambil data Pantangan", data)
+	data, err := c.s.GetAll()
+	if err != nil {
+		return utils.InternalError(ctx, "Gagal mengambil data Pantangan", err)
+	}
+	return utils.SuccessResponse(ctx, "Sukses mengambil data Pantangan", data)
 }
 
 func NewPantanganController(s services.PantanganService) PantanganController {

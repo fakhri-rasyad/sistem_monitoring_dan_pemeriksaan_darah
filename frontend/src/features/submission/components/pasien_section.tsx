@@ -4,8 +4,8 @@ import { useEffect, useState } from "react";
 import { Controller, UseFormReturn } from "react-hook-form";
 
 import { AddPekerjaan, getPekerjaan } from "@/services/pekerjaan";
-import { getAlergi } from "@/services/alergi";
-import { getPantangan } from "@/services/pantangan";
+import { AddAlergi, getAlergi } from "@/services/alergi";
+import { AddPantangan, getPantangan } from "@/services/pantangan";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
@@ -63,18 +63,38 @@ interface Props {
 export default function PatientSection({ form }: Props) {
   const { watch, control } = form;
 
-  const [jobs, setJobs] = useState<PekerjaanResponse[]>([]);
-  const [allergies, setAllergies] = useState<AlergiResponse[]>([]);
-  const [pantangan, setPantangan] = useState<PantanganResponse[]>([]);
   const [openTanggal, setTanggalOpen] = useState(false);
+
+  const [jobs, setJobs] = useState<PekerjaanResponse[]>([]);
   const [openPekerjaan, setOpenPekerjaan] = useState(false);
   const [namaPekerjaan, setNamaPekerjaan] = useState<string>("");
+
+  const [allergies, setAllergies] = useState<AlergiResponse[]>([]);
+  const [openALergi, setAlergiOpen] = useState(false);
+  const [namaAlergi, setNamaAlergi] = useState<string>("");
+
+  const [pantangan, setPantangan] = useState<PantanganResponse[]>([]);
+  const [openPantanagan, setPantanganOpen] = useState(false);
+  const [namaPantangan, setNamaPantangan] = useState<string>("");
 
   const handlePekerjaanNamaChange = (
     event: React.ChangeEvent<HTMLInputElement>,
   ) => {
     setNamaPekerjaan(event.target.value);
   };
+
+  const handleAlergiNamaChange = (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    setNamaAlergi(event.target.value);
+  };
+
+  const handlePantanganNamaChange = (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    setNamaPantangan(event.target.value);
+  };
+
   useEffect(() => {
     async function load() {
       const [j, a, pa] = await Promise.all([
@@ -116,12 +136,64 @@ export default function PatientSection({ form }: Props) {
       );
 
       setNamaPekerjaan("");
-      setTanggalOpen(false);
+      setOpenPekerjaan(false);
     } catch (e) {
       toast.error(
         e instanceof Error
           ? e.message
           : "Terjadi kesalahan saat menambah pekerjaan",
+      );
+    }
+  }
+
+  async function addAlergi() {
+    const nama = namaAlergi.trim();
+
+    if (!nama) {
+      toast.error("Nama alergi tidak boleh kosong");
+      return;
+    }
+
+    try {
+      const res = await AddAlergi(nama);
+
+      toast.success(res.Message);
+
+      setAllergies((current) => [...current, res.Data]);
+
+      setNamaAlergi("");
+      setAlergiOpen(false);
+    } catch (e) {
+      toast.error(
+        e instanceof Error
+          ? e.message
+          : "Terjadi kesalahan saat menambah alergi",
+      );
+    }
+  }
+
+  async function addPantangan() {
+    const nama = namaPantangan.trim();
+
+    if (!nama) {
+      toast.error("Nama alergi tidak boleh kosong");
+      return;
+    }
+
+    try {
+      const res = await AddPantangan(nama);
+
+      toast.success(res.Message);
+
+      setPantangan((current) => [...current, res.Data]);
+
+      setNamaPantangan("");
+      setPantanganOpen(false);
+    } catch (e) {
+      toast.error(
+        e instanceof Error
+          ? e.message
+          : "Terjadi kesalahan saat menambah pantangan",
       );
     }
   }
@@ -431,10 +503,55 @@ export default function PatientSection({ form }: Props) {
                 <FieldGroup>
                   <FieldSet data-invalid={fieldState.invalid}>
                     <FieldLegend variant="label">Alergi</FieldLegend>
-                    <FieldDescription>
-                      Pilih alergi yang dimiliki pasien.
-                    </FieldDescription>
+                    <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+                      <FieldDescription>
+                        Pilih alergi yang dimiliki pasien.
+                      </FieldDescription>
+                      <Dialog open={openALergi} onOpenChange={setAlergiOpen}>
+                        <DialogTrigger
+                          render={
+                            <Button type="button" variant="outline">
+                              <PlusIcon data-icon="inline-start" /> Tambah
+                              Alergi
+                            </Button>
+                          }
+                        />
 
+                        <DialogContent className="sm:max-w-sm">
+                          <DialogHeader>
+                            <DialogTitle>Tambah Alergi</DialogTitle>
+                          </DialogHeader>
+
+                          <Field>
+                            <FieldLabel htmlFor="nama-alergi">
+                              Nama Alergi
+                            </FieldLabel>
+
+                            <Input
+                              id="nama-alergi"
+                              value={namaAlergi}
+                              onChange={handleAlergiNamaChange}
+                              placeholder="Tambahkan nama alergi di sini"
+                            />
+                          </Field>
+
+                          <DialogFooter>
+                            <DialogClose
+                              render={
+                                <Button type="button" variant="outline">
+                                  Batal
+                                </Button>
+                              }
+                            />
+
+                            <Button type="button" onClick={addAlergi}>
+                              Simpan
+                            </Button>
+                          </DialogFooter>
+                        </DialogContent>
+                      </Dialog>
+                    </div>
+                    <Separator />
                     <FieldGroup
                       data-slot="checkbox-group"
                       className="grid grid-cols-2 lg:grid-cols-3 gap-3"
@@ -489,10 +606,59 @@ export default function PatientSection({ form }: Props) {
                 <FieldGroup>
                   <FieldSet data-invalid={fieldState.invalid}>
                     <FieldLegend variant="label">Pantangan</FieldLegend>
-                    <FieldDescription>
-                      Pilih pantangan makanan atau kebiasaan pasien.
-                    </FieldDescription>
+                    <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+                      <FieldDescription>
+                        Pilih pantangan yang dimiliki pasien.
+                      </FieldDescription>
+                      <Dialog
+                        open={openPantanagan}
+                        onOpenChange={setPantanganOpen}
+                      >
+                        <DialogTrigger
+                          render={
+                            <Button type="button" variant="outline">
+                              <PlusIcon data-icon="inline-start" /> Tambah
+                              Pantangan
+                            </Button>
+                          }
+                        />
 
+                        <DialogContent className="sm:max-w-sm">
+                          <DialogHeader>
+                            <DialogTitle>Tambah Pantangan</DialogTitle>
+                          </DialogHeader>
+
+                          <Field>
+                            <FieldLabel htmlFor="nama-pantangan">
+                              Nama Pantangan
+                            </FieldLabel>
+
+                            <Input
+                              id="nama-pantangan"
+                              value={namaPantangan}
+                              onChange={handlePantanganNamaChange}
+                              placeholder="Tambahkan nama pantangan di sini"
+                            />
+                          </Field>
+
+                          <DialogFooter>
+                            <DialogClose
+                              render={
+                                <Button type="button" variant="outline">
+                                  Batal
+                                </Button>
+                              }
+                            />
+
+                            <Button type="button" onClick={addPantangan}>
+                              Simpan
+                            </Button>
+                          </DialogFooter>
+                        </DialogContent>
+                      </Dialog>
+                    </div>
+
+                    <Separator />
                     <FieldGroup
                       data-slot="checkbox-group"
                       className="grid grid-cols-3 gap-3"

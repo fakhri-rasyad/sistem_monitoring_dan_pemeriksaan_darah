@@ -28,15 +28,16 @@ type AlergiControllerImpl struct {
 // @Router      /api/v1/alergi [post]
 func (c *AlergiControllerImpl) CreateAlergi(ctx fiber.Ctx) error {
 	alergiCreate := &dto.AlergiCreate{}
-  if err := ctx.Bind().Body(alergiCreate); err != nil {
-    return utils.BadRequest(ctx, "Input alergi tidak valid", err)
-  }
+	if err := ctx.Bind().Body(alergiCreate); err != nil {
+		return utils.BadRequest(ctx, "Input alergi tidak valid", err)
+	}
 
-  if err := c.s.Create(alergiCreate); err != nil {
-    return utils.InternalError(ctx, "Gagal menambahkan alergi", err)
-  }
+	data, err := c.s.Create(alergiCreate)
+	if err != nil {
+		return utils.InternalError(ctx, "Gagal menambahkan alergi", err)
+	}
 
-  return utils.CreationSuccess(ctx, "Alergi berhasil ditambahkan", nil)
+	return utils.CreationSuccess(ctx, "Alergi berhasil ditambahkan", data)
 }
 
 // CreateSubmit godoc
@@ -48,11 +49,11 @@ func (c *AlergiControllerImpl) CreateAlergi(ctx fiber.Ctx) error {
 // @Success     200 {object} utils.Response
 // @Router      /api/v1/alergi [get]
 func (c *AlergiControllerImpl) GetAlergi(ctx fiber.Ctx) error {
-  data, err := c.s.GetAll()
-  if err != nil {
-    return utils.InternalError(ctx, "Gagal mengambil data alergi", err)
-  }
-  return utils.SuccessResponse(ctx, "Sukses mengambil data alergi", data)
+	data, err := c.s.GetAll()
+	if err != nil {
+		return utils.InternalError(ctx, "Gagal mengambil data alergi", err)
+	}
+	return utils.SuccessResponse(ctx, "Sukses mengambil data alergi", data)
 }
 
 func NewAlergiController(s services.AlergiService) AlergiController {

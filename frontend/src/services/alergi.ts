@@ -19,3 +19,23 @@ export async function getAlergi(): Promise<AlergiResponse[]> {
     throw err;
   }
 }
+
+export async function AddAlergi(nama: string): Promise<ApiResponse<AlergiResponse>> {
+  try {
+    const res = await api.post<ApiResponse<AlergiResponse>>("/api/v1/alergi", {
+      "nama": nama
+    });
+    return res.data;
+  } catch (err) {
+    if (axios.isAxiosError(err)) {
+      console.error("Status:", err.response?.status);
+      console.error("Response:", err.response?.data);
+      console.error("URL:", err.config?.url);
+    } else {
+      console.error(err);
+    }
+
+    throw err;
+  }
+}
+

@@ -19,3 +19,24 @@ export async function getPantangan(): Promise<PantanganResponse[]> {
     throw err;
   }
 }
+
+export async function AddPantangan(nama: string): Promise<ApiResponse<PantanganResponse>> {
+  try {
+    const res = await api.post<ApiResponse<PantanganResponse>>("/api/v1/pantangan", {
+      "nama": nama
+    });
+    return res.data;
+  } catch (err) {
+    if (axios.isAxiosError(err)) {
+      console.error("Status:", err.response?.status);
+      console.error("Response:", err.response?.data);
+      console.error("URL:", err.config?.url);
+    } else {
+      console.error(err);
+    }
+
+    throw err;
+  }
+}
+
+

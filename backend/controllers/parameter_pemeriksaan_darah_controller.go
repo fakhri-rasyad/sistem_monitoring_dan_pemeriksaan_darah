@@ -28,15 +28,16 @@ type ParameterPemeriksaanDarahControllerImpl struct {
 // @Router      /api/v1/ppdh [post]
 func (c *ParameterPemeriksaanDarahControllerImpl) CreateParameterPemeriksaanDarah(ctx fiber.Ctx) error {
 	ParameterPemeriksaanDarahCreate := &dto.ParameterPemeriksaanDarahCreate{}
-  if err := ctx.Bind().Body(ParameterPemeriksaanDarahCreate); err != nil {
-    return utils.BadRequest(ctx, "Input ParameterPemeriksaanDarah tidak valid", err)
-  }
+	if err := ctx.Bind().Body(ParameterPemeriksaanDarahCreate); err != nil {
+		return utils.BadRequest(ctx, "Input ParameterPemeriksaanDarah tidak valid", err)
+	}
 
-  if err := c.s.Create(ParameterPemeriksaanDarahCreate); err != nil {
-    return utils.InternalError(ctx, "Gagal menambahkan ParameterPemeriksaanDarah", err)
-  }
+	data, err := c.s.Create(ParameterPemeriksaanDarahCreate)
+	if err != nil {
+		return utils.InternalError(ctx, "Gagal menambahkan ParameterPemeriksaanDarah", err)
+	}
 
-  return utils.CreationSuccess(ctx, "ParameterPemeriksaanDarah berhasil ditambahkan", nil)
+	return utils.CreationSuccess(ctx, "ParameterPemeriksaanDarah berhasil ditambahkan", data)
 }
 
 // CreateSubmit godoc
@@ -48,11 +49,11 @@ func (c *ParameterPemeriksaanDarahControllerImpl) CreateParameterPemeriksaanDara
 // @Success     200 {object} utils.Response
 // @Router      /api/v1/ppdh [get]
 func (c *ParameterPemeriksaanDarahControllerImpl) GetParameterPemeriksaanDarah(ctx fiber.Ctx) error {
-  data, err := c.s.GetAll()
-  if err != nil {
-    return utils.InternalError(ctx, "Gagal mengambil data ParameterPemeriksaanDarah", err)
-  }
-  return utils.SuccessResponse(ctx, "Sukses mengambil data ParameterPemeriksaanDarah", data)
+	data, err := c.s.GetAll()
+	if err != nil {
+		return utils.InternalError(ctx, "Gagal mengambil data ParameterPemeriksaanDarah", err)
+	}
+	return utils.SuccessResponse(ctx, "Sukses mengambil data ParameterPemeriksaanDarah", data)
 }
 
 func NewParameterPemeriksaanDarahController(s services.ParameterPemeriksaanDarahService) ParameterPemeriksaanDarahController {
