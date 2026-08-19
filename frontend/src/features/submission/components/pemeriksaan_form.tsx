@@ -24,59 +24,56 @@ import { toast } from "sonner";
 import { Dialog } from "@/components/ui/dialog";
 import { AxiosError } from "axios";
 import { handleApiError, showToastFromResponse } from "@/lib/utils";
+import { useEffect } from "react";
 
 export default function PemeriksaanForm() {
+  const defaultFormValues: PemeriksaanFormValues = {
+    pasien: {
+      pasien_create: {
+        nama: "",
+        alamat: "",
+        tempat_lahir: "",
+        tanggal_lahir: "",
+        nomor_hp: "",
+        email: "",
+        pekerjaan_public_id: "",
+      },
+      pasien_public_id: null,
+    },
+    alergi_pasiens: [],
+    pantangan_pasiens: [],
+    kunjungan: { tanggal: "", tensi: "" },
+    pemeriksaan: {
+      diperiksa_at: "",
+      subjective: "",
+      objective: "",
+      evaluasi: "",
+      planning_terapi: "",
+    },
+    komposisi_tubuh: {
+      berat_badan: 1,
+      tinggi_badan: 1,
+      indeks_massa_tubuh: 0,
+      air_tubuh: 0,
+      massa_lemak: 0,
+      massa_otot: 0,
+      massa_tulang: 0,
+    },
+    data_labs: [],
+  };
+
   const form = useForm<PemeriksaanFormValues>({
     resolver: zodResolver(PemeriksaanFormSchema),
-
-    defaultValues: {
-      pasien: {
-        pasien_create: {
-          nama: "",
-          alamat: "",
-          tempat_lahir: "",
-          tanggal_lahir: "",
-          nomor_hp: "",
-          email: "",
-          pekerjaan_public_id: "",
-        },
-        pasien_public_id: null,
-      },
-
-      alergi_pasiens: [],
-      pantangan_pasiens: [],
-
-      kunjungan: {
-        tanggal: "",
-        tensi: "",
-      },
-
-      pemeriksaan: {
-        diperiksa_at: "",
-        subjective: "",
-        objective: "",
-        evaluasi: "",
-        planning_terapi: "",
-      },
-
-      komposisi_tubuh: {
-        berat_badan: 1,
-        tinggi_badan: 1,
-        indeks_massa_tubuh: 0,
-        air_tubuh: 0,
-        massa_lemak: 0,
-        massa_otot: 0,
-        massa_tulang: 0,
-      },
-
-      data_labs: [],
-    },
+    defaultValues: defaultFormValues,
   });
-
   async function onSubmit(values: PemeriksaanFormValues) {
     try {
       const res = await postSubmit(values);
+
       showToastFromResponse(res);
+      if (res.StatusCode >= 200 && res.StatusCode < 300) {
+        form.reset(defaultFormValues);
+      }
     } catch (e) {
       handleApiError(e);
     }
