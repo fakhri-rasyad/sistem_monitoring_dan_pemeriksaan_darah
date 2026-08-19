@@ -22,6 +22,8 @@ import {
 import { postSubmit } from "@/services/submit";
 import { toast } from "sonner";
 import { Dialog } from "@/components/ui/dialog";
+import { AxiosError } from "axios";
+import { handleApiError, showToastFromResponse } from "@/lib/utils";
 
 export default function PemeriksaanForm() {
   const form = useForm<PemeriksaanFormValues>({
@@ -73,19 +75,11 @@ export default function PemeriksaanForm() {
   });
 
   async function onSubmit(values: PemeriksaanFormValues) {
-    console.log("ran");
-    console.log(values);
     try {
       const res = await postSubmit(values);
-      console.log(res.Message);
-      if (res.StatusCode >= 400) {
-        toast.error(res.Error);
-      } else {
-        toast.success(res.Message);
-      }
+      showToastFromResponse(res);
     } catch (e) {
-      console.log(`error: ${e}`);
-      // await createPemeriksaan(payload)
+      handleApiError(e);
     }
   }
 

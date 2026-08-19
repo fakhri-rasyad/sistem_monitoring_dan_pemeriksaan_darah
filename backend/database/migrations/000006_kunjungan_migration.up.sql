@@ -3,10 +3,7 @@ CREATE TABLE IF NOT EXISTS "kunjungans" (
 	"public_id" UUID NOT NULL DEFAULT gen_random_uuid(),
 	"pasien_id" INTEGER NOT NULL,
 	"tanggal" TIMESTAMPTZ NOT NULL,
-	-- (mm/Hg)
-	"tensi_sistol" SMALLINT NOT NULL,
-	-- (mm/Hg)
-	"tensi_diastol" SMALLINT NOT NULL,
+  "tensi" VARCHAR NOT NULL,
 	"created_at" TIMESTAMPTZ NOT NULL DEFAULT now(),
 	"updated_at" TIMESTAMPTZ NOT NULL DEFAULT now(),
 	"deleted_at" TIMESTAMPTZ,
