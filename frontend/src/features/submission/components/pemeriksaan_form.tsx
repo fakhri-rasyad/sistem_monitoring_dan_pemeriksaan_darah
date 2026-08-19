@@ -48,8 +48,7 @@ export default function PemeriksaanForm() {
 
       kunjungan: {
         tanggal: "",
-        tensi_sistol: 0,
-        tensi_diastol: 0,
+        tensi: "",
       },
 
       pemeriksaan: {

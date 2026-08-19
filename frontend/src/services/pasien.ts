@@ -111,8 +111,7 @@ export interface PemeriksaanData {
 export interface KunjunganData {
   public_id: string;
   tanggal: string;
-  tensi_sistol: number;
-  tensi_diastol: number;
+  tensi: string;
   komposisi_tubuh: KomposisiTubuhData;
   data_lab: DataLabData[];
   pemeriksaan: PemeriksaanData;

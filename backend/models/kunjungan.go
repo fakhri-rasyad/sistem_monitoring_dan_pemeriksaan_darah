@@ -5,20 +5,19 @@ import (
 )
 
 type Kunjungan struct {
-  ModelBase
+	ModelBase
 
-  Tanggal     time.Time   `gorm:"column:tanggal"`
-  Sistol      int         `gorm:"column:tensi_sistol"`
-  Diastol     int         `gorm:"column:tensi_diastol"`
+	Tanggal time.Time `gorm:"column:tanggal"`
+	Tensi   string    `gorm:"column:tensi"`
 
-  PasienID    int         `gorm:"column:pasien_id"`
-  Pasien     Pasien      `gorm:"foreignKey:PasienID;references:InternalID"`
+	PasienID int    `gorm:"column:pasien_id"`
+	Pasien   Pasien `gorm:"foreignKey:PasienID;references:InternalID"`
 
-  KomposisiTubuh  KomposisiTubuh  `gorm:"foreignKey:KunjunganID"`
-  DataLabs        []DataLab       `gorm:"foreignKey:KunjunganID"`
-  Pemeriksaan     *Pemeriksaan    `gorm:"foreignKey:KunjunganID"`
+	KomposisiTubuh KomposisiTubuh `gorm:"foreignKey:KunjunganID"`
+	DataLabs       []DataLab      `gorm:"foreignKey:KunjunganID"`
+	Pemeriksaan    *Pemeriksaan   `gorm:"foreignKey:KunjunganID"`
 }
 
 func (k *Kunjungan) TableName() string {
-  return "kunjungans"
+	return "kunjungans"
 }

@@ -15,8 +15,7 @@ export interface PemeriksaanPayload {
 
   kunjungan: {
     tanggal: string;
-    tensi_sistol: number;
-    tensi_diastol: number;
+    tensi: string;
   };
 
   pemeriksaan: {

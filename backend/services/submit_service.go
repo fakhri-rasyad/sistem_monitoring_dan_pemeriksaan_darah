@@ -202,8 +202,7 @@ func (s *SubmitServiceImpl) resolvePantanganPasien(tx *gorm.DB, pasienID int, re
 
 func (s *SubmitServiceImpl) resolveKunjungan(tx *gorm.DB, pasienID int, ref *dto.KunjunganCreate) (*models.Kunjungan, error) {
 	gormModel := &models.Kunjungan{
-		Sistol:  ref.Sistol,
-		Diastol: ref.Diastol,
+		Tensi:   ref.Tensi,
 		Tanggal: ref.Tanggal,
 
 		PasienID: pasienID,

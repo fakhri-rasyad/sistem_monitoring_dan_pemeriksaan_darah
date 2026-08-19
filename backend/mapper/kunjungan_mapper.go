@@ -8,8 +8,7 @@ import (
 func ToKunjungan(model *models.Kunjungan) *dto.Kunjungan {
 	dto := &dto.Kunjungan{
 		Tanggal: model.Tanggal,
-		Sistol:  model.Sistol,
-		Diastol: model.Diastol,
+		Tensi:   model.Tensi,
 	}
 
 	if dtoBase := Map(&model.ModelBase, ToNewDTOBase); dtoBase != nil {
@@ -34,8 +33,6 @@ func ToKunjungan(model *models.Kunjungan) *dto.Kunjungan {
 func ToKunjunganWithPasien(model *models.Kunjungan) *dto.KunjunganWithPatient {
 	dto := &dto.KunjunganWithPatient{
 		Tanggal: model.Tanggal,
-		Sistol:  model.Sistol,
-		Diastol: model.Diastol,
 	}
 
 	if dtoBase := Map(&model.ModelBase, ToNewDTOBase); dtoBase != nil {

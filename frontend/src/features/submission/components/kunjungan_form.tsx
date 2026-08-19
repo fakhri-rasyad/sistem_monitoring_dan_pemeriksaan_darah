@@ -17,8 +17,7 @@ export default function KunjunganForm() {
     defaultValues: {
       kunjungan: {
         tanggal: "",
-        tensi_sistol: 0,
-        tensi_diastol: 0,
+        tensi: "",
       },
 
       pemeriksaan: {

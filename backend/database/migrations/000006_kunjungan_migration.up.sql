@@ -11,7 +11,6 @@ CREATE TABLE IF NOT EXISTS "kunjungans" (
 	PRIMARY KEY("internal_id")
 );
 
-COMMENT ON COLUMN "kunjungans"."tensi_sistol" IS '(mm/Hg)';
-COMMENT ON COLUMN "kunjungans"."tensi_diastol" IS '(mm/Hg)';
+COMMENT ON COLUMN "kunjungans"."tensi" IS '(mm/Hg)';
 CREATE INDEX "kunjungans_pasien_index"
 ON "kunjungans" ("pasien_id");

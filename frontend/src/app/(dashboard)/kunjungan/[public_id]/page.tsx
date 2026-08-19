@@ -69,15 +69,7 @@ export default function KunjunganDetail({
 
               <CardContent>
                 <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
-                  <Info
-                    label="Sistol"
-                    value={`${kunjungan.tensi_sistol} mmHg`}
-                  />
-
-                  <Info
-                    label="Diastol"
-                    value={`${kunjungan.tensi_diastol} mmHg`}
-                  />
+                  <Info label="Tensi" value={`${kunjungan.tensi} mmHg`} />
                 </div>
               </CardContent>
             </Card>
