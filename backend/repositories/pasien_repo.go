@@ -3,18 +3,17 @@ package repositories
 import (
 	"fakhri-rasyad/sistem_monitoring_darah/models"
 	"fakhri-rasyad/sistem_monitoring_darah/utils"
-	"log"
 
 	"github.com/google/uuid"
 	"gorm.io/gorm"
 )
 
 type PasienRepo interface {
-  RepoBase[models.Pasien]
+	RepoBase[models.Pasien]
 
-  GetByPublicIDWithPreload(publicID uuid.UUID)(*models.Pasien, error)
-  GetByNama(nama string) ([]models.Pasien, error)
-  GetAllWithPreload()([]models.Pasien, error)
+	GetByPublicIDWithPreload(publicID uuid.UUID) (*models.Pasien, error)
+	GetByNama(nama string) ([]models.Pasien, error)
+	GetAllWithPreload() ([]models.Pasien, error)
 }
 
 type PasienRepoImpl struct {
@@ -22,47 +21,44 @@ type PasienRepoImpl struct {
 }
 
 func NewPasienRepo(db *gorm.DB) PasienRepo {
-  return &PasienRepoImpl{
-    RepoBaseImpl: (*RepoBaseImpl[models.Pasien])(NewRepoBaseImpl[models.Pasien](db)),
-  }
+	return &PasienRepoImpl{
+		RepoBaseImpl: (*RepoBaseImpl[models.Pasien])(NewRepoBaseImpl[models.Pasien](db)),
+	}
 }
 
-func (r *PasienRepoImpl) GetByPublicIDWithPreload(publicID uuid.UUID)(*models.Pasien, error) {
-  pasien := &models.Pasien{}
+func (r *PasienRepoImpl) GetByPublicIDWithPreload(publicID uuid.UUID) (*models.Pasien, error) {
+	pasien := &models.Pasien{}
 
-  if err := r.getDB(nil).
-    Preload("Pekerjaan").
-    Preload("Kunjungan.KomposisiTubuh").
-    Preload("Kunjungan.DataLabs.Parameter").
-    Preload("Kunjungan.Pemeriksaan").
-    Preload("AlergiPasiens.Alergi").
-    Preload("PantanganPasien.Pantangan").
-    Where("public_id = ?", publicID).
-    First(pasien).Error; err != nil {
-      return nil, err
-    }
+	if err := r.getDB(nil).
+		Preload("Pekerjaan").
+		Preload("Kunjungan.KomposisiTubuh").
+		Preload("Kunjungan.DataLabs.Parameter").
+		Preload("Kunjungan.Pemeriksaan").
+		Preload("AlergiPasiens.Alergi").
+		Preload("PantanganPasien.Pantangan").
+		Where("public_id = ?", publicID).
+		First(pasien).Error; err != nil {
+		return nil, err
+	}
 
-  return pasien, nil
+	return pasien, nil
 }
 
 func (r *PasienRepoImpl) GetByNama(nama string) ([]models.Pasien, error) {
-  var data []models.Pasien
+	var data []models.Pasien
 
-  if err := r.getDB(nil).Where("nama LIKE ?", "%" + nama + "%").Find(&data).Error; err != nil {
-    return nil, utils.ParseDBError(err)
-  }
+	if err := r.getDB(nil).Where("nama LIKE ?", "%"+nama+"%").Find(&data).Error; err != nil {
+		return nil, utils.ParseDBError(err)
+	}
 
-  return data, nil
+	return data, nil
 }
 func (r *PasienRepoImpl) GetAllWithPreload() ([]models.Pasien, error) {
-  var listData []models.Pasien
+	var listData []models.Pasien
 
+	if err := r.getDB(nil).Preload("Pekerjaan").Find(&listData).Error; err != nil {
+		return nil, err
+	}
 
-  if err := r.getDB(nil).Preload("Pekerjaan").Find(&listData).Error; err != nil {
-    return nil, err
-  }
-
-  log.Println(listData[0].Pekerjaan.Nama)
-
-  return listData, nil
+	return listData, nil
 }

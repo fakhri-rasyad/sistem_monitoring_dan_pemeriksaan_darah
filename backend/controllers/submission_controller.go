@@ -31,6 +31,7 @@ func NewSubmissionCont(s services.SubmitService) SubmissionController {
 // @Router      /api/v1/checkup [post]
 func (c *SubmissionControllerImpl) Create(ctx fiber.Ctx) error {
 	submit := &dto.SubmissionCreate{}
+
 	if err := ctx.Bind().Body(submit); err != nil {
 		return utils.BadRequest(ctx, "Input submit tidak valid", err)
 	}

@@ -172,9 +172,7 @@ func (s *SubmitServiceImpl) resolveAlergiPasien(tx *gorm.DB, pasienID int, ref *
 
 	_, err = s.alrgPasRepo.Create(tx, alergiPasien)
 
-	if err.Error() == "duplicate data" {
-		return nil
-	} else if err != nil {
+	if err != nil {
 		return err
 	} else {
 		return nil
@@ -195,9 +193,7 @@ func (s *SubmitServiceImpl) resolvePantanganPasien(tx *gorm.DB, pasienID int, re
 
 	_, err = s.pntgPasRepo.Create(tx, pantangPasien)
 
-	if err.Error() == "duplicate data" {
-		return nil
-	} else if err != nil {
+	if err != nil {
 		return err
 	} else {
 		return nil
