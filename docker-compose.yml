@@ -46,7 +46,7 @@ services:
     image: migrate/migrate
 
     volumes:
-      - ./backend/database/migrations:/migrations
+      - ./migrations:/migrations
 
     command: [ "-path", "/migrations", "-database", "postgres://${DB_USERNAME}:${DB_PASSWORD}@database:${DB_PORT}/${DB_NAME}?sslmode=disable", "up" ]
 

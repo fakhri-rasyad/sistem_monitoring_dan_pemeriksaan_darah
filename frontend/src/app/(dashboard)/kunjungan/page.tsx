@@ -3,12 +3,6 @@
 import { useCallback, useEffect, useState } from "react";
 
 import DataTables from "@/components/layouts/data-table";
-import {
-  AlergiColumns,
-  AlergiData,
-} from "@/features/submission/types/alergi_data";
-import { getAlergi } from "@/services/alergi";
-import { toAlergiData } from "@/features/submission/utils/alergi_mapper";
 import { Spinner } from "@/components/ui/spinner";
 import { getKunjungan } from "@/services/kunjungan";
 import { KunjunganData } from "@/services/pasien";

@@ -14,21 +14,16 @@ import { PasienDetailKunjunganColumns } from "@/features/submission/types/kunjun
 import Info from "@/components/shared/info";
 import formatDate from "@/utils/date";
 
-export default function PasienDetailPage({
-  params,
-}: {
-  params: Promise<{ public_id: string }>;
-}) {
-  const publicId = use(params);
+export default function PasienDetailPage() {
+  const params = useParams<{ public_id: string }>();
 
   const [pasien, setPasien] = useState<PasienDetailResponse | null>(null);
-
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function load() {
       try {
-        const data = await getPasienDetail(publicId.public_id);
+        const data = await getPasienDetail(params.public_id);
         setPasien(data);
       } catch (error) {
         console.error(error);
@@ -37,11 +32,8 @@ export default function PasienDetailPage({
       }
     }
 
-    if (publicId) {
-      load();
-    }
-  }, [publicId]);
-
+    load();
+  }, [params.public_id]);
   if (loading) {
     return (
       <div className="flex min-h-screen items-center justify-center">
@@ -140,7 +132,7 @@ export default function PasienDetailPage({
           columns={PasienDetailKunjunganColumns}
           data={pasien.kunjungan}
           tableName="Daftar Kunjungan"
-          actionLink={null}
+          actionLink={`/kunjungan/create/${params.public_id}`}
         />
       </div>
       {/* <Card>

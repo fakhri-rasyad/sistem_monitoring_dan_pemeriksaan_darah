@@ -11,10 +11,17 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import KunjunganDataLabSection from "./data_lab_kunjugan_section";
 
-export default function KunjunganForm() {
+interface KunjunganFormProps {
+  pasien_public_id: string;
+}
+
+export default function KunjunganForm({
+  pasien_public_id,
+}: KunjunganFormProps) {
   const form = useForm<KunjunganFormValue>({
     resolver: zodResolver(KunjunganFormSchema),
     defaultValues: {
+      pasien_public_id: pasien_public_id,
       kunjungan: {
         tanggal: "",
         tensi: "",
