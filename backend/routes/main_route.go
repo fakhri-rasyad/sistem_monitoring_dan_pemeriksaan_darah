@@ -73,6 +73,7 @@ func Setup(
 	api.Get("/kunjungan", kunjugCont.GetKunjunganList)
 
 	// Submission
-	api.Post("/checkup", submitCont.Create)
+	api.Post("/checkup", submitCont.FirstKunjunganSubmissionCreate)
+	api.Post("/kunjungan/followup", submitCont.KunjunganSubmissionCreate)
 
 }

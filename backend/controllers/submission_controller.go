@@ -9,7 +9,8 @@ import (
 )
 
 type SubmissionController interface {
-	Create(ctx fiber.Ctx) error
+	FirstKunjunganSubmissionCreate(ctx fiber.Ctx) error
+	KunjunganSubmissionCreate(ctx fiber.Ctx) error
 }
 
 type SubmissionControllerImpl struct {
@@ -29,16 +30,31 @@ func NewSubmissionCont(s services.SubmitService) SubmissionController {
 // @Param       submit body dto.SubmissionCreate true "Data checkup"
 // @Success     200 string Success
 // @Router      /api/v1/checkup [post]
-func (c *SubmissionControllerImpl) Create(ctx fiber.Ctx) error {
+func (c *SubmissionControllerImpl) FirstKunjunganSubmissionCreate(ctx fiber.Ctx) error {
 	submit := &dto.SubmissionCreate{}
 
 	if err := ctx.Bind().Body(submit); err != nil {
 		return utils.BadRequest(ctx, "Input submit tidak valid", err)
 	}
 
-	if err := c.s.Create(submit); err != nil {
+	if err := c.s.FirstSubmissionCreation(submit); err != nil {
 		return utils.InternalError(ctx, "Gagal menambahkan kunjungan", err)
 	}
 
 	return utils.CreationSuccess(ctx, "Kunjungan berhasil ditambahkan", true)
+}
+
+func (c *SubmissionControllerImpl) KunjunganSubmissionCreate(ctx fiber.Ctx) error {
+	data := &dto.KunjunganSubmission{}
+
+	if err := ctx.Bind().Body(data); err != nil {
+		return utils.BadRequest(ctx, "Input tidak valid", err)
+	}
+
+	if err := c.s.LaterSubmissionCreation(data); err != nil {
+		return utils.InternalError(ctx, "Gagal menambahkan kunjungan", err)
+	}
+
+	return utils.CreationSuccess(ctx, "Sukses menambahkan kunjungan pasien", true)
+
 }

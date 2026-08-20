@@ -7,11 +7,13 @@ import (
 	"fakhri-rasyad/sistem_monitoring_darah/repositories"
 	"fmt"
 
+	"github.com/google/uuid"
 	"gorm.io/gorm"
 )
 
 type SubmitService interface {
-	Create(submission *dto.SubmissionCreate) error
+	FirstSubmissionCreation(submission *dto.SubmissionCreate) error
+	LaterSubmissionCreation(submission *dto.KunjunganSubmission) error
 }
 
 type SubmitServiceImpl struct {
@@ -56,7 +58,64 @@ func NewSubmitService(
 	}
 }
 
-func (s *SubmitServiceImpl) Create(submission *dto.SubmissionCreate) error {
+func (s *SubmitServiceImpl) LaterSubmissionCreation(submission *dto.KunjunganSubmission) error {
+	wf := beginWorkflow()
+
+	defer func() {
+		if r := recover(); r != nil {
+			fmt.Printf("PANIC: %v\n", r)
+			wf.Rollback()
+		}
+	}()
+
+	pasienUid, err := uuid.Parse(submission.PasienPublicID)
+
+	if err != nil {
+		wf.Rollback()
+		return err
+	}
+
+	pasien, err := s.pasienRepo.GetByPublicID(wf.tx, pasienUid)
+
+	if err != nil {
+		wf.Rollback()
+		return err
+	}
+
+	kunjungan, err := s.resolveKunjungan(wf.tx, pasien.InternalID, &submission.Kunjungan)
+
+	if err != nil {
+		wf.Rollback()
+		return err
+	}
+
+	if err := s.resolveKomposisiTubuh(wf.tx, kunjungan.InternalID, &submission.KomposisiTubuh); err != nil {
+		wf.Rollback()
+		return err
+	}
+
+	if len(submission.DataLabs) != 0 {
+		for i := range submission.DataLabs {
+			err := s.resolveDataLab(wf.tx, kunjungan.InternalID, &submission.DataLabs[i])
+			if err != nil {
+				wf.Rollback()
+				return err
+			}
+		}
+	}
+
+	if err := s.resolvePemeriksaan(wf.tx, kunjungan.InternalID, &submission.Pemeriksaan); err != nil {
+		wf.Rollback()
+		return err
+	}
+
+	if err := wf.Commit(); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (s *SubmitServiceImpl) FirstSubmissionCreation(submission *dto.SubmissionCreate) error {
 	wf := beginWorkflow()
 
 	defer func() {
