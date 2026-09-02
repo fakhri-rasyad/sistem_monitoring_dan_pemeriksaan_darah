@@ -1,6 +1,7 @@
 "use client";
 
 import Info from "@/components/shared/info";
+import { SectionCard } from "@/components/shared/section_card";
 import TextInfo from "@/components/shared/text_info";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Spinner } from "@/components/ui/spinner";
@@ -15,6 +16,13 @@ import {
 import { getKunjunganDetail } from "@/services/kunjungan";
 import { KunjunganData } from "@/services/pasien";
 import formatDate from "@/utils/date";
+import {
+  CirclePercent,
+  HeartPulse,
+  Receipt,
+  SearchCheck,
+  Stethoscope,
+} from "lucide-react";
 import { use, useEffect, useState } from "react";
 
 export default function KunjunganDetail({
@@ -62,7 +70,7 @@ export default function KunjunganDetail({
         <CardHeader>Data Kunjungan</CardHeader>
         <CardContent className="space-y-6">
           <div className="grid grid-cols-2 gap-4">
-            <Card>
+            {/* <Card>
               <CardHeader>
                 <h3 className="mb-3 font-medium">Tekanan Darah</h3>
               </CardHeader>
@@ -72,53 +80,100 @@ export default function KunjunganDetail({
                   <Info label="Tensi" value={`${kunjungan.tensi} mmHg`} />
                 </div>
               </CardContent>
-            </Card>
-            <Card>
+            </Card> */}
+            <SectionCard
+              id="tensi_darah"
+              title="Tensi Darah"
+              description="Detail tensi darah pasien"
+              icon={HeartPulse}
+            >
+              <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
+                <Info label="Tensi" value={`${kunjungan.tensi} mmHg`} />
+              </div>
+            </SectionCard>
+            <SectionCard
+              id="komposisi_tubuh"
+              title="Komposisi Tubuh"
+              description="Detail komposisi tubuh pasien saat pemeriksaan"
+              icon={CirclePercent}
+            >
+              <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
+                <Info
+                  label="Berat Badan"
+                  value={`${kunjungan.komposisi_tubuh.berat_badan} Kg`}
+                />
+
+                <Info
+                  label="Tinggi Badan"
+                  value={`${kunjungan.komposisi_tubuh.tinggi_badan} cm`}
+                />
+
+                <Info
+                  label="BMI"
+                  value={`${kunjungan.komposisi_tubuh.indeks_massa_tubuh} Kg/m²`}
+                />
+
+                <Info
+                  label="Air Tubuh"
+                  value={`${kunjungan.komposisi_tubuh.air_tubuh}`}
+                />
+
+                <Info
+                  label="Massa Otot"
+                  value={`${kunjungan.komposisi_tubuh.massa_otot} Kg`}
+                />
+
+                <Info
+                  label="Massa Lemak"
+                  value={`${kunjungan.komposisi_tubuh.massa_lemak} Kg`}
+                />
+
+                <Info
+                  label="Massa Tulang"
+                  value={`${kunjungan.komposisi_tubuh.massa_tulang} Kg`}
+                />
+              </div>
+            </SectionCard>
+            {/* <Card>
               <CardHeader>
                 <h3 className="mb-3 font-medium">Komposisi Tubuh</h3>
               </CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
-                  <Info
-                    label="Berat Badan"
-                    value={`${kunjungan.komposisi_tubuh.berat_badan} Kg`}
-                  />
-
-                  <Info
-                    label="Tinggi Badan"
-                    value={`${kunjungan.komposisi_tubuh.tinggi_badan} cm`}
-                  />
-
-                  <Info
-                    label="BMI"
-                    value={`${kunjungan.komposisi_tubuh.indeks_massa_tubuh} Kg/m²`}
-                  />
-
-                  <Info
-                    label="Air Tubuh"
-                    value={`${kunjungan.komposisi_tubuh.air_tubuh}`}
-                  />
-
-                  <Info
-                    label="Massa Otot"
-                    value={`${kunjungan.komposisi_tubuh.massa_otot} Kg`}
-                  />
-
-                  <Info
-                    label="Massa Lemak"
-                    value={`${kunjungan.komposisi_tubuh.massa_lemak} Kg`}
-                  />
-
-                  <Info
-                    label="Massa Tulang"
-                    value={`${kunjungan.komposisi_tubuh.massa_tulang} Kg`}
-                  />
-                </div>
-              </CardContent>
-            </Card>
+              <CardContent></CardContent>
+            </Card> */}
           </div>
+          <SectionCard
+            id="data_laboratorium"
+            title="Data Laboratorium"
+            description="Detail hasil pemeriksaan laboratorium"
+            icon={Stethoscope}
+          >
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Jenis Pemeriksaan</TableHead>
+                  <TableHead>Nilai Tercatat</TableHead>
+                  <TableHead>Satuan</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {kunjungan.data_lab.length === 0 ? (
+                  <TableCell>Tidak ada data laboratorium.</TableCell>
+                ) : (
+                  kunjungan.data_lab.map((lab) => (
+                    <TableRow>
+                      <TableCell>{lab.parameter.nama}</TableCell>
 
-          <Card>
+                      <TableCell>{lab.nilai}</TableCell>
+
+                      <TableCell>{lab.parameter.satuan}</TableCell>
+                    </TableRow>
+                  ))
+                )}
+              </TableBody>
+            </Table>
+          </SectionCard>
+
+          {/* <Card>
             <CardHeader>
               <h3 className="mb-3 font-medium">Data Laboratorium</h3>
             </CardHeader>
@@ -149,9 +204,43 @@ export default function KunjunganDetail({
                 </TableBody>
               </Table>
             </CardContent>
-          </Card>
+          </Card> */}
 
-          <Card>
+          <SectionCard
+            id="pemeriksaan"
+            title="Pemeriksaan"
+            description="Detail hasil pemeriksaan"
+            icon={SearchCheck}
+          >
+            <div className="space-y-4">
+              <Info
+                label="Diperiksa At"
+                value={formatDate(kunjungan.pemeriksaan.diperiksa_at)}
+              />
+
+              <TextInfo
+                label="Subjective"
+                value={kunjungan.pemeriksaan.subjective}
+              />
+
+              <TextInfo
+                label="Objective"
+                value={kunjungan.pemeriksaan.objective}
+              />
+
+              <TextInfo
+                label="Evaluasi"
+                value={kunjungan.pemeriksaan.evaluasi}
+              />
+
+              <TextInfo
+                label="Planning Terapi"
+                value={kunjungan.pemeriksaan.planning_terapi}
+              />
+            </div>
+          </SectionCard>
+
+          {/* <Card>
             <CardHeader>
               <h3 className="mb-3 font-medium">Pemeriksaan</h3>
             </CardHeader>
@@ -183,7 +272,40 @@ export default function KunjunganDetail({
                 />
               </div>
             </CardContent>
-          </Card>
+          </Card> */}
+          <SectionCard
+            id="tagihan"
+            title="Tagihan"
+            description="Detail tagihan kunjungan"
+            icon={Receipt}
+          >
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+              <TextInfo
+                label="Tagihan Konsultasi"
+                value={`Rp.${kunjungan.tagihan.biaya_konsultasi.toLocaleString(
+                  "id-ID",
+                )}`}
+              />
+
+              <TextInfo
+                label="Tagihan Alat"
+                value={`Rp.${kunjungan.tagihan.biaya_alat.toLocaleString("id-ID")}`}
+              />
+
+              <TextInfo
+                label="Biaya Total"
+                value={`Rp.${(
+                  kunjungan.tagihan.biaya_alat +
+                  kunjungan.tagihan.biaya_konsultasi
+                ).toLocaleString("id-ID")}`}
+              />
+
+              <TextInfo
+                label="Metode Pembayaran"
+                value={kunjungan.tagihan.metode_pembayaran}
+              />
+            </div>
+          </SectionCard>
         </CardContent>
       </Card>
     </div>

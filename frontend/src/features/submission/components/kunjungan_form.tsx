@@ -13,6 +13,8 @@ import KunjunganDataLabSection from "./data_lab_kunjugan_section";
 import { postKunjunganSubmit } from "@/services/submit";
 import { handleApiError, showToastFromResponse } from "@/lib/utils";
 import { error } from "console";
+import { MetodePembayaran } from "@/enum/metode_pembayaran";
+import TagihanSection from "./tagihan_section";
 
 interface KunjunganFormProps {
   pasien_public_id: string;
@@ -47,6 +49,11 @@ export default function KunjunganForm({
     },
 
     data_labs: [],
+    tagihan: {
+      biaya_konsultasi: 150000,
+      biaya_alat: 20000,
+      metode_pembayaran: MetodePembayaran.Cash,
+    },
   };
 
   const form = useForm<KunjunganFormValue>({
@@ -83,6 +90,8 @@ export default function KunjunganForm({
         <PemeriksaanSection />
 
         <KunjunganDataLabSection form={form} />
+
+        <TagihanSection />
 
         <div className="flex justify-end">
           <Button type="submit" size="lg">

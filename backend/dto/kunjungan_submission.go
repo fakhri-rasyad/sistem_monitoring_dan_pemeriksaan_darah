@@ -6,4 +6,5 @@ type KunjunganSubmission struct {
 	KomposisiTubuh KomposisiTubuhCreate `json:"komposisi_tubuh"`
 	DataLabs       []DataLabCreate      `json:"data_labs"`
 	Pemeriksaan    PemeriksaanCreate    `json:"pemeriksaan"`
+	Tagihan        TagihanCreate        `json:"tagihan"`
 }

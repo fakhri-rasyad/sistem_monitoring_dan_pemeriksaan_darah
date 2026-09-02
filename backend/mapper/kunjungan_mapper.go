@@ -15,8 +15,8 @@ func ToKunjungan(model *models.Kunjungan) *dto.Kunjungan {
 		dto.DTOBase = *dtoBase
 	}
 
-	if komposisiTubuh := Map(&model.KomposisiTubuh, ToKomposisiTubuh); komposisiTubuh != nil {
-		dto.KomposisiTubuh = *komposisiTubuh
+	if komposisiTubuh := Map(model.KomposisiTubuh, ToKomposisiTubuh); komposisiTubuh != nil {
+		dto.KomposisiTubuh = komposisiTubuh
 	}
 
 	if dataLabs := MapSlice(model.DataLabs, ToDataLabBase); dataLabs != nil {
@@ -24,7 +24,11 @@ func ToKunjungan(model *models.Kunjungan) *dto.Kunjungan {
 	}
 
 	if pemeriksaan := Map(model.Pemeriksaan, ToPemeriksaan); pemeriksaan != nil {
-		dto.Pemeriksaan = *pemeriksaan
+		dto.Pemeriksaan = pemeriksaan
+	}
+
+	if tagihan := Map(model.Tagihan, ToTagihanBase); tagihan != nil {
+		dto.Tagihan = tagihan
 	}
 
 	return dto
@@ -40,7 +44,7 @@ func ToKunjunganWithPasien(model *models.Kunjungan) *dto.KunjunganWithPatient {
 	}
 
 	if pasien := Map(&model.Pasien, ToPasien); pasien != nil {
-		dto.Pasien = *pasien
+		dto.Pasien = pasien
 	}
 
 	return dto

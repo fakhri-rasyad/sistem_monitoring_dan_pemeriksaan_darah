@@ -13,6 +13,8 @@ import DataTables from "@/components/layouts/data-table";
 import { PasienDetailKunjunganColumns } from "@/features/submission/types/kunjungan_column";
 import Info from "@/components/shared/info";
 import formatDate from "@/utils/date";
+import { SectionCard } from "@/components/shared/section_card";
+import { BeanOff, Section, User, UtensilsCrossed } from "lucide-react";
 
 export default function PasienDetailPage() {
   const params = useParams<{ public_id: string }>();
@@ -48,8 +50,32 @@ export default function PasienDetailPage() {
 
   return (
     <div className="mx-auto max-w-7xl space-y-6 p-6">
-      {/* DATA PASIEN */}
-      <Card>
+      <SectionCard
+        id="data_pasien"
+        title="Data Pasien"
+        description="Detail pasien"
+        icon={User}
+      >
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+          <Info label="Nama" value={pasien.nama} />
+
+          <Info label="Nomor HP" value={pasien.nomor_hp} />
+
+          <Info label="Email" value={pasien.email} />
+
+          <Info label="Pekerjaan" value={pasien.pekerjaan?.nama} />
+
+          <Info label="Tempat Lahir" value={pasien.tempat_lahir} />
+
+          <Info
+            label="Tanggal Lahir"
+            value={formatDate(pasien.tanggal_lahir)}
+          />
+
+          <Info label="Alamat" value={pasien.alamat} />
+        </div>
+      </SectionCard>
+      {/* <Card>
         <CardHeader>
           <CardTitle>Data Pasien</CardTitle>
         </CardHeader>
@@ -74,11 +100,31 @@ export default function PasienDetailPage() {
             <Info label="Alamat" value={pasien.alamat} />
           </div>
         </CardContent>
-      </Card>
+      </Card> */}
 
-      {/* ALERGI & PANTANGAN */}
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-        <Card>
+        <SectionCard
+          id="alergi"
+          title="Alergi"
+          description="Detail alergi pasien"
+          icon={BeanOff}
+        >
+          {pasien.alergi_pasien.length === 0 ? (
+            <p className="text-sm text-muted-foreground">Tidak ada alergi.</p>
+          ) : (
+            <div className="flex flex-wrap gap-2">
+              {pasien.alergi_pasien.map((item) => (
+                <div
+                  key={item.public_id}
+                  className="rounded-md border px-3 py-2 text-sm"
+                >
+                  {item.alergi.nama}
+                </div>
+              ))}
+            </div>
+          )}
+        </SectionCard>
+        {/* <Card>
           <CardHeader>
             <CardTitle>Alergi</CardTitle>
           </CardHeader>
@@ -99,9 +145,32 @@ export default function PasienDetailPage() {
               </div>
             )}
           </CardContent>
-        </Card>
+        </Card> */}
+        <SectionCard
+          id="pantangan"
+          title="Pantangan"
+          description="Detail pantangan pasien"
+          icon={UtensilsCrossed}
+        >
+          {pasien.pantangan_pasien.length === 0 ? (
+            <p className="text-sm text-muted-foreground">
+              Tidak ada pantangan.
+            </p>
+          ) : (
+            <div className="flex flex-wrap gap-2">
+              {pasien.pantangan_pasien.map((item) => (
+                <div
+                  key={item.public_id}
+                  className="rounded-md border px-3 py-2 text-sm"
+                >
+                  {item.pantangan.nama}
+                </div>
+              ))}
+            </div>
+          )}
+        </SectionCard>
 
-        <Card>
+        {/* <Card>
           <CardHeader>
             <CardTitle>Pantangan</CardTitle>
           </CardHeader>
@@ -124,7 +193,7 @@ export default function PasienDetailPage() {
               </div>
             )}
           </CardContent>
-        </Card>
+        </Card> */}
       </div>
 
       <div className="container mx-auto">

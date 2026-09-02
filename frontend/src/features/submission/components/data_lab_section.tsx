@@ -32,7 +32,7 @@ import {
   TableCell,
 } from "@/components/ui/table";
 
-import { PlusIcon, Trash2 } from "lucide-react";
+import { Microscope, PlusIcon, Trash2 } from "lucide-react";
 import { ParameterResponse } from "../types/api";
 import { AddPPDH, getPPDH } from "@/services/ppdh";
 import { PemeriksaanFormValues } from "../schema/pemeriksaan_form_schema";
@@ -47,6 +47,7 @@ import {
 } from "@/components/ui/dialog";
 import { Field, FieldLabel } from "@/components/ui/field";
 import { toast } from "sonner";
+import { SectionCard } from "@/components/shared/section_card";
 
 interface Props {
   form: UseFormReturn<PemeriksaanFormValues>;
@@ -136,145 +137,278 @@ export default function DataLabSection({ form }: Props) {
   }
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Data Laboratorium</CardTitle>
-        <CardDescription>
-          Tambahkan hasil pemeriksaan laboratorium pasien.
-        </CardDescription>
-        <CardAction>
-          <Dialog open={openParameter} onOpenChange={setParameterOpen}>
-            <DialogTrigger
-              render={
-                <Button type="button" variant="outline">
-                  <PlusIcon data-icon="inline-start" /> Tambah Parameter
-                </Button>
-              }
-            />
-
-            <DialogContent className="sm:max-w-sm">
-              <DialogHeader>
-                <DialogTitle>Tambah Parameter</DialogTitle>
-              </DialogHeader>
-
-              <Field>
-                <FieldLabel htmlFor="nama-parameter">Nama Parameter</FieldLabel>
-                <Input
-                  id="nama-parameter"
-                  value={namaParameterBaru}
-                  onChange={handleNamaParameterChange}
-                  placeholder="Tambahkan nama parameter di sini"
-                />
-                <Input
-                  id="satuan-parameter"
-                  value={satuanParameterBaru}
-                  onChange={handleSatuanParameterChange}
-                  placeholder="Tambahkan satuan parameter di sini"
-                />
-              </Field>
-
-              <DialogFooter>
-                <DialogClose
-                  render={
-                    <Button type="button" variant="outline">
-                      Batal
-                    </Button>
-                  }
-                />
-
-                <Button type="button" onClick={addParameter}>
-                  Simpan
-                </Button>
-              </DialogFooter>
-            </DialogContent>
-          </Dialog>
-        </CardAction>
-      </CardHeader>
-
-      <CardContent className="space-y-6">
-        <div className="grid grid-cols-[2fr_1fr_auto] gap-3">
-          <Select
-            value={selectedParameter}
-            onValueChange={setSelectedParameter}
-          >
-            <SelectTrigger>
-              <SelectValue placeholder="Pilih Parameter">
-                {
-                  parameters.find((item) => item.public_id == selectedParameter)
-                    ?.nama
-                }
-              </SelectValue>
-            </SelectTrigger>
-
-            <SelectContent>
-              {parameters.map((item) => (
-                <SelectItem key={item.public_id} value={item.public_id}>
-                  {item.nama} - ({item.satuan})
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-
-          <Input
-            type="number"
-            placeholder="Nilai"
-            value={nilai}
-            onChange={(e) => setNilai(e.target.value)}
+    <SectionCard
+      id="data_laboratorium"
+      title="Data Laboratorium"
+      description="Tambahkan hasil pemeriksaan laboratorium pasien"
+      action={
+        <Dialog open={openParameter} onOpenChange={setParameterOpen}>
+          <DialogTrigger
+            render={
+              <Button type="button" variant="outline">
+                <PlusIcon data-icon="inline-start" /> Tambah Parameter
+              </Button>
+            }
           />
 
-          <Button type="button" onClick={handleAdd}>
-            Tambah
-          </Button>
-        </div>
+          <DialogContent className="sm:max-w-sm">
+            <DialogHeader>
+              <DialogTitle>Tambah Parameter</DialogTitle>
+            </DialogHeader>
 
-        <Table>
-          <TableHeader>
+            <Field>
+              <FieldLabel htmlFor="nama-parameter">Nama Parameter</FieldLabel>
+              <Input
+                id="nama-parameter"
+                value={namaParameterBaru}
+                onChange={handleNamaParameterChange}
+                placeholder="Tambahkan nama parameter di sini"
+              />
+              <Input
+                id="satuan-parameter"
+                value={satuanParameterBaru}
+                onChange={handleSatuanParameterChange}
+                placeholder="Tambahkan satuan parameter di sini"
+              />
+            </Field>
+
+            <DialogFooter>
+              <DialogClose
+                render={
+                  <Button type="button" variant="outline">
+                    Batal
+                  </Button>
+                }
+              />
+
+              <Button type="button" onClick={addParameter}>
+                Simpan
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+      }
+      icon={Microscope}
+    >
+      <div className="grid grid-cols-[2fr_1fr_auto] gap-3">
+        <Select value={selectedParameter} onValueChange={setSelectedParameter}>
+          <SelectTrigger>
+            <SelectValue placeholder="Pilih Parameter">
+              {
+                parameters.find((item) => item.public_id == selectedParameter)
+                  ?.nama
+              }
+            </SelectValue>
+          </SelectTrigger>
+
+          <SelectContent>
+            {parameters.map((item) => (
+              <SelectItem key={item.public_id} value={item.public_id}>
+                {item.nama} - ({item.satuan})
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+
+        <Input
+          type="number"
+          placeholder="Nilai"
+          value={nilai}
+          onChange={(e) => setNilai(e.target.value)}
+        />
+
+        <Button type="button" onClick={handleAdd}>
+          Tambah
+        </Button>
+      </div>
+
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead>Parameter</TableHead>
+            <TableHead>Nilai</TableHead>
+            <TableHead className="w-16"></TableHead>
+          </TableRow>
+        </TableHeader>
+
+        <TableBody>
+          {fields.length === 0 && (
             <TableRow>
-              <TableHead>Parameter</TableHead>
-              <TableHead>Nilai</TableHead>
-              <TableHead className="w-16"></TableHead>
+              <TableCell
+                colSpan={3}
+                className="text-center text-muted-foreground"
+              >
+                Belum ada data laboratorium.
+              </TableCell>
             </TableRow>
-          </TableHeader>
+          )}
 
-          <TableBody>
-            {fields.length === 0 && (
-              <TableRow>
-                <TableCell
-                  colSpan={3}
-                  className="text-center text-muted-foreground"
-                >
-                  Belum ada data laboratorium.
+          {fields.map((field, index) => {
+            const parameter = parameters.find(
+              (p) => p.public_id === field.parameter_public_id,
+            );
+
+            return (
+              <TableRow key={field.id}>
+                <TableCell>{parameter?.nama ?? "-"}</TableCell>
+
+                <TableCell>{field.nilai}</TableCell>
+
+                <TableCell>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => remove(index)}
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
                 </TableCell>
               </TableRow>
-            )}
+            );
+          })}
+        </TableBody>
+      </Table>
+    </SectionCard>
+    // <Card>
+    //   <CardHeader>
+    //     <CardTitle>Data Laboratorium</CardTitle>
+    //     <CardDescription>
+    //       Tambahkan hasil pemeriksaan laboratorium pasien.
+    //     </CardDescription>
+    //     <CardAction>
+    //       <Dialog open={openParameter} onOpenChange={setParameterOpen}>
+    //         <DialogTrigger
+    //           render={
+    //             <Button type="button" variant="outline">
+    //               <PlusIcon data-icon="inline-start" /> Tambah Parameter
+    //             </Button>
+    //           }
+    //         />
 
-            {fields.map((field, index) => {
-              const parameter = parameters.find(
-                (p) => p.public_id === field.parameter_public_id,
-              );
+    //         <DialogContent className="sm:max-w-sm">
+    //           <DialogHeader>
+    //             <DialogTitle>Tambah Parameter</DialogTitle>
+    //           </DialogHeader>
 
-              return (
-                <TableRow key={field.id}>
-                  <TableCell>{parameter?.nama ?? "-"}</TableCell>
+    //           <Field>
+    //             <FieldLabel htmlFor="nama-parameter">Nama Parameter</FieldLabel>
+    //             <Input
+    //               id="nama-parameter"
+    //               value={namaParameterBaru}
+    //               onChange={handleNamaParameterChange}
+    //               placeholder="Tambahkan nama parameter di sini"
+    //             />
+    //             <Input
+    //               id="satuan-parameter"
+    //               value={satuanParameterBaru}
+    //               onChange={handleSatuanParameterChange}
+    //               placeholder="Tambahkan satuan parameter di sini"
+    //             />
+    //           </Field>
 
-                  <TableCell>{field.nilai}</TableCell>
+    //           <DialogFooter>
+    //             <DialogClose
+    //               render={
+    //                 <Button type="button" variant="outline">
+    //                   Batal
+    //                 </Button>
+    //               }
+    //             />
 
-                  <TableCell>
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => remove(index)}
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
-                  </TableCell>
-                </TableRow>
-              );
-            })}
-          </TableBody>
-        </Table>
-      </CardContent>
-    </Card>
+    //             <Button type="button" onClick={addParameter}>
+    //               Simpan
+    //             </Button>
+    //           </DialogFooter>
+    //         </DialogContent>
+    //       </Dialog>
+    //     </CardAction>
+    //   </CardHeader>
+
+    //   <CardContent className="space-y-6">
+    //     <div className="grid grid-cols-[2fr_1fr_auto] gap-3">
+    //       <Select
+    //         value={selectedParameter}
+    //         onValueChange={setSelectedParameter}
+    //       >
+    //         <SelectTrigger>
+    //           <SelectValue placeholder="Pilih Parameter">
+    //             {
+    //               parameters.find((item) => item.public_id == selectedParameter)
+    //                 ?.nama
+    //             }
+    //           </SelectValue>
+    //         </SelectTrigger>
+
+    //         <SelectContent>
+    //           {parameters.map((item) => (
+    //             <SelectItem key={item.public_id} value={item.public_id}>
+    //               {item.nama} - ({item.satuan})
+    //             </SelectItem>
+    //           ))}
+    //         </SelectContent>
+    //       </Select>
+
+    //       <Input
+    //         type="number"
+    //         placeholder="Nilai"
+    //         value={nilai}
+    //         onChange={(e) => setNilai(e.target.value)}
+    //       />
+
+    //       <Button type="button" onClick={handleAdd}>
+    //         Tambah
+    //       </Button>
+    //     </div>
+
+    //     <Table>
+    //       <TableHeader>
+    //         <TableRow>
+    //           <TableHead>Parameter</TableHead>
+    //           <TableHead>Nilai</TableHead>
+    //           <TableHead className="w-16"></TableHead>
+    //         </TableRow>
+    //       </TableHeader>
+
+    //       <TableBody>
+    //         {fields.length === 0 && (
+    //           <TableRow>
+    //             <TableCell
+    //               colSpan={3}
+    //               className="text-center text-muted-foreground"
+    //             >
+    //               Belum ada data laboratorium.
+    //             </TableCell>
+    //           </TableRow>
+    //         )}
+
+    //         {fields.map((field, index) => {
+    //           const parameter = parameters.find(
+    //             (p) => p.public_id === field.parameter_public_id,
+    //           );
+
+    //           return (
+    //             <TableRow key={field.id}>
+    //               <TableCell>{parameter?.nama ?? "-"}</TableCell>
+
+    //               <TableCell>{field.nilai}</TableCell>
+
+    //               <TableCell>
+    //                 <Button
+    //                   type="button"
+    //                   variant="ghost"
+    //                   size="icon"
+    //                   onClick={() => remove(index)}
+    //                 >
+    //                   <Trash2 className="h-4 w-4" />
+    //                 </Button>
+    //               </TableCell>
+    //             </TableRow>
+    //           );
+    //         })}
+    //       </TableBody>
+    //     </Table>
+    //   </CardContent>
+    // </Card>
   );
 }

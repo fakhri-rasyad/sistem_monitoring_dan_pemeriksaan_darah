@@ -13,9 +13,10 @@ type Kunjungan struct {
 	PasienID int    `gorm:"column:pasien_id"`
 	Pasien   Pasien `gorm:"foreignKey:PasienID;references:InternalID"`
 
-	KomposisiTubuh KomposisiTubuh `gorm:"foreignKey:KunjunganID"`
-	DataLabs       []DataLab      `gorm:"foreignKey:KunjunganID"`
-	Pemeriksaan    *Pemeriksaan   `gorm:"foreignKey:KunjunganID"`
+	KomposisiTubuh *KomposisiTubuh `gorm:"foreignKey:KunjunganID"`
+	DataLabs       []DataLab       `gorm:"foreignKey:KunjunganID"`
+	Pemeriksaan    *Pemeriksaan    `gorm:"foreignKey:KunjunganID"`
+	Tagihan        *Tagihan        `gorm:"foreignKey:KunjunganID"`
 }
 
 func (k *Kunjungan) TableName() string {

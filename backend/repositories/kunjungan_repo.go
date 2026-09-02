@@ -30,7 +30,7 @@ func (k *KunjunganRepoImpl) GetAllWithPreload(tx *gorm.DB) ([]models.Kunjungan, 
 
 func (k *KunjunganRepoImpl) GetDetailWithPreload(tx *gorm.DB, publicID uuid.UUID) (*models.Kunjungan, error) {
 	kunjungan := &models.Kunjungan{}
-	err := k.getDB(tx).Where("public_id = ?", publicID).Preload("KomposisiTubuh").Preload("DataLabs").Preload("DataLabs.Parameter").Preload("Pemeriksaan").First(kunjungan).Error
+	err := k.getDB(tx).Where("public_id = ?", publicID).Preload("Tagihan").Preload("KomposisiTubuh").Preload("DataLabs").Preload("DataLabs.Parameter").Preload("Pemeriksaan").First(kunjungan).Error
 
 	if err != nil {
 		return nil, err

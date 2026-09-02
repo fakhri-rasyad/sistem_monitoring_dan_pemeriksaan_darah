@@ -4,9 +4,8 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
-
-    tags:
-      - kaizerd23/monitoring_darah_backend:${APP_TAG}
+      tags:
+        - kaizerd23/monitoring_darah_backend:${APP_TAG}
 
     container_name: monitoring-backend
 
@@ -15,7 +14,7 @@ services:
         condition: service_completed_successfully
 
     env_file:
-      - .env
+      - local.env
 
     ports:
       - "${BACKEND_PORT}:${BACKEND_PORT}"
@@ -31,9 +30,8 @@ services:
       dockerfile: Dockerfile
       args:
         NEXT_PUBLIC_BACKEND_URL: ${NEXT_PUBLIC_BACKEND_URL}
-
-    tags:
-      - kaizerd23/monitoring_darah_frontend:${APP_TAG}
+      tags:
+        - kaizerd23/monitoring_darah_frontend:${APP_TAG}
 
     container_name: monitoring-frontend
 

@@ -3,6 +3,7 @@ package services
 import (
 	"errors"
 	"fakhri-rasyad/sistem_monitoring_darah/dto"
+	"fakhri-rasyad/sistem_monitoring_darah/mapper"
 	"fakhri-rasyad/sistem_monitoring_darah/models"
 	"fakhri-rasyad/sistem_monitoring_darah/repositories"
 	"fmt"
@@ -28,6 +29,7 @@ type SubmitServiceImpl struct {
 	parametRepo repositories.RepoBase[models.ParameterPemeriksaanDarah]
 	dataLabRepo repositories.RepoBase[models.DataLab]
 	pemerikRepo repositories.RepoBase[models.Pemeriksaan]
+	tagihanRepo repositories.TagihanRepo
 }
 
 func NewSubmitService(
@@ -42,6 +44,7 @@ func NewSubmitService(
 	parametRepo repositories.RepoBase[models.ParameterPemeriksaanDarah],
 	dataLabRepo repositories.RepoBase[models.DataLab],
 	pemerikRepo repositories.RepoBase[models.Pemeriksaan],
+	tagihanRepo repositories.TagihanRepo,
 ) SubmitService {
 	return &SubmitServiceImpl{
 		pekerjaRepo: pekerjaRepo,
@@ -55,6 +58,7 @@ func NewSubmitService(
 		parametRepo: parametRepo,
 		dataLabRepo: dataLabRepo,
 		pemerikRepo: pemerikRepo,
+		tagihanRepo: tagihanRepo,
 	}
 }
 
@@ -105,6 +109,11 @@ func (s *SubmitServiceImpl) LaterSubmissionCreation(submission *dto.KunjunganSub
 	}
 
 	if err := s.resolvePemeriksaan(wf.tx, kunjungan.InternalID, &submission.Pemeriksaan); err != nil {
+		wf.Rollback()
+		return err
+	}
+
+	if err := s.resolveTagihan(wf.tx, kunjungan.InternalID, &submission.Tagihan); err != nil {
 		wf.Rollback()
 		return err
 	}
@@ -174,6 +183,11 @@ func (s *SubmitServiceImpl) FirstSubmissionCreation(submission *dto.SubmissionCr
 	}
 
 	if err := s.resolvePemeriksaan(wf.tx, kunjungan.InternalID, &submission.Pemeriksaan); err != nil {
+		wf.Rollback()
+		return err
+	}
+
+	if err := s.resolveTagihan(wf.tx, kunjungan.InternalID, &submission.Tagihan); err != nil {
 		wf.Rollback()
 		return err
 	}
@@ -331,6 +345,19 @@ func (s *SubmitServiceImpl) resolvePemeriksaan(tx *gorm.DB, kunjunganID int, ref
 	}
 
 	_, err := s.pemerikRepo.Create(tx, gormModel)
+
+	if err != nil {
+		return err
+	} else {
+		return nil
+	}
+}
+
+func (s *SubmitServiceImpl) resolveTagihan(tx *gorm.DB, kunjunganID int, ref *dto.TagihanCreate) error {
+	gormModel := mapper.Map(ref, mapper.ToTagihanModel)
+	gormModel.KunjunganID = kunjunganID
+
+	_, err := s.tagihanRepo.Create(tx, gormModel)
 
 	if err != nil {
 		return err

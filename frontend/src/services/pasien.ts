@@ -115,7 +115,15 @@ export interface KunjunganData {
   komposisi_tubuh: KomposisiTubuhData;
   data_lab: DataLabData[];
   pemeriksaan: PemeriksaanData;
-  pasien: PasienResponse
+  pasien: PasienResponse;
+  tagihan: TagihanResponse;
+}
+
+export interface TagihanResponse {
+  public_id: string;
+  biaya_konsultasi: number;
+  biaya_alat: number;
+  metode_pembayaran: string;
 }
 
 export interface PasienDetailResponse {

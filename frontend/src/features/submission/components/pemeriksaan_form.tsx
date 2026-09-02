@@ -25,6 +25,8 @@ import { Dialog } from "@/components/ui/dialog";
 import { AxiosError } from "axios";
 import { handleApiError, showToastFromResponse } from "@/lib/utils";
 import { useEffect } from "react";
+import { MetodePembayaran } from "@/enum/metode_pembayaran";
+import TagihanSection from "./tagihan_section";
 
 export default function PemeriksaanForm() {
   const defaultFormValues: PemeriksaanFormValues = {
@@ -60,6 +62,11 @@ export default function PemeriksaanForm() {
       massa_tulang: 0,
     },
     data_labs: [],
+    tagihan: {
+      biaya_konsultasi: 150000,
+      biaya_alat: 20000,
+      metode_pembayaran: MetodePembayaran.Cash,
+    },
   };
 
   const form = useForm<PemeriksaanFormValues>({
@@ -98,6 +105,8 @@ export default function PemeriksaanForm() {
           <PemeriksaanSection />
 
           <DataLabSection form={form} />
+
+          <TagihanSection />
 
           <div className="flex justify-end">
             <Button type="submit" size="lg">
