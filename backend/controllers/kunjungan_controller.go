@@ -12,6 +12,7 @@ import (
 type KunjunganController interface {
 	GetKunjunganByPublicID(ctx fiber.Ctx) error
 	GetKunjunganList(ctx fiber.Ctx) error
+	Delete(ctx fiber.Ctx) error
 }
 
 type KunjunganControllerImpl struct {
@@ -56,6 +57,25 @@ func (c *KunjunganControllerImpl) GetKunjunganList(ctx fiber.Ctx) error {
 	}
 
 	return utils.SuccessResponse(ctx, "Sukses mengambil data Pasien", data)
+}
+
+func (c *KunjunganControllerImpl) Delete(ctx fiber.Ctx) error {
+	query := ctx.Query("public_id")
+	if query == "" {
+		return utils.BadRequest(ctx, utils.ParsingError, errors.New("Permintaan tidak valid"))
+	}
+
+	uid, err := uuid.Parse(query)
+
+	if err != nil {
+		return utils.BadRequest(ctx, utils.ParsingError, err)
+	}
+
+	if err := c.s.Delete(uid); err != nil {
+		return utils.InternalError(ctx, "Gagal menghapus kunjungan", err)
+	}
+
+	return utils.SuccessResponse(ctx, "Sukses menghapus kunjungan", nil)
 }
 
 func NewKunjunganController(s services.KunjunganService) KunjunganController {

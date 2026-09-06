@@ -6,8 +6,8 @@ CREATE TABLE IF NOT EXISTS "pantangan_pasiens" (
 	"created_at" TIMESTAMPTZ NOT NULL DEFAULT now(),
 	"updated_at" TIMESTAMPTZ NOT NULL DEFAULT now(),
 	"deleted_at" TIMESTAMPTZ,
-  CONSTRAINT "pantangan_pasien_pasien_fk" FOREIGN KEY ("pasien_id") REFERENCES "pasiens"("internal_id"),
-  CONSTRAINT "pantangan_pasien_pantangan_fk" FOREIGN KEY ("pantangan_id") REFERENCES "pantangans"("internal_id"),
+  CONSTRAINT "pantangan_pasien_pasien_fk" FOREIGN KEY ("pasien_id") REFERENCES "pasiens"("internal_id") ON DELETE CASCADE,
+  CONSTRAINT "pantangan_pasien_pantangan_fk" FOREIGN KEY ("pantangan_id") REFERENCES "pantangans"("internal_id") ON DELETE CASCADE,
 	CONSTRAINT "pantangan_pasien_unique_constraint" UNIQUE ("pasien_id", "pantangan_id"),
   PRIMARY KEY("internal_id")
 );

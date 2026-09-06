@@ -7,7 +7,7 @@ CREATE TABLE IF NOT EXISTS "kunjungans" (
 	"created_at" TIMESTAMPTZ NOT NULL DEFAULT now(),
 	"updated_at" TIMESTAMPTZ NOT NULL DEFAULT now(),
 	"deleted_at" TIMESTAMPTZ,
-  CONSTRAINT "kunjungans_pasien_fk" FOREIGN KEY ("pasien_id") REFERENCES "pasiens"("internal_id"),
+  CONSTRAINT "kunjungans_pasien_fk" FOREIGN KEY ("pasien_id") REFERENCES "pasiens"("internal_id") ON DELETE CASCADE,
 	PRIMARY KEY("internal_id")
 );
 

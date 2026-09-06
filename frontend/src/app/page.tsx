@@ -8,8 +8,9 @@ import {
   PasienData,
 } from "@/features/dashboard/types/pasien_data_column";
 import { PasienMapper } from "@/features/dashboard/utils/pasien_mapper";
-import { getPasien } from "@/services/pasien";
+import { DeletePasien, getPasien } from "@/services/pasien";
 import { Spinner } from "@/components/ui/spinner";
+import { toast } from "sonner";
 
 export default function DashboardPage() {
   const [pasienData, setPasienData] = useState<PasienData[]>([]);
@@ -27,6 +28,15 @@ export default function DashboardPage() {
       setIsLoading(false);
     }
   }, []);
+
+  const handleDelete = async (public_id: string) => {
+    setIsLoading(true);
+
+    try {
+      await DeletePasien(public_id);
+      toast.success("Sukses menghapus pasien");
+    } catch (e) {}
+  };
 
   useEffect(() => {
     refreshData();

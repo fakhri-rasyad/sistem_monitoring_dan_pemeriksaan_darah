@@ -13,6 +13,7 @@ type PantanganService interface {
 	Create(create *dto.PantanganCreate) (*dto.Pantangan, error)
 	GetByPublicID(publicID uuid.UUID) (*dto.Pantangan, error)
 	GetAll() ([]dto.Pantangan, error)
+	Delete(publicID uuid.UUID) error
 }
 
 type PantanganServiceImpl struct {
@@ -49,6 +50,19 @@ func (a *PantanganServiceImpl) GetByPublicID(publicID uuid.UUID) (*dto.Pantangan
 	}
 
 	return mapper.Map(data, mapper.ToPantanganBase), nil
+}
+
+func (a *PantanganServiceImpl) Delete(publicID uuid.UUID) error {
+	pantangan, err := a.r.GetByPublicID(nil, publicID)
+	if err != nil {
+		return err
+	}
+
+	if err = a.r.Delete(nil, pantangan.InternalID); err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func NewPantanganService(r repositories.RepoBase[models.Pantangan]) PantanganService {

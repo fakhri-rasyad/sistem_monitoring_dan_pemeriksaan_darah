@@ -6,8 +6,8 @@ CREATE TABLE IF NOT EXISTS "alergi_pasiens" (
 	"created_at" TIMESTAMPTZ NOT NULL DEFAULT now(),
 	"updated_at" TIMESTAMPTZ NOT NULL DEFAULT now(),
 	"deleted_at" TIMESTAMPTZ,
-  CONSTRAINT "alergi_pasien_pasien_fk" FOREIGN KEY ("pasien_id") REFERENCES "pasiens"("internal_id"),
-  CONSTRAINT "alergi_pasien_alergi_fk" FOREIGN KEY ("alergi_id") REFERENCES "alergis"("internal_id"),
+  CONSTRAINT "alergi_pasien_pasien_fk" FOREIGN KEY ("pasien_id") REFERENCES "pasiens"("internal_id") ON DELETE CASCADE,
+  CONSTRAINT "alergi_pasien_alergi_fk" FOREIGN KEY ("alergi_id") REFERENCES "alergis"("internal_id") ON DELETE CASCADE,
   CONSTRAINT "alergi_pasien_unique_constraint" UNIQUE ("pasien_id", "alergi_id"),
   PRIMARY KEY("internal_id")
 );

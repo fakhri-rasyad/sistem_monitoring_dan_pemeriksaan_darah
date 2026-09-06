@@ -16,6 +16,7 @@ type PasienController interface {
 	GetPasienByPublicID(ctx fiber.Ctx) error
 	GetPasienByPublicIDWithPreload(ctx fiber.Ctx) error
 	GetAllWithPreload(ctx fiber.Ctx) error
+	Delete(ctx fiber.Ctx) error
 }
 
 type PasienControllerImpl struct {
@@ -117,6 +118,25 @@ func (c *PasienControllerImpl) GetAllWithPreload(ctx fiber.Ctx) error {
 		return utils.InternalError(ctx, "Gagal mengambil data Pasien", err)
 	}
 	return utils.SuccessResponse(ctx, "Sukses mengambil data Pasien", data)
+}
+
+func (c *PasienControllerImpl) Delete(ctx fiber.Ctx) error {
+	query := ctx.Query("public_id")
+	if query == "" {
+		return utils.BadRequest(ctx, utils.ParsingError, errors.New("Permintaan tidak valid"))
+	}
+
+	uid, err := uuid.Parse(query)
+
+	if err != nil {
+		return utils.BadRequest(ctx, utils.ParsingError, err)
+	}
+
+	if err := c.s.Delete(uid); err != nil {
+		return utils.InternalError(ctx, "Gagal menghapus pasien", err)
+	}
+
+	return utils.SuccessResponse(ctx, "Sukses menghapus pasien", nil)
 }
 
 func NewPasienController(s services.PasienService) PasienController {

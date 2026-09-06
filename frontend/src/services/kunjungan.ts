@@ -37,3 +37,24 @@ export async function getKunjunganDetail(public_id: string): Promise<ApiResponse
     throw err;
   }
 }
+
+export async function DeleteKunjungan(public_id: string): Promise<ApiResponse<null>> {
+  try {
+    const res = await api.delete<ApiResponse<null>>("/api/v1/kunjungan", {
+      params: {
+        public_id: public_id
+      }
+    });
+    return res.data;
+  } catch (err) {
+    if (axios.isAxiosError(err)) {
+      console.error("Status:", err.response?.status);
+      console.error("Response:", err.response?.data);
+      console.error("URL:", err.config?.url);
+    } else {
+      console.error(err);
+    }
+
+    throw err;
+  }
+}

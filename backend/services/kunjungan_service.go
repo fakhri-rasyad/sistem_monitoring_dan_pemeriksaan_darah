@@ -11,6 +11,7 @@ import (
 type KunjunganService interface {
 	GetByPublicID(publicID uuid.UUID) (*dto.Kunjungan, error)
 	GetAll() ([]dto.KunjunganWithPatient, error)
+	Delete(publicID uuid.UUID) error
 }
 
 type KunjunganServiceImpl struct {
@@ -34,6 +35,19 @@ func (a *KunjunganServiceImpl) GetByPublicID(publicID uuid.UUID) (*dto.Kunjungan
 		return nil, err
 	}
 	return mapper.Map(data, mapper.ToKunjungan), nil
+}
+
+func (a *KunjunganServiceImpl) Delete(publicID uuid.UUID) error {
+	kunjungan, err := a.r.GetByPublicID(nil, publicID)
+	if err != nil {
+		return err
+	}
+
+	if err = a.r.Delete(nil, kunjungan.InternalID); err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func NewKunjunganService(r repositories.KunjunganRepoImpl) KunjunganService {

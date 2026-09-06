@@ -12,7 +12,7 @@ CREATE TABLE IF NOT EXISTS "pasiens" (
 	"created_at" TIMESTAMPTZ NOT NULL DEFAULT now(),
 	"updated_at" TIMESTAMPTZ NOT NULL DEFAULT now(),
 	"deleted_at" TIMESTAMPTZ,
-  CONSTRAINT "pasiens_pekerjaan_fk" FOREIGN KEY ("pekerjaan_id") REFERENCES pekerjaans("internal_id"),
+  CONSTRAINT "pasiens_pekerjaan_fk" FOREIGN KEY ("pekerjaan_id") REFERENCES pekerjaans("internal_id") ON DELETE RESTRICT,
 	PRIMARY KEY("internal_id")
 );
 

@@ -13,6 +13,7 @@ type ParameterPemeriksaanDarahService interface {
 	Create(create *dto.ParameterPemeriksaanDarahCreate) (*dto.ParameterPemeriksaanDarah, error)
 	GetByPublicID(publicID uuid.UUID) (*dto.ParameterPemeriksaanDarah, error)
 	GetAll() ([]dto.ParameterPemeriksaanDarah, error)
+	Delete(publicID uuid.UUID) error
 }
 
 type ParameterPemeriksaanDarahServiceImpl struct {
@@ -50,6 +51,19 @@ func (a *ParameterPemeriksaanDarahServiceImpl) GetByPublicID(publicID uuid.UUID)
 	}
 
 	return mapper.Map(data, mapper.ToPPDarah), nil
+}
+
+func (a *ParameterPemeriksaanDarahServiceImpl) Delete(publicID uuid.UUID) error {
+	ppdh, err := a.r.GetByPublicID(nil, publicID)
+	if err != nil {
+		return err
+	}
+
+	if err = a.r.Delete(nil, ppdh.InternalID); err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func NewParameterPemeriksaanDarahService(r repositories.RepoBase[models.ParameterPemeriksaanDarah]) ParameterPemeriksaanDarahService {

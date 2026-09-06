@@ -8,10 +8,10 @@ type Kunjungan struct {
 	Tanggal time.Time `json:"tanggal"`
 	Tensi   string    `json:"tensi"`
 
-	KomposisiTubuh *KomposisiTubuh `json:"komposisi_tubuh,omitempty"`
-	DataLabs       []DataLab       `json:"data_lab,omitempty"`
-	Pemeriksaan    *Pemeriksaan    `json:"pemeriksaan,omitempty"`
-	Tagihan        *Tagihan        `json:"tagihan,omitempty"`
+	KomposisiTubuh *KomposisiTubuh `json:"komposisi_tubuh"`
+	DataLabs       []DataLab       `json:"data_lab"`
+	Pemeriksaan    *Pemeriksaan    `json:"pemeriksaan"`
+	Tagihan        *Tagihan        `json:"tagihan"`
 }
 
 type KunjunganWithPatient struct {
@@ -19,7 +19,7 @@ type KunjunganWithPatient struct {
 
 	Tanggal time.Time `json:"tanggal"`
 	Tensi   string    `json:"tensi"`
-	Pasien  *Pasien   `json:"pasien,omitempty"`
+	Pasien  *Pasien   `json:"pasien"`
 }
 
 type KunjunganCreate struct {

@@ -13,6 +13,7 @@ type AlergiService interface {
 	Create(create *dto.AlergiCreate) (*dto.Alergi, error)
 	GetByPublicID(publicID uuid.UUID) (*dto.Alergi, error)
 	GetAll() ([]dto.Alergi, error)
+	Delete(publicID uuid.UUID) error
 }
 
 type AlergiServiceImpl struct {
@@ -49,6 +50,19 @@ func (a *AlergiServiceImpl) GetByPublicID(publicID uuid.UUID) (*dto.Alergi, erro
 	}
 
 	return mapper.Map(data, mapper.ToAlergiBase), nil
+}
+
+func (a *AlergiServiceImpl) Delete(publicID uuid.UUID) error {
+	alergi, err := a.r.GetByPublicID(nil, publicID)
+	if err != nil {
+		return err
+	}
+
+	if err = a.r.Delete(nil, alergi.InternalID); err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func NewAlergiService(r repositories.RepoBase[models.Alergi]) AlergiService {

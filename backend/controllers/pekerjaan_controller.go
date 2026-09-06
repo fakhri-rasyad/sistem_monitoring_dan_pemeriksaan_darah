@@ -1,16 +1,19 @@
 package controllers
 
 import (
+	"errors"
 	"fakhri-rasyad/sistem_monitoring_darah/dto"
 	"fakhri-rasyad/sistem_monitoring_darah/services"
 	"fakhri-rasyad/sistem_monitoring_darah/utils"
 
 	"github.com/gofiber/fiber/v3"
+	"github.com/google/uuid"
 )
 
 type PekerjaanController interface {
 	CreatePekerjaan(ctx fiber.Ctx) error
 	GetPekerjaan(ctx fiber.Ctx) error
+	Delete(ctx fiber.Ctx) error
 }
 
 type PekerjaanControllerImpl struct {
@@ -54,6 +57,25 @@ func (c *PekerjaanControllerImpl) GetPekerjaan(ctx fiber.Ctx) error {
 		return utils.InternalError(ctx, "Gagal mengambil data Pekerjaan", err)
 	}
 	return utils.SuccessResponse(ctx, "Sukses mengambil data Pekerjaan", data)
+}
+
+func (c *PekerjaanControllerImpl) Delete(ctx fiber.Ctx) error {
+	query := ctx.Query("public_id")
+	if query == "" {
+		return utils.BadRequest(ctx, utils.ParsingError, errors.New("Permintaan tidak valid"))
+	}
+
+	uid, err := uuid.Parse(query)
+
+	if err != nil {
+		return utils.BadRequest(ctx, utils.ParsingError, err)
+	}
+
+	if err := c.s.Delete(uid); err != nil {
+		return utils.InternalError(ctx, "Gagal menghapus pekerjaan", err)
+	}
+
+	return utils.SuccessResponse(ctx, "Sukses menghapus pekerjaan", nil)
 }
 
 func NewPekerjaanController(s services.PekerjaanService) PekerjaanController {

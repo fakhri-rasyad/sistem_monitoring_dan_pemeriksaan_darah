@@ -1,16 +1,19 @@
 package controllers
 
 import (
+	"errors"
 	"fakhri-rasyad/sistem_monitoring_darah/dto"
 	"fakhri-rasyad/sistem_monitoring_darah/services"
 	"fakhri-rasyad/sistem_monitoring_darah/utils"
 
 	"github.com/gofiber/fiber/v3"
+	"github.com/google/uuid"
 )
 
 type PantanganController interface {
 	CreatePantangan(ctx fiber.Ctx) error
 	GetPantangan(ctx fiber.Ctx) error
+	Delete(ctx fiber.Ctx) error
 }
 
 type PantanganControllerImpl struct {
@@ -54,6 +57,25 @@ func (c *PantanganControllerImpl) GetPantangan(ctx fiber.Ctx) error {
 		return utils.InternalError(ctx, "Gagal mengambil data Pantangan", err)
 	}
 	return utils.SuccessResponse(ctx, "Sukses mengambil data Pantangan", data)
+}
+
+func (c *PantanganControllerImpl) Delete(ctx fiber.Ctx) error {
+	query := ctx.Query("public_id")
+	if query == "" {
+		return utils.BadRequest(ctx, utils.ParsingError, errors.New("Permintaan tidak valid"))
+	}
+
+	uid, err := uuid.Parse(query)
+
+	if err != nil {
+		return utils.BadRequest(ctx, utils.ParsingError, err)
+	}
+
+	if err := c.s.Delete(uid); err != nil {
+		return utils.InternalError(ctx, "Gagal menghapus pantangan", err)
+	}
+
+	return utils.SuccessResponse(ctx, "Sukses menghapus pantangan", nil)
 }
 
 func NewPantanganController(s services.PantanganService) PantanganController {

@@ -56,21 +56,27 @@ func Setup(
 
 	api.Get("/pekerjaan", pekerjCont.GetPekerjaan)
 	api.Post("/pekerjaan", pekerjCont.CreatePekerjaan)
+	api.Delete("/pekerjaan", pekerjCont.Delete)
 
 	api.Get("/alergi", alergiCont.GetAlergi)
 	api.Post("/alergi", alergiCont.CreateAlergi)
+	api.Delete("/alergi", alergiCont.Delete)
 
 	api.Get("/pantangan", pantanCont.GetPantangan)
 	api.Post("/pantangan", pantanCont.CreatePantangan)
+	api.Delete("/pantangan", pantanCont.Delete)
 
 	api.Get("/ppdh", paramDCont.GetParameterPemeriksaanDarah)
 	api.Post("/ppdh", paramDCont.CreateParameterPemeriksaanDarah)
+	api.Delete("/ppdh", paramDCont.Delete)
 
 	api.Get("/pasien", pasienCont.GetAllWithPreload)
 	api.Get("/pasien/detail", pasienCont.GetPasienByPublicIDWithPreload)
+	api.Delete("/pasien", pasienCont.Delete)
 
 	api.Get("/kunjungan/:public_id", kunjugCont.GetKunjunganByPublicID)
 	api.Get("/kunjungan", kunjugCont.GetKunjunganList)
+	api.Delete("/kunjungan", kunjugCont.Delete)
 
 	// Submission
 	api.Post("/checkup", submitCont.FirstKunjunganSubmissionCreate)

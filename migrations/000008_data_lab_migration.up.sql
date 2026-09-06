@@ -7,7 +7,7 @@ CREATE TABLE IF NOT EXISTS "data_labs" (
 	"created_at" TIMESTAMPTZ NOT NULL DEFAULT now(),
 	"updated_at" TIMESTAMPTZ NOT NULL DEFAULT now(),
 	"deleted_at" TIMESTAMPTZ,
-  CONSTRAINT "data_lab_kunjungan_fk" FOREIGN KEY ("kunjungan_id") REFERENCES "kunjungans"("internal_id"),
-  CONSTRAINT "data_lab_parameter_fk" FOREIGN KEY ("parameter_id") REFERENCES "parameter_pemeriksaan_darahs"("internal_id"),
+  CONSTRAINT "data_lab_kunjungan_fk" FOREIGN KEY ("kunjungan_id") REFERENCES "kunjungans"("internal_id") ON DELETE CASCADE,
+  CONSTRAINT "data_lab_parameter_fk" FOREIGN KEY ("parameter_id") REFERENCES "parameter_pemeriksaan_darahs"("internal_id") ON DELETE RESTRICT,
 	PRIMARY KEY("internal_id")
 );

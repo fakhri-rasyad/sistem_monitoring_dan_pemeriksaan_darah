@@ -12,85 +12,98 @@ import (
 type PasienService interface {
 	Create(create *dto.PasienCreate) error
 	GetByPublicID(publicID uuid.UUID) (*dto.Pasien, error)
-  GetByPublicIDWithPreload(publicID uuid.UUID) (*dto.Pasien, error)
+	GetByPublicIDWithPreload(publicID uuid.UUID) (*dto.Pasien, error)
 	GetAll() ([]dto.Pasien, error)
-  GetAllWithPreload()([]dto.Pasien, error)
+	GetAllWithPreload() ([]dto.Pasien, error)
+	Delete(publicID uuid.UUID) error
 }
 
 type PasienServiceImpl struct {
-	r repositories.PasienRepo
-  pr repositories.RepoBase[models.Pekerjaan]
+	r  repositories.PasienRepo
+	pr repositories.RepoBase[models.Pekerjaan]
 }
 
 func (a *PasienServiceImpl) Create(create *dto.PasienCreate) error {
-  pekerjaan, err := a.pr.GetByPublicID(nil, create.PekerjaanPublicID)
+	pekerjaan, err := a.pr.GetByPublicID(nil, create.PekerjaanPublicID)
 
-  if err != nil {
-    return err
-  }
+	if err != nil {
+		return err
+	}
 
-  gorm := &models.Pasien{
-    Nama: create.Nama,
-    Alamat: create.Alamat,
-    TempatLahir: create.TempatLahir,
-    TanggalLahir: create.TanggalLahir,
-    NomorHP: create.NomorHP,
-    Email: create.Email,
-    PekerjaanID: pekerjaan.InternalID,
+	gorm := &models.Pasien{
+		Nama:         create.Nama,
+		Alamat:       create.Alamat,
+		TempatLahir:  create.TempatLahir,
+		TanggalLahir: create.TanggalLahir,
+		NomorHP:      create.NomorHP,
+		Email:        create.Email,
+		PekerjaanID:  pekerjaan.InternalID,
+	}
 
-  }
+	_, err = a.r.Create(nil, gorm)
 
-  _, err = a.r.Create(nil, gorm)
-
-  if err != nil{
-    return err
-  } else {
-    return nil
-  }
+	if err != nil {
+		return err
+	} else {
+		return nil
+	}
 }
 
 func (a *PasienServiceImpl) GetAll() ([]dto.Pasien, error) {
-  data, err := a.r.GetAll(nil)
-  if err != nil {
-    return nil, err
-  }
+	data, err := a.r.GetAll(nil)
+	if err != nil {
+		return nil, err
+	}
 
-  return mapper.MapSlice(data, mapper.ToPasien), nil
+	return mapper.MapSlice(data, mapper.ToPasien), nil
 }
 
 func (a *PasienServiceImpl) GetByPublicID(publicID uuid.UUID) (*dto.Pasien, error) {
-  data, err := a.r.GetByPublicID(nil, publicID)
-  if err != nil {
-    return nil, err
-  }
+	data, err := a.r.GetByPublicID(nil, publicID)
+	if err != nil {
+		return nil, err
+	}
 
-  return mapper.Map(data, mapper.ToPasien), nil
+	return mapper.Map(data, mapper.ToPasien), nil
 }
 
 func (a *PasienServiceImpl) GetByPublicIDWithPreload(publicID uuid.UUID) (*dto.Pasien, error) {
-  data, err := a.r.GetByPublicIDWithPreload(publicID)
-  if err != nil {
-    return nil, err
-  }
+	data, err := a.r.GetByPublicIDWithPreload(publicID)
+	if err != nil {
+		return nil, err
+	}
 
-  return mapper.Map(data, mapper.ToPasien), nil
+	return mapper.Map(data, mapper.ToPasien), nil
 }
 
-func (a *PasienServiceImpl) GetAllWithPreload()([]dto.Pasien, error){
-  data, err := a.r.GetAllWithPreload()
-  if err != nil {
-    return nil, err
-  }
+func (a *PasienServiceImpl) GetAllWithPreload() ([]dto.Pasien, error) {
+	data, err := a.r.GetAllWithPreload()
+	if err != nil {
+		return nil, err
+	}
 
-  return mapper.MapSlice(data, mapper.ToPasien), nil
+	return mapper.MapSlice(data, mapper.ToPasien), nil
+}
+
+func (a *PasienServiceImpl) Delete(publicID uuid.UUID) error {
+	pasien, err := a.r.GetByPublicID(nil, publicID)
+	if err != nil {
+		return err
+	}
+
+	if err = a.r.Delete(nil, pasien.InternalID); err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func NewPasienService(
-  r repositories.PasienRepo,
-  pr repositories.RepoBase[models.Pekerjaan],
-  ) PasienService {
+	r repositories.PasienRepo,
+	pr repositories.RepoBase[models.Pekerjaan],
+) PasienService {
 	return &PasienServiceImpl{
-		r: r,
-    pr: pr,
+		r:  r,
+		pr: pr,
 	}
 }

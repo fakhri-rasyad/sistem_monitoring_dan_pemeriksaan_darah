@@ -13,6 +13,7 @@ type PekerjaanService interface {
 	Create(create *dto.PekerjaanCreate) (*dto.Pekerjaan, error)
 	GetByPublicID(publicID uuid.UUID) (*dto.Pekerjaan, error)
 	GetAll() ([]dto.Pekerjaan, error)
+	Delete(publicID uuid.UUID) error
 }
 
 type PekerjaanServiceImpl struct {
@@ -49,6 +50,19 @@ func (a *PekerjaanServiceImpl) GetByPublicID(publicID uuid.UUID) (*dto.Pekerjaan
 	}
 
 	return mapper.Map(data, mapper.ToPekerjaan), nil
+}
+
+func (a *PekerjaanServiceImpl) Delete(publicID uuid.UUID) error {
+	pekerjaan, err := a.r.GetByPublicID(nil, publicID)
+	if err != nil {
+		return err
+	}
+
+	if err = a.r.Delete(nil, pekerjaan.InternalID); err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func NewPekerjaanService(r repositories.RepoBase[models.Pekerjaan]) PekerjaanService {

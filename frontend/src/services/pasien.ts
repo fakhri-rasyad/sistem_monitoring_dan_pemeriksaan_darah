@@ -47,6 +47,28 @@ export async function searchPasien(
 }
 
 
+export async function DeletePasien(public_id: string): Promise<ApiResponse<null>> {
+  try {
+    const res = await api.delete<ApiResponse<null>>("/api/v1/pasien", {
+      params: {
+        public_id: public_id
+      }
+    });
+    return res.data;
+  } catch (err) {
+    if (axios.isAxiosError(err)) {
+      console.error("Status:", err.response?.status);
+      console.error("Response:", err.response?.data);
+      console.error("URL:", err.config?.url);
+    } else {
+      console.error(err);
+    }
+
+    throw err;
+  }
+}
+
+
 // ==============================
 // DETAIL PASIEN
 // ==============================
