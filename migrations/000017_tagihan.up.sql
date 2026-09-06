@@ -17,5 +17,5 @@ CREATE TABLE IF NOT EXISTS "tagihans" (
   "created_at" TIMESTAMPTZ NOT NULL DEFAULT now(),
 	"updated_at" TIMESTAMPTZ NOT NULL DEFAULT now(),
   "deleted_at" TIMESTAMPTZ,
-  CONSTRAINT "tagihan_kunjungan_fk" FOREIGN KEY ("kunjungan_id") REFERENCES "kunjungans"("internal_id")
+  CONSTRAINT "tagihan_kunjungan_fk" FOREIGN KEY ("kunjungan_id") REFERENCES "kunjungans"("internal_id") ON DELETE CASCADE
 );
