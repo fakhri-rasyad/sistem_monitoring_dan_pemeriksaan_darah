@@ -8,7 +8,7 @@ import {
   FieldContent,
 } from "@/components/ui/field";
 import { Controller, useFormContext, UseFormReturn } from "react-hook-form";
-import { Receipt } from "lucide-react";
+import { Banknote, CreditCard, QrCode, Receipt } from "lucide-react";
 import { SectionCard } from "@/components/shared/section_card";
 import {
   Select,
@@ -29,6 +29,21 @@ export default function TagihanSection() {
   const biayaAlat = watch("tagihan.biaya_alat") ?? 0;
 
   const total = biayaKonsultasi + biayaAlat;
+
+  const metode_pembayaran = [
+    {
+      nama: MetodePembayaran.Cash,
+      icon: Banknote,
+    },
+    {
+      nama: MetodePembayaran.Qris,
+      icon: QrCode,
+    },
+    {
+      nama: MetodePembayaran.Transfer,
+      icon: CreditCard,
+    },
+  ];
 
   return (
     <SectionCard
@@ -113,11 +128,19 @@ export default function TagihanSection() {
                       </SelectValue>
                     </SelectTrigger>
                     <SelectContent>
-                      {Object.values(MetodePembayaran).map((value) => (
+                      {metode_pembayaran.map((metode) => (
+                        <SelectItem key={metode.nama} value={metode.nama}>
+                          <div className="flex items-center">
+                            <metode.icon className="mr-2 h-4 w-4" />
+                            {metode.nama}
+                          </div>
+                        </SelectItem>
+                      ))}
+                      {/* {Object.values(MetodePembayaran).map((value) => (
                         <SelectItem key={value} value={value}>
                           {value}
                         </SelectItem>
-                      ))}
+                      ))} */}
                     </SelectContent>
                   </Select>
                 </FieldContent>
