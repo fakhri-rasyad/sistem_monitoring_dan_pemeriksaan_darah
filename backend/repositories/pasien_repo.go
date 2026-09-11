@@ -14,6 +14,7 @@ type PasienRepo interface {
 	GetByPublicIDWithPreload(publicID uuid.UUID) (*models.Pasien, error)
 	GetByNama(nama string) ([]models.Pasien, error)
 	GetAllWithPreload() ([]models.Pasien, error)
+	ExportUserData(publicID uuid.UUID) (*models.Pasien, error)
 }
 
 type PasienRepoImpl struct {
@@ -34,6 +35,27 @@ func (r *PasienRepoImpl) GetByPublicIDWithPreload(publicID uuid.UUID) (*models.P
 		Preload("Kunjungan").
 		Preload("AlergiPasiens.Alergi").
 		Preload("PantanganPasien.Pantangan").
+		Where("public_id = ?", publicID).
+		First(pasien).Error; err != nil {
+		return nil, err
+	}
+
+	return pasien, nil
+}
+
+func (r *PasienRepoImpl) ExportUserData(publicID uuid.UUID) (*models.Pasien, error) {
+	pasien := &models.Pasien{}
+
+	if err := r.getDB(nil).
+		Preload("Pekerjaan").
+		Preload("Kunjungan").
+		Preload("AlergiPasiens.Alergi").
+		Preload("PantanganPasien.Pantangan").
+		Preload("Kunjungan.KomposisiTubuh").
+		Preload("Kunjungan.DataLabs").
+		Preload("Kunjungan.DataLabs.Parameter").
+		Preload("Kunjungan.Pemeriksaan").
+		Preload("Kunjungan.Tagihan").
 		Where("public_id = ?", publicID).
 		First(pasien).Error; err != nil {
 		return nil, err

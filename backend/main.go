@@ -84,6 +84,7 @@ func main() {
 	pasienServ := services.NewPasienService(pasienRepo, pekerjRepo)
 	kunjugServ := services.NewKunjunganService(kunjunRepo)
 	parmDhServ := services.NewParameterPemeriksaanDarahService(pemeDhRepo)
+	exportServ := services.NewExportService(pasienRepo)
 
 	submitCont := controllers.NewSubmissionCont(submitServ)
 	alergiCont := controllers.NewAlergiController(alergiServ)
@@ -92,6 +93,7 @@ func main() {
 	pasienCont := controllers.NewPasienController(pasienServ)
 	kunjugCont := controllers.NewKunjunganController(kunjugServ)
 	paramDCont := controllers.NewParameterPemeriksaanDarahController(parmDhServ)
+	exportCont := controllers.NewExportController(exportServ)
 
 	routes.Setup(
 		app,
@@ -102,6 +104,7 @@ func main() {
 		pasienCont,
 		kunjugCont,
 		paramDCont,
+		exportCont,
 	)
 
 	port := config.APPConfig.APPPort

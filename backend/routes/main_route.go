@@ -19,6 +19,7 @@ func Setup(
 	pasienCont controllers.PasienController,
 	kunjugCont controllers.KunjunganController,
 	paramDCont controllers.ParameterPemeriksaanDarahController,
+	exportCont controllers.ExportController,
 ) {
 	err := godotenv.Load(".env")
 	if err != nil {
@@ -51,6 +52,7 @@ func Setup(
 				"Accept",
 				"Authorization",
 			},
+			ExposeHeaders: []string{"Content-Disposition"},
 		},
 	))
 
@@ -71,6 +73,7 @@ func Setup(
 	api.Delete("/ppdh", paramDCont.Delete)
 
 	api.Get("/pasien", pasienCont.GetAllWithPreload)
+	api.Get("/pasien/export", exportCont.ExportUser)
 	api.Get("/pasien/detail", pasienCont.GetPasienByPublicIDWithPreload)
 	api.Delete("/pasien", pasienCont.Delete)
 

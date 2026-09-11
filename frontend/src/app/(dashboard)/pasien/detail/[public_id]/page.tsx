@@ -15,6 +15,8 @@ import { SectionCard } from "@/components/shared/section_card";
 import { BeanOff, User, UtensilsCrossed } from "lucide-react";
 import { toast } from "sonner";
 import { DeleteConfirmationDialog } from "@/components/shared/delete_confirmation_dialog";
+import { DownloadUserDetail } from "@/services/export";
+import { Button } from "@/components/ui/button";
 
 export default function PasienDetailPage() {
   const params = useParams<{ public_id: string }>();
@@ -25,6 +27,7 @@ export default function PasienDetailPage() {
   const [selectedKunjunganId, setSelectedKunjunganId] = useState<string | null>(
     null,
   );
+  const [downloadLoading, setDownloadLoading] = useState<boolean>(false);
 
   const handleDelete = (publicId: string) => {
     setSelectedKunjunganId(publicId);
@@ -72,6 +75,19 @@ export default function PasienDetailPage() {
     load();
   }, [params.public_id]);
 
+  const export_user_data = async () => {
+    setDownloadLoading(true);
+
+    try {
+      await DownloadUserDetail(params.public_id);
+      toast.success("Sukses mendownload data user");
+    } catch {
+      toast.error("Gagal mendownload data user");
+    } finally {
+      setDownloadLoading(false);
+    }
+  };
+
   if (loading) {
     return (
       <div className="flex min-h-screen items-center justify-center">
@@ -91,6 +107,15 @@ export default function PasienDetailPage() {
         title="Data Pasien"
         description="Detail pasien"
         icon={User}
+        action={
+          <Button onClick={export_user_data}>
+            {downloadLoading ? (
+              <Spinner className="size-8" />
+            ) : (
+              "Download Data Pasien"
+            )}
+          </Button>
+        }
       >
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
           <Info label="Nama" value={pasien.nama} />
