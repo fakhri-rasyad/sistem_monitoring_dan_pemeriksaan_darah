@@ -31,9 +31,7 @@ func (r *PasienRepoImpl) GetByPublicIDWithPreload(publicID uuid.UUID) (*models.P
 
 	if err := r.getDB(nil).
 		Preload("Pekerjaan").
-		Preload("Kunjungan.KomposisiTubuh").
-		Preload("Kunjungan.DataLabs.Parameter").
-		Preload("Kunjungan.Pemeriksaan").
+		Preload("Kunjungan").
 		Preload("AlergiPasiens.Alergi").
 		Preload("PantanganPasien.Pantangan").
 		Where("public_id = ?", publicID).

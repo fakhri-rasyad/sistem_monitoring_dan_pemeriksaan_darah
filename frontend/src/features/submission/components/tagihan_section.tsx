@@ -98,7 +98,11 @@ export default function TagihanSection() {
                 <Input
                   type="text"
                   value={`Rp ${Number(field.value ?? 0).toLocaleString("id-ID")}`}
-                  readOnly
+                  onChange={(e) => {
+                    const numericValue = e.target.value.replace(/\D/g, "");
+                    field.onChange(Number(numericValue));
+                  }}
+                  aria-invalid={fieldState.invalid}
                 />
                 {fieldState.error && <FieldError errors={[fieldState.error]} />}
               </Field>

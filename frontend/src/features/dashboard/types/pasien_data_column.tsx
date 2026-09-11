@@ -1,6 +1,8 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { dateToSugar } from "../utils/date_converter";
 import NavigationButton from "@/components/shared/navigation_button";
+import { Button } from "@/components/ui/button";
+import { TrashIcon } from "lucide-react";
 
 export type PasienData = {
   public_id: string;
@@ -9,7 +11,9 @@ export type PasienData = {
   tanggalLahir: string;
 };
 
-export const PasienColumns: ColumnDef<PasienData>[] = [
+export const PasienColumns = (
+  onDelete: (public_id: string) => void,
+): ColumnDef<PasienData>[] => [
   {
     accessorKey: "nama",
     header: "Nama",
@@ -34,6 +38,22 @@ export const PasienColumns: ColumnDef<PasienData>[] = [
         <NavigationButton
           navigationLink={`/pasien/detail/${row.original.public_id}`}
         />
+      );
+    },
+  },
+  {
+    accessorKey: "public_id",
+    header: "Hapus",
+    cell: ({ row }) => {
+      const public_id = row.original.public_id;
+      return (
+        <Button
+          size={"icon"}
+          variant={"destructive"}
+          onClick={() => onDelete(public_id)}
+        >
+          <TrashIcon />
+        </Button>
       );
     },
   },

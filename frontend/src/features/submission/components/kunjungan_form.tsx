@@ -51,7 +51,7 @@ export default function KunjunganForm({
     data_labs: [],
     tagihan: {
       biaya_konsultasi: 150000,
-      biaya_alat: 20000,
+      biaya_alat: 0,
       metode_pembayaran: MetodePembayaran.Cash,
     },
   };

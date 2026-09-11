@@ -16,6 +16,7 @@ export const AlergiColumns = (
   },
   {
     accessorKey: "public_id",
+    header: "Hapus",
     cell: ({ row }) => {
       const public_id = row.original.public_id;
       return (
