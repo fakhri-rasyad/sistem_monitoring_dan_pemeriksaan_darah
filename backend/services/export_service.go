@@ -309,14 +309,10 @@ func (s *ExportServiceImpl) PopulateKunjungan(
 		"Total",
 	)
 
-	f.SetCellFormula(
+	f.SetCellValue(
 		sheetName,
 		fmt.Sprintf("B%d", tagihanStartRow+4),
-		fmt.Sprintf(
-			"=B%d+B%d",
-			tagihanStartRow+1,
-			tagihanStartRow+2,
-		),
+		kunjungan.Tagihan.BiayaKonsultasi+kunjungan.Tagihan.BiayaAlat,
 	)
 
 	f.SetCellStyle(
