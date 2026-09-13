@@ -59,6 +59,7 @@ export default function KomposisiTubuhSection() {
                   {...register("komposisi_tubuh.berat_badan", {
                     valueAsNumber: true,
                   })}
+                  step="0.01"
                   type="number"
                   aria-invalid={fieldState.invalid}
                   id="komposisi_tubuh.berat_badan"
@@ -77,6 +78,7 @@ export default function KomposisiTubuhSection() {
                   {...register("komposisi_tubuh.tinggi_badan", {
                     valueAsNumber: true,
                   })}
+                  step="0.01"
                   type="number"
                   aria-invalid={fieldState.invalid}
                   id="komposisi_tubuh.tinggi_badan"
@@ -116,6 +118,7 @@ export default function KomposisiTubuhSection() {
                   {...register("komposisi_tubuh.air_tubuh", {
                     valueAsNumber: true,
                   })}
+                  step="0.01"
                   type="number"
                   aria-invalid={fieldState.invalid}
                   id="komposisi_tubuh.air_tubuh"
@@ -134,6 +137,7 @@ export default function KomposisiTubuhSection() {
                   {...register("komposisi_tubuh.massa_otot", {
                     valueAsNumber: true,
                   })}
+                  step="0.01"
                   type="number"
                   aria-invalid={fieldState.invalid}
                   id="komposisi_tubuh.massa_otot"
@@ -152,6 +156,7 @@ export default function KomposisiTubuhSection() {
                   {...register("komposisi_tubuh.massa_lemak", {
                     valueAsNumber: true,
                   })}
+                  step="0.01"
                   type="number"
                   aria-invalid={fieldState.invalid}
                   id="komposisi_tubuh.massa_lemak"
@@ -170,6 +175,7 @@ export default function KomposisiTubuhSection() {
                   {...register("komposisi_tubuh.massa_tulang", {
                     valueAsNumber: true,
                   })}
+                  step="0.01"
                   type="number"
                   aria-invalid={fieldState.invalid}
                   id="komposisi_tubuh.massa_tulang"
