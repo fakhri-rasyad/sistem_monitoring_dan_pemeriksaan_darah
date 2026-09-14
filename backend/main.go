@@ -55,6 +55,8 @@ func main() {
 	alePasRepo := repositories.NewAlergiPasienRepo(config.DB)
 	pantanRepo := repositories.NewPantanganRepo(config.DB)
 	panPasRepo := repositories.NewPantanganPasienRepo(config.DB)
+	rwytPyktRepo := repositories.NewRiwayatPenyakitRepo(config.DB)
+	rwytPytkPasRepo := repositories.NewRiwayatPenyakitPasienRepo(config.DB)
 	pemeDhRepo := repositories.NewParameterPemeriksaanDarah(config.DB)
 	pekerjRepo := repositories.NewPekerjaanRepo(config.DB)
 	pasienRepo := repositories.NewPasienRepo(config.DB)
@@ -69,8 +71,10 @@ func main() {
 		pasienRepo,
 		alergiRepo,
 		pantanRepo,
+		rwytPyktRepo,
 		alePasRepo,
 		panPasRepo,
+		rwytPytkPasRepo,
 		kunjunRepo,
 		komposRepo,
 		pemeDhRepo,
@@ -80,6 +84,7 @@ func main() {
 	)
 	alergiServ := services.NewAlergiService(alergiRepo)
 	pantanServ := services.NewPantanganService(pantanRepo)
+	rwytPyktServ := services.NewRiwayatPenyakitService(rwytPyktRepo)
 	pekerjServ := services.NewPekerjaanService(pekerjRepo)
 	pasienServ := services.NewPasienService(pasienRepo, pekerjRepo)
 	kunjugServ := services.NewKunjunganService(kunjunRepo)
@@ -89,6 +94,7 @@ func main() {
 	submitCont := controllers.NewSubmissionCont(submitServ)
 	alergiCont := controllers.NewAlergiController(alergiServ)
 	pantanCont := controllers.NewPantanganController(pantanServ)
+	rwytPyktCont := controllers.NewRiwayatPenyakitController(rwytPyktServ)
 	pekerjCont := controllers.NewPekerjaanController(pekerjServ)
 	pasienCont := controllers.NewPasienController(pasienServ)
 	kunjugCont := controllers.NewKunjunganController(kunjugServ)
@@ -100,6 +106,7 @@ func main() {
 		submitCont,
 		alergiCont,
 		pantanCont,
+		rwytPyktCont,
 		pekerjCont,
 		pasienCont,
 		kunjugCont,

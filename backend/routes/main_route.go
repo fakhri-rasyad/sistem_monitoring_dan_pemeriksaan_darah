@@ -15,6 +15,7 @@ func Setup(
 	submitCont controllers.SubmissionController,
 	alergiCont controllers.AlergiController,
 	pantanCont controllers.PantanganController,
+	rwytPyktCont controllers.RiwayatPenyakitController,
 	pekerjCont controllers.PekerjaanController,
 	pasienCont controllers.PasienController,
 	kunjugCont controllers.KunjunganController,
@@ -67,6 +68,10 @@ func Setup(
 	api.Get("/pantangan", pantanCont.GetPantangan)
 	api.Post("/pantangan", pantanCont.CreatePantangan)
 	api.Delete("/pantangan", pantanCont.Delete)
+
+	api.Get("/riwayat_penyakit", rwytPyktCont.GetRiwayatPenyakit)
+	api.Post("/riwayat_penyakit", rwytPyktCont.CreateRiwayatPenyakit)
+	api.Delete("/riwayat_penyakit", rwytPyktCont.Delete)
 
 	api.Get("/ppdh", paramDCont.GetParameterPemeriksaanDarah)
 	api.Post("/ppdh", paramDCont.CreateParameterPemeriksaanDarah)
