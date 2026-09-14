@@ -23,7 +23,7 @@ import { MetodePembayaran } from "@/enum/metode_pembayaran";
 export default function TagihanSection() {
   const { control, register, watch } = useFormContext();
 
-  const biayaKonsultasiList = [150000, 100000, 50000];
+  const biayaKonsultasiList = [150000, 100000, 50000, 0];
 
   const biayaKonsultasi = watch("tagihan.biaya_konsultasi") ?? 0;
   const biayaAlat = watch("tagihan.biaya_alat") ?? 0;
