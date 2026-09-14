@@ -6,32 +6,35 @@ import (
 )
 
 func ToPasien(model *models.Pasien) *dto.Pasien {
-  dto := &dto.Pasien{
-    DTOBase: *Map(&model.ModelBase, ToNewDTOBase),
-    Nama: model.Nama,
-    Alamat: model.Alamat,
-    TempatLahir: model.TempatLahir,
-    TanggalLahir: model.TanggalLahir,
-    NomorHP: model.NomorHP,
-    Email: model.Email,
+	dto := &dto.Pasien{
+		DTOBase:      *Map(&model.ModelBase, ToNewDTOBase),
+		Nama:         model.Nama,
+		Alamat:       model.Alamat,
+		TempatLahir:  model.TempatLahir,
+		TanggalLahir: model.TanggalLahir,
+		NomorHP:      model.NomorHP,
+		Email:        model.Email,
+	}
 
-  }
+	if pekerjaan := Map(&model.Pekerjaan, ToPekerjaan); pekerjaan != nil {
+		dto.Pekerjaan = *pekerjaan
+	}
 
-  if pekerjaan := Map(&model.Pekerjaan, ToPekerjaan); pekerjaan != nil {
-    dto.Pekerjaan = *pekerjaan
-  }
+	if kunjungan := MapSlice(model.Kunjungan, ToKunjungan); kunjungan != nil {
+		dto.Kunjungans = kunjungan
+	}
 
-  if kunjungan := MapSlice(model.Kunjungan, ToKunjungan); kunjungan != nil {
-    dto.Kunjungans = kunjungan
-  }
+	if alergiPasiens := MapSlice(model.AlergiPasiens, ToAlergiPasienBase); alergiPasiens != nil {
+		dto.AlergiPasiens = alergiPasiens
+	}
 
-  if alergiPasiens := MapSlice(model.AlergiPasiens, ToAlergiPasienBase); alergiPasiens != nil {
-    dto.AlergiPasiens = alergiPasiens
-  }
+	if pantanganPasien := MapSlice(model.PantanganPasien, ToPantanganPasien); pantanganPasien != nil {
+		dto.PantanganPasiens = pantanganPasien
+	}
 
-  if pantanganPasien := MapSlice(model.PantanganPasien, ToPantanganPasien); pantanganPasien != nil {
-    dto.PantanganPasiens = pantanganPasien
-  }
+	if riwayatPenyakit := MapSlice(model.RiwayatPenyakitPasien, ToRiwayatPenyakitPasien); riwayatPenyakit != nil {
+		dto.RiwayatPenyakitPasiens = riwayatPenyakit
+	}
 
-  return dto
+	return dto
 }

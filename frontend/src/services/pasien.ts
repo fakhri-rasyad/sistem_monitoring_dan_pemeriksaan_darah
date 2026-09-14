@@ -98,6 +98,16 @@ export interface PantanganPasienData {
   pantangan: PantanganData;
 }
 
+export interface RiwayatPenyakitData {
+  public_id: string;
+  nama: string;
+}
+
+export interface RiwayatPenyakitPasienData {
+  public_id: string;
+  riwayat_penyakit: RiwayatPenyakitData;
+}
+
 export interface ParameterData {
   public_id: string;
   nama: string;
@@ -162,6 +172,8 @@ export interface PasienDetailResponse {
   alergi_pasien: AlergiPasienData[];
 
   pantangan_pasien: PantanganPasienData[];
+
+  riwayat_penyakit_pasien: RiwayatPenyakitPasienData[];
 
   kunjungan: KunjunganData[];
 }

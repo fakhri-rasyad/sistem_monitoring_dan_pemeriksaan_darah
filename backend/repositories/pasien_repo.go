@@ -35,6 +35,7 @@ func (r *PasienRepoImpl) GetByPublicIDWithPreload(publicID uuid.UUID) (*models.P
 		Preload("Kunjungan").
 		Preload("AlergiPasiens.Alergi").
 		Preload("PantanganPasien.Pantangan").
+		Preload("RiwayatPenyakitPasien.RiwayatPenyakit").
 		Where("public_id = ?", publicID).
 		First(pasien).Error; err != nil {
 		return nil, err

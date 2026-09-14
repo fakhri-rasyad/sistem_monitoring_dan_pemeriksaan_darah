@@ -12,7 +12,7 @@ import { PasienDetailKunjunganColumns } from "@/features/submission/types/kunjun
 import Info from "@/components/shared/info";
 import formatDate from "@/utils/date";
 import { SectionCard } from "@/components/shared/section_card";
-import { BeanOff, User, UtensilsCrossed } from "lucide-react";
+import { BeanOff, ClipboardClock, User, UtensilsCrossed } from "lucide-react";
 import { toast } from "sonner";
 import { DeleteConfirmationDialog } from "@/components/shared/delete_confirmation_dialog";
 import { DownloadUserDetail } from "@/services/export";
@@ -131,7 +131,7 @@ export default function PasienDetailPage() {
         </div>
       </SectionCard>
 
-      <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
         <SectionCard
           id="alergi"
           title="Alergi"
@@ -172,6 +172,29 @@ export default function PasienDetailPage() {
                   className="rounded-md border px-3 py-2 text-sm"
                 >
                   {item.pantangan.nama}
+                </div>
+              ))}
+            </div>
+          )}
+        </SectionCard>
+        <SectionCard
+          id="riwayat_penyakit"
+          title="Riwayat Penyakit"
+          description="Detail riwayat penyakit pasien"
+          icon={ClipboardClock}
+        >
+          {pasien.riwayat_penyakit_pasien.length === 0 ? (
+            <p className="text-sm text-muted-foreground">
+              Tidak ada riwayat penyakit.
+            </p>
+          ) : (
+            <div className="flex flex-wrap gap-2">
+              {pasien.riwayat_penyakit_pasien.map((item) => (
+                <div
+                  key={item.public_id}
+                  className="rounded-md border px-3 py-2 text-sm"
+                >
+                  {item.riwayat_penyakit.nama}
                 </div>
               ))}
             </div>

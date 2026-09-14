@@ -139,7 +139,7 @@ export function PantanganSection({ form }: Props) {
             <Separator />
             <FieldGroup
               data-slot="checkbox-group"
-              className="grid grid-cols-3 gap-3"
+              className="grid grid-cols-2 lg:grid-cols-3 gap-3"
             >
               {pantangan.map((item) => (
                 <Field
