@@ -18,18 +18,20 @@ type SubmitService interface {
 }
 
 type SubmitServiceImpl struct {
-	pekerjaRepo repositories.RepoBase[models.Pekerjaan]
-	pasienRepo  repositories.RepoBase[models.Pasien]
-	alergiRepo  repositories.RepoBase[models.Alergi]
-	pantangRepo repositories.RepoBase[models.Pantangan]
-	alrgPasRepo repositories.RepoBase[models.AlergiPasiens]
-	pntgPasRepo repositories.RepoBase[models.PantanganPasien]
-	kunjungRepo repositories.RepoBase[models.Kunjungan]
-	kompTubRepo repositories.RepoBase[models.KomposisiTubuh]
-	parametRepo repositories.RepoBase[models.ParameterPemeriksaanDarah]
-	dataLabRepo repositories.RepoBase[models.DataLab]
-	pemerikRepo repositories.RepoBase[models.Pemeriksaan]
-	tagihanRepo repositories.TagihanRepo
+	pekerjaRepo     repositories.RepoBase[models.Pekerjaan]
+	pasienRepo      repositories.RepoBase[models.Pasien]
+	alergiRepo      repositories.RepoBase[models.Alergi]
+	pantangRepo     repositories.RepoBase[models.Pantangan]
+	rwytPyktRepo    repositories.RepoBase[models.RiwayatPenyakit]
+	alrgPasRepo     repositories.RepoBase[models.AlergiPasiens]
+	pntgPasRepo     repositories.RepoBase[models.PantanganPasien]
+	rwytPyktPasRepo repositories.RepoBase[models.RiwayatPenyakitPasien]
+	kunjungRepo     repositories.RepoBase[models.Kunjungan]
+	kompTubRepo     repositories.RepoBase[models.KomposisiTubuh]
+	parametRepo     repositories.RepoBase[models.ParameterPemeriksaanDarah]
+	dataLabRepo     repositories.RepoBase[models.DataLab]
+	pemerikRepo     repositories.RepoBase[models.Pemeriksaan]
+	tagihanRepo     repositories.TagihanRepo
 }
 
 func NewSubmitService(
@@ -37,8 +39,10 @@ func NewSubmitService(
 	pasienRepo repositories.RepoBase[models.Pasien],
 	alergiRepo repositories.RepoBase[models.Alergi],
 	pantangRepo repositories.RepoBase[models.Pantangan],
+	rwytPyktRepo repositories.RepoBase[models.RiwayatPenyakit],
 	alrgPasRepo repositories.RepoBase[models.AlergiPasiens],
 	pntgPasRepo repositories.RepoBase[models.PantanganPasien],
+	rwytPyktPasRepo repositories.RepoBase[models.RiwayatPenyakitPasien],
 	kunjungRepo repositories.RepoBase[models.Kunjungan],
 	kompTubRepo repositories.RepoBase[models.KomposisiTubuh],
 	parametRepo repositories.RepoBase[models.ParameterPemeriksaanDarah],
@@ -160,6 +164,15 @@ func (s *SubmitServiceImpl) FirstSubmissionCreation(submission *dto.SubmissionCr
 		}
 	}
 
+	if len(submission.RiwayatPenyakitPasiens) != 0 {
+		for i := range submission.RiwayatPenyakitPasiens {
+			err := s.resolveRiwayatPenyakitPasien(wf.tx, pasien.InternalID, &submission.RiwayatPenyakitPasiens[i])
+			if err != nil {
+				return err
+			}
+		}
+	}
+
 	kunjungan, err := s.resolveKunjungan(wf.tx, pasien.InternalID, &submission.Kunjungan)
 
 	if err != nil {
@@ -271,6 +284,27 @@ func (s *SubmitServiceImpl) resolvePantanganPasien(tx *gorm.DB, pasienID int, re
 	} else {
 		return nil
 	}
+}
+
+func (s *SubmitServiceImpl) resolveRiwayatPenyakitPasien(tx *gorm.DB, pasienID int, ref *dto.RiwayatPenyakitPasienCreate) error {
+	riwayatPenyakit, err := s.rwytPyktRepo.GetByPublicID(tx, ref.RiwayatPenyakitPublicID)
+
+	if err != nil {
+		return err
+	}
+
+	model := &models.RiwayatPenyakitPasien{
+		PasienID:          pasienID,
+		RiwayatPenyakitID: riwayatPenyakit.InternalID,
+	}
+
+	_, err = s.rwytPyktPasRepo.Create(tx, model)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func (s *SubmitServiceImpl) resolveKunjungan(tx *gorm.DB, pasienID int, ref *dto.KunjunganCreate) (*models.Kunjungan, error) {
