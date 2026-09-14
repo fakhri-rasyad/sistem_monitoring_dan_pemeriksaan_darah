@@ -7,6 +7,7 @@ import { PantanganPasienSchema } from "./pantangan_pasien_schema";
 import { PemeriksaanSchema } from "./pemeriksaan_schema";
 import { PasienSchema } from "./pasien_schema";
 import { TagihanSchema } from "./tagihan_schema";
+import { RiwayatPenyakitPasienSchema } from "./riwayat_penyakit_pasien_schema";
 
 export const PemeriksaanFormSchema = z
   .object({
@@ -15,6 +16,8 @@ export const PemeriksaanFormSchema = z
     alergi_pasiens: z.array(AlergiPasienSchema),
 
     pantangan_pasiens: z.array(PantanganPasienSchema),
+
+    riwayat_penyakit_pasiens: z.array(RiwayatPenyakitPasienSchema),
 
     kunjungan: KunjunganSchema,
 

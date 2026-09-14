@@ -7,6 +7,7 @@ import {
   BeanOff,
   BedDouble,
   Briefcase,
+  ClipboardClock,
   Heart,
   Hospital,
   HospitalIcon,
@@ -28,6 +29,7 @@ import {
 } from "@/components/ui/sidebar";
 
 import { Separator } from "@/components/ui/separator";
+import { title } from "process";
 
 const items = [
   {
@@ -55,6 +57,11 @@ const items = [
     title: "Parameter Pemeriksaan Darah",
     href: "/ppdh",
     icon: Stethoscope,
+  },
+  {
+    title: "Riwayat Penyakit",
+    href: "/riwayat_penyakit",
+    icon: ClipboardClock,
   },
 
   {

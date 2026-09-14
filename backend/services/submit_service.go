@@ -51,18 +51,20 @@ func NewSubmitService(
 	tagihanRepo repositories.TagihanRepo,
 ) SubmitService {
 	return &SubmitServiceImpl{
-		pekerjaRepo: pekerjaRepo,
-		pasienRepo:  pasienRepo,
-		alergiRepo:  alergiRepo,
-		pantangRepo: pantangRepo,
-		alrgPasRepo: alrgPasRepo,
-		pntgPasRepo: pntgPasRepo,
-		kunjungRepo: kunjungRepo,
-		kompTubRepo: kompTubRepo,
-		parametRepo: parametRepo,
-		dataLabRepo: dataLabRepo,
-		pemerikRepo: pemerikRepo,
-		tagihanRepo: tagihanRepo,
+		pekerjaRepo:     pekerjaRepo,
+		pasienRepo:      pasienRepo,
+		alergiRepo:      alergiRepo,
+		pantangRepo:     pantangRepo,
+		rwytPyktRepo:    rwytPyktRepo,
+		alrgPasRepo:     alrgPasRepo,
+		pntgPasRepo:     pntgPasRepo,
+		rwytPyktPasRepo: rwytPyktPasRepo,
+		kunjungRepo:     kunjungRepo,
+		kompTubRepo:     kompTubRepo,
+		parametRepo:     parametRepo,
+		dataLabRepo:     dataLabRepo,
+		pemerikRepo:     pemerikRepo,
+		tagihanRepo:     tagihanRepo,
 	}
 }
 

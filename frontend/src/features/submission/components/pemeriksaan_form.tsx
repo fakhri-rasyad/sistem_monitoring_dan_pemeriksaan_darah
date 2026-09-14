@@ -44,6 +44,7 @@ export default function PemeriksaanForm() {
     },
     alergi_pasiens: [],
     pantangan_pasiens: [],
+    riwayat_penyakit_pasiens: [],
     kunjungan: { tanggal: "", tensi: "" },
     pemeriksaan: {
       diperiksa_at: "",
