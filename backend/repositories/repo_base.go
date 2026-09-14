@@ -10,6 +10,7 @@ import (
 type RepoBase[T any] interface {
 	Create(tx *gorm.DB, entity *T) (*T, error)
 	GetByPublicID(tx *gorm.DB, uuid uuid.UUID) (*T, error)
+	Update(tx *gorm.DB, toUpdate *T) error
 	GetAll(tx *gorm.DB) ([]T, error)
 	Delete(tx *gorm.DB, id int) error
 }
@@ -66,6 +67,13 @@ func (r *RepoBaseImpl[T]) GetAll(tx *gorm.DB) ([]T, error) {
 	}
 
 	return entities, nil
+}
+
+func (r *RepoBaseImpl[T]) Update(tx *gorm.DB, toUpdate *T) error {
+	if err := r.getDB(tx).Save(toUpdate).Error; err != nil {
+		return err
+	}
+	return nil
 }
 
 func (r *RepoBaseImpl[T]) Delete(tx *gorm.DB, id int) error {

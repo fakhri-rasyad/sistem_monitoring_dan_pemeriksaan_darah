@@ -13,6 +13,7 @@ import (
 type PasienController interface {
 	CreatePasien(ctx fiber.Ctx) error
 	GetPasien(ctx fiber.Ctx) error
+	Update(ctx fiber.Ctx) error
 	GetPasienByPublicID(ctx fiber.Ctx) error
 	GetPasienByPublicIDWithPreload(ctx fiber.Ctx) error
 	GetAllWithPreload(ctx fiber.Ctx) error
@@ -137,6 +138,19 @@ func (c *PasienControllerImpl) Delete(ctx fiber.Ctx) error {
 	}
 
 	return utils.SuccessResponse(ctx, "Sukses menghapus pasien", nil)
+}
+
+func (c *PasienControllerImpl) Update(ctx fiber.Ctx) error {
+	update := &dto.PasienUpdate{}
+	if err := ctx.Bind().Body(update); err != nil {
+		return utils.BadRequest(ctx, "Input Pasien tidak valid", err)
+	}
+
+	if err := c.s.Update(update); err != nil {
+		return utils.InternalError(ctx, "Gagal memperbarui Pasien", err)
+	}
+
+	return utils.SuccessResponse(ctx, "Alamat berhasil diperbarui", nil)
 }
 
 func NewPasienController(s services.PasienService) PasienController {

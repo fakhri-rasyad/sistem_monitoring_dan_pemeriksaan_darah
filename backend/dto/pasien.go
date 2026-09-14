@@ -33,6 +33,12 @@ type PasienCreate struct {
 	PekerjaanPublicID uuid.UUID `json:"pekerjaan_public_id"`
 }
 
+type PasienUpdate struct {
+	// Tambahkan variabel baru kalau perlu
+	PublicID uuid.UUID `json:"public_id"`
+	Alamat   string    `json:"alamat"`
+}
+
 type PasienReference struct {
 	PublicID *uuid.UUID    `json:"pasien_public_id"`
 	Create   *PasienCreate `json:"pasien_create"`

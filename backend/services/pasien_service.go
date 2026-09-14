@@ -14,6 +14,7 @@ type PasienService interface {
 	GetByPublicID(publicID uuid.UUID) (*dto.Pasien, error)
 	GetByPublicIDWithPreload(publicID uuid.UUID) (*dto.Pasien, error)
 	GetAll() ([]dto.Pasien, error)
+	Update(update *dto.PasienUpdate) error
 	GetAllWithPreload() ([]dto.Pasien, error)
 	Delete(publicID uuid.UUID) error
 }
@@ -92,6 +93,21 @@ func (a *PasienServiceImpl) Delete(publicID uuid.UUID) error {
 	}
 
 	if err = a.r.Delete(nil, pasien.InternalID); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (a *PasienServiceImpl) Update(update *dto.PasienUpdate) error {
+	pasien, err := a.r.GetByPublicID(nil, update.PublicID)
+
+	if err != nil {
+		return err
+	}
+	pasien.Alamat = update.Alamat
+
+	if err := a.r.Update(nil, pasien); err != nil {
 		return err
 	}
 

@@ -1,9 +1,16 @@
 "use client";
 
-import { use, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import z from "zod";
 
-import { getPasienDetail, PasienDetailResponse } from "@/services/pasien";
+import {
+  getPasienDetail,
+  PasienDetailResponse,
+  updatePasien,
+} from "@/services/pasien";
 import { DeleteKunjungan } from "@/services/kunjungan";
 
 import { Spinner } from "@/components/ui/spinner";
@@ -12,22 +19,65 @@ import { PasienDetailKunjunganColumns } from "@/features/submission/types/kunjun
 import Info from "@/components/shared/info";
 import formatDate from "@/utils/date";
 import { SectionCard } from "@/components/shared/section_card";
-import { BeanOff, ClipboardClock, User, UtensilsCrossed } from "lucide-react";
+
+import {
+  BeanOff,
+  ClipboardClock,
+  User,
+  UtensilsCrossed,
+  Pencil,
+} from "lucide-react";
+
 import { toast } from "sonner";
 import { DeleteConfirmationDialog } from "@/components/shared/delete_confirmation_dialog";
 import { DownloadUserDetail } from "@/services/export";
 import { Button } from "@/components/ui/button";
+
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+
+import { Field, FieldError, FieldLabel } from "@/components/ui/field";
+
+import { Input } from "@/components/ui/input";
+import {
+  PasienUpdate,
+  PasienUpdateValue,
+} from "@/features/submission/schema/pasien_update_schema";
 
 export default function PasienDetailPage() {
   const params = useParams<{ public_id: string }>();
 
   const [pasien, setPasien] = useState<PasienDetailResponse | null>(null);
   const [loading, setLoading] = useState(true);
+
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [updateDialogOpen, setUpdateDialogOpen] = useState(false);
+
   const [selectedKunjunganId, setSelectedKunjunganId] = useState<string | null>(
     null,
   );
-  const [downloadLoading, setDownloadLoading] = useState<boolean>(false);
+
+  const [downloadLoading, setDownloadLoading] = useState(false);
+  const [updateLoading, setUpdateLoading] = useState(false);
+
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<PasienUpdateValue>({
+    resolver: zodResolver(PasienUpdate),
+    defaultValues: {
+      public_id: params.public_id,
+      alamat: "",
+    },
+  });
 
   const handleDelete = (publicId: string) => {
     setSelectedKunjunganId(publicId);
@@ -52,6 +102,7 @@ export default function PasienDetailPage() {
       });
 
       toast.success("Sukses menghapus kunjungan");
+
       setSelectedKunjunganId(null);
       setDeleteDialogOpen(false);
     } catch (error) {
@@ -75,6 +126,41 @@ export default function PasienDetailPage() {
     load();
   }, [params.public_id]);
 
+  const handleOpenUpdateDialog = () => {
+    if (!pasien) return;
+
+    reset({
+      public_id: params.public_id,
+      alamat: pasien.alamat ?? "",
+    });
+
+    setUpdateDialogOpen(true);
+  };
+
+  const handleUpdatePasien = async (data: PasienUpdateValue) => {
+    setUpdateLoading(true);
+
+    try {
+      await updatePasien(data);
+
+      setPasien((current) => {
+        if (!current) return current;
+
+        return {
+          ...current,
+          alamat: data.alamat,
+        };
+      });
+
+      toast.success("Sukses memperbarui data pasien");
+      setUpdateDialogOpen(false);
+    } catch (error) {
+      console.error("UPDATE ERROR:", error);
+      toast.error("Gagal memperbarui data pasien");
+    } finally {
+      setUpdateLoading(false);
+    }
+  };
   const export_user_data = async () => {
     setDownloadLoading(true);
 
@@ -108,25 +194,41 @@ export default function PasienDetailPage() {
         description="Detail pasien"
         icon={User}
         action={
-          <Button onClick={export_user_data}>
-            {downloadLoading ? (
-              <Spinner className="size-8" />
-            ) : (
-              "Download Data Pasien"
-            )}
-          </Button>
+          <div className="flex flex-wrap gap-2">
+            <Button variant="outline" onClick={handleOpenUpdateDialog}>
+              <Pencil />
+              Edit
+            </Button>
+
+            <Button onClick={export_user_data} disabled={downloadLoading}>
+              {downloadLoading ? (
+                <>
+                  <Spinner />
+                  Mendownload...
+                </>
+              ) : (
+                "Download Data Pasien"
+              )}
+            </Button>
+          </div>
         }
       >
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
           <Info label="Nama" value={pasien.nama} />
+
           <Info label="Nomor HP" value={pasien.nomor_hp} />
+
           <Info label="Email" value={pasien.email} />
+
           <Info label="Pekerjaan" value={pasien.pekerjaan?.nama} />
+
           <Info label="Tempat Lahir" value={pasien.tempat_lahir} />
+
           <Info
             label="Tanggal Lahir"
             value={formatDate(pasien.tanggal_lahir)}
           />
+
           <Info label="Alamat" value={pasien.alamat} />
         </div>
       </SectionCard>
@@ -177,6 +279,7 @@ export default function PasienDetailPage() {
             </div>
           )}
         </SectionCard>
+
         <SectionCard
           id="riwayat_penyakit"
           title="Riwayat Penyakit"
@@ -211,6 +314,59 @@ export default function PasienDetailPage() {
         />
       </div>
 
+      <Dialog open={updateDialogOpen} onOpenChange={setUpdateDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Edit Data Pasien</DialogTitle>
+
+            <DialogDescription>
+              Perbarui informasi pasien yang dapat diubah.
+            </DialogDescription>
+          </DialogHeader>
+
+          <form
+            onSubmit={handleSubmit(handleUpdatePasien, (errors) => {
+              console.log("Validation errors:", errors);
+            })}
+            className="space-y-4"
+          >
+            <Field>
+              <FieldLabel htmlFor="alamat">Alamat</FieldLabel>
+
+              <Input
+                id="alamat"
+                placeholder="Masukkan alamat pasien"
+                {...register("alamat")}
+                aria-invalid={!!errors.alamat}
+              />
+
+              {errors.alamat && <FieldError errors={[errors.alamat]} />}
+            </Field>
+
+            <DialogFooter>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => setUpdateDialogOpen(false)}
+                disabled={updateLoading}
+              >
+                Batal
+              </Button>
+
+              <Button type="submit" disabled={updateLoading}>
+                {updateLoading ? (
+                  <>
+                    <Spinner />
+                    Menyimpan...
+                  </>
+                ) : (
+                  "Simpan"
+                )}
+              </Button>
+            </DialogFooter>
+          </form>
+        </DialogContent>
+      </Dialog>
       <DeleteConfirmationDialog
         open={deleteDialogOpen}
         onOpenChange={setDeleteDialogOpen}

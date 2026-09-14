@@ -78,6 +78,7 @@ func Setup(
 	api.Delete("/ppdh", paramDCont.Delete)
 
 	api.Get("/pasien", pasienCont.GetAllWithPreload)
+	api.Patch("/pasien", pasienCont.Update)
 	api.Get("/pasien/export", exportCont.ExportUser)
 	api.Get("/pasien/detail", pasienCont.GetPasienByPublicIDWithPreload)
 	api.Delete("/pasien", pasienCont.Delete)

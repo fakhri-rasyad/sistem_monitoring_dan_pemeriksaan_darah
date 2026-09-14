@@ -2,6 +2,7 @@ import { PasienResponse } from "@/features/dashboard/types/pasien_respose";
 import { api } from "./api";
 import { ApiResponse } from "./response";
 import axios from "axios";
+import { PasienUpdateValue } from "@/features/submission/schema/pasien_update_schema";
 
 export async function getPasien(): Promise<PasienResponse[]> {
   try {
@@ -191,6 +192,26 @@ export async function getPasienDetail(
           public_id: publicId,
         },
       }
+    );
+
+    return res.data.Data;
+  } catch (err) {
+    if (axios.isAxiosError(err)) {
+      console.error("Status:", err.response?.status);
+      console.error("Response:", err.response?.data);
+      console.error("URL:", err.config?.url);
+    } else {
+      console.error(err);
+    }
+
+    throw err;
+  }
+}
+
+export async function updatePasien(data: PasienUpdateValue): Promise<null> {
+  try {
+    const res = await api.patch<ApiResponse<null>>(
+      "/api/v1/pasien", data
     );
 
     return res.data.Data;
