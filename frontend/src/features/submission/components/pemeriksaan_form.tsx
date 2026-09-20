@@ -73,6 +73,7 @@ export default function PemeriksaanForm() {
   const form = useForm<PemeriksaanFormValues>({
     resolver: zodResolver(PemeriksaanFormSchema),
     defaultValues: defaultFormValues,
+    mode: "onChange",
   });
   async function onSubmit(values: PemeriksaanFormValues) {
     try {

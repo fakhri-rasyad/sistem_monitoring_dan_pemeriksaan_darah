@@ -160,7 +160,7 @@ export default function KunjunganDetail({
                   <TableCell>Tidak ada data laboratorium.</TableCell>
                 ) : (
                   kunjungan.data_lab.map((lab) => (
-                    <TableRow>
+                    <TableRow key={lab.public_id}>
                       <TableCell>{lab.parameter.nama}</TableCell>
 
                       <TableCell>{lab.nilai}</TableCell>

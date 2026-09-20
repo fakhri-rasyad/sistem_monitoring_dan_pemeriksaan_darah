@@ -171,24 +171,6 @@ export default function PatientSection({ form }: Props) {
               </Field>
             )}
           />
-          {/* <Controller
-              name={"pasien.pasien_create.tanggal_lahir"}
-              control={control}
-              render={({ field, fieldState }) => (
-                <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel>Tanggal Lahir Pasien</FieldLabel>
-                  <Input
-                    type="datetime-local"
-                    {...field}
-                    aria-invalid={fieldState.invalid}
-                    id="pasien.pasien_create.tanggal_lahir"
-                  />
-                  {fieldState.invalid && (
-                    <FieldError errors={[fieldState.error]} />
-                  )}
-                </Field>
-              )}
-            /> */}
           <Controller
             name={"pasien.pasien_create.tanggal_lahir"}
             control={control}
@@ -198,7 +180,7 @@ export default function PatientSection({ form }: Props) {
 
               return (
                 <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel htmlFor="ayah.create.tanggal_lahir">
+                  <FieldLabel htmlFor="pasien.pasien_create.tanggal_lahir">
                     Tanggal Lahir
                   </FieldLabel>
 
@@ -207,7 +189,7 @@ export default function PatientSection({ form }: Props) {
                       render={
                         <Button
                           variant="outline"
-                          id="ayah.create.tanggal_lahir"
+                          id="pasien.pasien_create.tanggal_lahir"
                           className="w-full justify-start"
                           aria-invalid={fieldState.invalid}
                         >

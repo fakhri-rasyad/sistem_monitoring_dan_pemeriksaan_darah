@@ -34,9 +34,13 @@ type PasienCreate struct {
 }
 
 type PasienUpdate struct {
-	// Tambahkan variabel baru kalau perlu
-	PublicID uuid.UUID `json:"public_id"`
-	Alamat   string    `json:"alamat"`
+	PublicID     uuid.UUID `json:"public_id"`
+	Nama         string    `json:"nama"`
+	Alamat       string    `json:"alamat"`
+	TempatLahir  string    `json:"tempat_lahir"`
+	TanggalLahir time.Time `json:"tanggal_lahir"`
+	NomorHP      string    `json:"nomor_hp"`
+	Email        string    `json:"email"`
 }
 
 type PasienReference struct {

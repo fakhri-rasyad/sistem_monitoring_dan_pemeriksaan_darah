@@ -105,7 +105,13 @@ func (a *PasienServiceImpl) Update(update *dto.PasienUpdate) error {
 	if err != nil {
 		return err
 	}
+
+	pasien.Nama = update.Nama
 	pasien.Alamat = update.Alamat
+	pasien.TempatLahir = update.TempatLahir
+	pasien.TanggalLahir = update.TanggalLahir
+	pasien.NomorHP = update.NomorHP
+	pasien.Email = update.Email
 
 	if err := a.r.Update(nil, pasien); err != nil {
 		return err
