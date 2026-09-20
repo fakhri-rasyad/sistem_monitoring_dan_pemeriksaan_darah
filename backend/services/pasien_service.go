@@ -113,6 +113,13 @@ func (a *PasienServiceImpl) Update(update *dto.PasienUpdate) error {
 	pasien.NomorHP = update.NomorHP
 	pasien.Email = update.Email
 
+	pekerjaan, err := a.pr.GetByPublicID(nil, update.PekerjaanPubID)
+	if err != nil {
+		return err
+	}
+
+	pasien.PekerjaanID = pekerjaan.InternalID
+
 	if err := a.r.Update(nil, pasien); err != nil {
 		return err
 	}

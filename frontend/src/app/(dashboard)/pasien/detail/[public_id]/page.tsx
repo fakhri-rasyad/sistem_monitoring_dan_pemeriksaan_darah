@@ -36,14 +36,21 @@ import { Button } from "@/components/ui/button";
 
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
+  DialogTrigger,
 } from "@/components/ui/dialog";
 
-import { Field, FieldError, FieldLabel } from "@/components/ui/field";
+import {
+  Field,
+  FieldContent,
+  FieldError,
+  FieldLabel,
+} from "@/components/ui/field";
 
 import { Input } from "@/components/ui/input";
 import {
@@ -56,6 +63,15 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
+import { PekerjaanResponse } from "@/features/dashboard/types/pekerjaan_response";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { getPekerjaan } from "@/services/pekerjaan";
 
 export default function PasienDetailPage() {
   const params = useParams<{ public_id: string }>();
@@ -74,6 +90,8 @@ export default function PasienDetailPage() {
   const [pasienEditStatus, setPasienEditStatus] = useState(false);
   const [openTanggal, setTanggalOpen] = useState(false);
 
+  const [jobs, setJobs] = useState<PekerjaanResponse[]>([]);
+
   const defaultValue = {
     public_id: params.public_id,
     nama: "",
@@ -82,10 +100,11 @@ export default function PasienDetailPage() {
     tanggal_lahir: "",
     nomor_hp: "",
     email: "",
+    pekerjaan_public_id: "",
   };
 
   const {
-    register,
+    watch,
     handleSubmit,
     reset,
     formState: { errors },
@@ -94,6 +113,11 @@ export default function PasienDetailPage() {
     resolver: zodResolver(PasienUpdate),
     defaultValues: defaultValue,
   });
+
+  const selectedPekerjaan = watch("pekerjaan_public_id");
+  const currentPekerjaan = jobs.find(
+    (value) => value.public_id == selectedPekerjaan,
+  );
 
   const handleDelete = (publicId: string) => {
     setSelectedKunjunganId(publicId);
@@ -129,9 +153,13 @@ export default function PasienDetailPage() {
   useEffect(() => {
     async function load() {
       try {
-        const data = await getPasienDetail(params.public_id);
+        const [data, pekerjaan] = await Promise.all([
+          getPasienDetail(params.public_id),
+          getPekerjaan(),
+        ]);
 
         setPasien(data);
+        setJobs(pekerjaan);
 
         reset({
           public_id: data.public_id,
@@ -141,6 +169,7 @@ export default function PasienDetailPage() {
           tanggal_lahir: data.tanggal_lahir ?? "",
           nomor_hp: data.nomor_hp ?? "",
           email: data.email ?? "",
+          pekerjaan_public_id: data.pekerjaan.public_id ?? "",
         });
       } catch (error) {
         console.error(error);
@@ -163,6 +192,7 @@ export default function PasienDetailPage() {
       tanggal_lahir: pasien.tanggal_lahir ?? "",
       nomor_hp: pasien.nomor_hp ?? "",
       email: pasien.email ?? "",
+      pekerjaan_public_id: pasien.pekerjaan.public_id ?? "",
     });
 
     setPasienEditStatus(false);
@@ -176,21 +206,21 @@ export default function PasienDetailPage() {
     try {
       await updatePasien(data);
 
-      setPasien((current) => {
-        if (!current) return current;
+      // setPasien((current) => {
+      //   if (!current) return current;
 
-        return {
-          ...current,
-          public_id: data.public_id,
-          nama: data.nama ?? current.nama,
-          alamat: data.alamat ?? current.alamat,
-          tempat_lahir: data.tempat_lahir ?? current.tempat_lahir,
-          tanggal_lahir: data.tanggal_lahir ?? current.tanggal_lahir,
-          nomor_hp: data.nomor_hp ?? current.nomor_hp,
-          email: data.email ?? current.email,
-          pekerjaan: current.pekerjaan,
-        };
-      });
+      //   return {
+      //     ...current,
+      //     public_id: data.public_id,
+      //     nama: data.nama ?? current.nama,
+      //     alamat: data.alamat ?? current.alamat,
+      //     tempat_lahir: data.tempat_lahir ?? current.tempat_lahir,
+      //     tanggal_lahir: data.tanggal_lahir ?? current.tanggal_lahir,
+      //     nomor_hp: data.nomor_hp ?? current.nomor_hp,
+      //     email: data.email ?? current.email,
+      //     pekerjaan: current.pekerjaan,
+      //   };
+      // });
 
       toast.success("Sukses memperbarui data pasien");
       setPasienEditStatus(false);
@@ -439,7 +469,55 @@ export default function PasienDetailPage() {
               />
             </div>
 
-            <Info label="Pekerjaan" value={pasien.pekerjaan?.nama} />
+            {pasienEditStatus ? (
+              <Controller
+                control={control}
+                name="pekerjaan_public_id"
+                render={({ field, fieldState }) => (
+                  <Field data-invalid={fieldState.invalid}>
+                    <FieldLabel>Pekerjaan</FieldLabel>
+                    <FieldContent>
+                      <div className="grid grid-cols-4 gap-4 lg:grid-cols-8">
+                        <div className="col-span-3 lg:col-span-7">
+                          <Select
+                            value={field.value}
+                            onValueChange={field.onChange}
+                          >
+                            <SelectTrigger
+                              aria-invalid={fieldState.invalid}
+                              className="w-full"
+                            >
+                              <SelectValue
+                                placeholder={currentPekerjaan?.nama ?? ""}
+                              >
+                                {currentPekerjaan?.nama ?? "Pilih pekerjaan"}
+                              </SelectValue>
+                            </SelectTrigger>
+
+                            <SelectContent>
+                              {jobs.map((job) => (
+                                <SelectItem
+                                  key={job.public_id}
+                                  value={job.public_id}
+                                >
+                                  {job.nama}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        </div>
+                      </div>
+                    </FieldContent>
+
+                    {fieldState.invalid && (
+                      <FieldError errors={[fieldState.error]} />
+                    )}
+                  </Field>
+                )}
+              />
+            ) : (
+              <Info label="Pekerjaan" value={currentPekerjaan?.nama} />
+            )}
             {pasienEditStatus && (
               <div className="flex flex-row-reverse gap-2">
                 <Button type="submit" disabled={updateLoading}>

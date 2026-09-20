@@ -9,6 +9,8 @@ export const PasienUpdate = z.object({
     .iso.datetime("Tanggal lahir wajib diisi").optional(),
   nomor_hp: z.string("Nomor tidak boleh kosong").min(8, "Nomor HP tidak valid").optional(),
   email: z.email("Email tidak valid").optional(),
+
+  pekerjaan_public_id: z.guid("Pekerjaan wajib dipilih").optional(),
 })
 
 
