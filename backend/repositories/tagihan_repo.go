@@ -7,29 +7,16 @@ import (
 )
 
 type TagihanRepo interface {
+	RepoBase[models.Tagihan]
 	Create(tx *gorm.DB, m *models.Tagihan) (*models.Tagihan, error)
 }
 
 type TagihanRepoImpl struct {
-	db *gorm.DB
+	*RepoBaseImpl[models.Tagihan]
 }
 
 func NewTagihanRepo(db *gorm.DB) TagihanRepo {
-	return &TagihanRepoImpl{db: db}
-}
-
-func (r *TagihanRepoImpl) getDB(tx *gorm.DB) *gorm.DB {
-	if tx != nil {
-		return tx
+	return &TagihanRepoImpl{
+		RepoBaseImpl: (*RepoBaseImpl[models.Tagihan])(NewRepoBaseImpl[models.Pasien](db)),
 	}
-
-	return r.db
-}
-
-func (r *TagihanRepoImpl) Create(tx *gorm.DB, m *models.Tagihan) (*models.Tagihan, error) {
-	if err := r.getDB(tx).Create(m).Error; err != nil {
-		return nil, err
-	}
-
-	return m, nil
 }

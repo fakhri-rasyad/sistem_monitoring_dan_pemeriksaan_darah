@@ -4,6 +4,7 @@ import { ApiResponse } from "./response";
 import { PemeriksaanPayload } from "@/features/submission/types/payload";
 import { PemeriksaanFormValues } from "@/features/submission/schema/pemeriksaan_form_schema";
 import { KunjunganFormValue } from "@/features/submission/schema/kunjungan_form_schema";
+import { KunjunganUpdateValue } from "@/features/submission/schema/kunjungan_update_schema";
 
 export async function postSubmit(data: PemeriksaanFormValues): Promise<ApiResponse<boolean>> {
   try {
@@ -25,6 +26,23 @@ export async function postSubmit(data: PemeriksaanFormValues): Promise<ApiRespon
 export async function postKunjunganSubmit(data: KunjunganFormValue): Promise<ApiResponse<boolean>> {
   try {
     const res = await api.post<ApiResponse<boolean>>("/api/v1/kunjungan/followup", data);
+    return res.data;
+  } catch (err) {
+    if (axios.isAxiosError(err)) {
+      console.error("Status:", err.response?.status);
+      console.error("Response:", err.response?.data);
+      console.error("URL:", err.config?.url);
+    } else {
+      console.error(err);
+    }
+
+    throw err;
+  }
+}
+
+export async function updateKunjunganSubmit(data: KunjunganUpdateValue): Promise<ApiResponse<boolean>> {
+  try {
+    const res = await api.put<ApiResponse<boolean>>("/api/v1/kunjungan/edit", data);
     return res.data;
   } catch (err) {
     if (axios.isAxiosError(err)) {

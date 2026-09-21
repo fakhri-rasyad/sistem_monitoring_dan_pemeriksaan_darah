@@ -1,9 +1,16 @@
 "use client";
 
 import Info from "@/components/shared/info";
+import NavigationButton from "@/components/shared/navigation_button";
 import { SectionCard } from "@/components/shared/section_card";
 import TextInfo from "@/components/shared/text_info";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardAction,
+  CardContent,
+  CardHeader,
+} from "@/components/ui/card";
 import { Spinner } from "@/components/ui/spinner";
 import {
   Table,
@@ -19,10 +26,12 @@ import formatDate from "@/utils/date";
 import {
   CirclePercent,
   HeartPulse,
+  Pencil,
   Receipt,
   SearchCheck,
   Stethoscope,
 } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { use, useEffect, useState } from "react";
 
 export default function KunjunganDetail({
@@ -61,26 +70,27 @@ export default function KunjunganDetail({
   }
 
   if (!kunjungan) {
-    return <div className="p-6">Data pasien tidak ditemukan.</div>;
+    return <div className="p-6">Data kunjungan tidak ditemukan.</div>;
   }
+  const router = useRouter();
 
   return (
     <div className="mx-auto max-w-7xl space-y-6 p-6">
       <Card>
-        <CardHeader>Data Kunjungan</CardHeader>
+        <CardHeader className="flex flex-row items-center justify-between">
+          <span>Data Kunjungan</span>
+
+          <Button
+            variant="default"
+            size="sm"
+            onClick={() => router.push(`/kunjungan/edit/${publicId.public_id}`)}
+          >
+            <Pencil />
+            Edit
+          </Button>
+        </CardHeader>
         <CardContent className="space-y-6">
           <div className="grid grid-cols-1  lg:grid-cols-2 gap-4">
-            {/* <Card>
-              <CardHeader>
-                <h3 className="mb-3 font-medium">Tekanan Darah</h3>
-              </CardHeader>
-
-              <CardContent>
-                <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
-                  <Info label="Tensi" value={`${kunjungan.tensi} mmHg`} />
-                </div>
-              </CardContent>
-            </Card> */}
             <SectionCard
               id="tensi_darah"
               title="Tensi Darah"
@@ -134,12 +144,6 @@ export default function KunjunganDetail({
                 />
               </div>
             </SectionCard>
-            {/* <Card>
-              <CardHeader>
-                <h3 className="mb-3 font-medium">Komposisi Tubuh</h3>
-              </CardHeader>
-              <CardContent></CardContent>
-            </Card> */}
           </div>
           <SectionCard
             id="data_laboratorium"
@@ -172,39 +176,6 @@ export default function KunjunganDetail({
               </TableBody>
             </Table>
           </SectionCard>
-
-          {/* <Card>
-            <CardHeader>
-              <h3 className="mb-3 font-medium">Data Laboratorium</h3>
-            </CardHeader>
-
-            <CardContent>
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Jenis Pemeriksaan</TableHead>
-                    <TableHead>Nilai Tercatat</TableHead>
-                    <TableHead>Satuan</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {kunjungan.data_lab.length === 0 ? (
-                    <TableCell>Tidak ada data laboratorium.</TableCell>
-                  ) : (
-                    kunjungan.data_lab.map((lab) => (
-                      <TableRow>
-                        <TableCell>{lab.parameter.nama}</TableCell>
-
-                        <TableCell>{lab.nilai}</TableCell>
-
-                        <TableCell>{lab.parameter.satuan}</TableCell>
-                      </TableRow>
-                    ))
-                  )}
-                </TableBody>
-              </Table>
-            </CardContent>
-          </Card> */}
 
           <SectionCard
             id="pemeriksaan"
@@ -239,40 +210,6 @@ export default function KunjunganDetail({
               />
             </div>
           </SectionCard>
-
-          {/* <Card>
-            <CardHeader>
-              <h3 className="mb-3 font-medium">Pemeriksaan</h3>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                <Info
-                  label="Diperiksa At"
-                  value={formatDate(kunjungan.pemeriksaan.diperiksa_at)}
-                />
-
-                <TextInfo
-                  label="Subjective"
-                  value={kunjungan.pemeriksaan.subjective}
-                />
-
-                <TextInfo
-                  label="Objective"
-                  value={kunjungan.pemeriksaan.objective}
-                />
-
-                <TextInfo
-                  label="Evaluasi"
-                  value={kunjungan.pemeriksaan.evaluasi}
-                />
-
-                <TextInfo
-                  label="Planning Terapi"
-                  value={kunjungan.pemeriksaan.planning_terapi}
-                />
-              </div>
-            </CardContent>
-          </Card> */}
           <SectionCard
             id="tagihan"
             title="Tagihan"

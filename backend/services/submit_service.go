@@ -15,6 +15,7 @@ import (
 type SubmitService interface {
 	FirstSubmissionCreation(submission *dto.SubmissionCreate) error
 	LaterSubmissionCreation(submission *dto.KunjunganSubmission) error
+	UpdateKunjungan(update *dto.KunjunganUpdate) error
 }
 
 type SubmitServiceImpl struct {
@@ -26,10 +27,10 @@ type SubmitServiceImpl struct {
 	alrgPasRepo     repositories.RepoBase[models.AlergiPasiens]
 	pntgPasRepo     repositories.RepoBase[models.PantanganPasien]
 	rwytPyktPasRepo repositories.RepoBase[models.RiwayatPenyakitPasien]
-	kunjungRepo     repositories.RepoBase[models.Kunjungan]
+	kunjungRepo     repositories.KunjunganRepoImpl
 	kompTubRepo     repositories.RepoBase[models.KomposisiTubuh]
 	parametRepo     repositories.RepoBase[models.ParameterPemeriksaanDarah]
-	dataLabRepo     repositories.RepoBase[models.DataLab]
+	dataLabRepo     repositories.DataLabRepoImpl
 	pemerikRepo     repositories.RepoBase[models.Pemeriksaan]
 	tagihanRepo     repositories.TagihanRepo
 }
@@ -43,10 +44,10 @@ func NewSubmitService(
 	alrgPasRepo repositories.RepoBase[models.AlergiPasiens],
 	pntgPasRepo repositories.RepoBase[models.PantanganPasien],
 	rwytPyktPasRepo repositories.RepoBase[models.RiwayatPenyakitPasien],
-	kunjungRepo repositories.RepoBase[models.Kunjungan],
+	kunjungRepo repositories.KunjunganRepoImpl,
 	kompTubRepo repositories.RepoBase[models.KomposisiTubuh],
 	parametRepo repositories.RepoBase[models.ParameterPemeriksaanDarah],
-	dataLabRepo repositories.RepoBase[models.DataLab],
+	dataLabRepo repositories.DataLabRepoImpl,
 	pemerikRepo repositories.RepoBase[models.Pemeriksaan],
 	tagihanRepo repositories.TagihanRepo,
 ) SubmitService {
@@ -66,6 +67,147 @@ func NewSubmitService(
 		pemerikRepo:     pemerikRepo,
 		tagihanRepo:     tagihanRepo,
 	}
+}
+
+func (s *SubmitServiceImpl) UpdateKunjungan(update *dto.KunjunganUpdate) error {
+	wf := beginWorkflow()
+
+	defer func() {
+		if r := recover(); r != nil {
+			fmt.Printf("PANIC: %v\n", r)
+			wf.Rollback()
+		}
+	}()
+
+	kunjungan, err := s.kunjungRepo.GetDetailWithPreload(wf.tx, update.KunjunganPubID)
+
+	if err != nil {
+		return err
+	}
+
+	if err = s.UpdateKunjunganDetail(wf.tx, kunjungan, update.Kunjungan); err != nil {
+		return err
+	}
+
+	if err = s.UpdateKomposisiButuh(wf.tx, kunjungan.KomposisiTubuh.PublicID, update.KomposisiTubuh); err != nil {
+		return err
+	}
+
+	if err = s.UpdatePemeriksaan(wf.tx, kunjungan.Pemeriksaan.PublicID, update.Pemeriksaan); err != nil {
+		return err
+	}
+
+	if err = s.UpdateTagihan(wf.tx, kunjungan.Tagihan, update.Tagihan); err != nil {
+		return err
+	}
+
+	if err = s.UpdateDataLab(wf.tx, kunjungan.InternalID, update.DataLabs); err != nil {
+		return err
+	}
+
+	if err = wf.Commit(); err != nil {
+		return err
+	}
+	return nil
+
+}
+
+func (s *SubmitServiceImpl) UpdateKunjunganDetail(tx *gorm.DB, kunjungan *models.Kunjungan, update dto.KunjunganCreate) error {
+
+	kunjungan.Tanggal = update.Tanggal
+	kunjungan.Tensi = update.Tensi
+
+	if err := s.kunjungRepo.Update(tx, kunjungan); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (s *SubmitServiceImpl) UpdateKomposisiButuh(tx *gorm.DB, komposisiPubID uuid.UUID, update dto.KomposisiTubuhCreate) error {
+	kompos, err := s.kompTubRepo.GetByPublicID(tx, komposisiPubID)
+
+	if err != nil {
+		return err
+	}
+
+	kompos.Berat = update.Berat
+	kompos.Tinggi = update.Tinggi
+
+	kompos.MassaLemak = update.MassaLemak
+	kompos.MassaOtot = update.MassaOtot
+	kompos.MassaTulang = update.MassaTulang
+
+	kompos.AirTubuh = update.AirTubuh
+	kompos.IndeksMassaTubh = update.IndeksMassaTubh
+
+	if err := s.kompTubRepo.Update(tx, kompos); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (s *SubmitServiceImpl) UpdatePemeriksaan(tx *gorm.DB, pemeriksaanPublidID uuid.UUID, update dto.PemeriksaanCreate) error {
+	pemeriksaan, err := s.pemerikRepo.GetByPublicID(tx, pemeriksaanPublidID)
+
+	if err != nil {
+		return err
+	}
+
+	pemeriksaan.Subjective = update.Subjective
+	pemeriksaan.Objective = update.Objective
+	pemeriksaan.PlanningTerapi = update.PlanningTerapi
+	pemeriksaan.Evaluasi = update.Evaluasi
+	pemeriksaan.DiperiksaAt = update.DiperiksaAt
+
+	err = s.pemerikRepo.Update(tx, pemeriksaan)
+
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (s *SubmitServiceImpl) UpdateTagihan(tx *gorm.DB, tagihan *models.Tagihan, update dto.TagihanCreate) error {
+	tagihan.BiayaAlat = update.BiayaAlat
+	tagihan.BiayaKonsultasi = update.BiayaKonsultasi
+	tagihan.MetodeBayar = update.MetodeBayar
+
+	if err := s.tagihanRepo.Update(tx, tagihan); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (s *SubmitServiceImpl) UpdateDataLab(tx *gorm.DB, kunjunganID int, update []dto.DataLabCreate) error {
+	if err := s.dataLabRepo.BatchDelete(tx, kunjunganID); err != nil {
+		return err
+	}
+
+	for _, item := range update {
+		parameter, err := s.parametRepo.GetByPublicID(tx, item.ParameterPublicID)
+
+		if err != nil {
+			return err
+		}
+
+		gormModel := &models.DataLab{
+			Nilai:       item.Nilai,
+			KunjunganID: kunjunganID,
+			ParameterID: parameter.InternalID,
+		}
+
+		_, err = s.dataLabRepo.Create(tx, gormModel)
+		if err != nil {
+			return err
+		} else {
+			return nil
+		}
+
+	}
+	return nil
 }
 
 func (s *SubmitServiceImpl) LaterSubmissionCreation(submission *dto.KunjunganSubmission) error {

@@ -85,6 +85,7 @@ func Setup(
 
 	api.Get("/kunjungan/:public_id", kunjugCont.GetKunjunganByPublicID)
 	api.Get("/kunjungan", kunjugCont.GetKunjunganList)
+	api.Put("/kunjungan/edit", kunjugCont.Update)
 	api.Delete("/kunjungan", kunjugCont.Delete)
 
 	// Submission

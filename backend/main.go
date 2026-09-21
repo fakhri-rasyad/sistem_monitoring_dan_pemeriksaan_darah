@@ -97,7 +97,7 @@ func main() {
 	rwytPyktCont := controllers.NewRiwayatPenyakitController(rwytPyktServ)
 	pekerjCont := controllers.NewPekerjaanController(pekerjServ)
 	pasienCont := controllers.NewPasienController(pasienServ)
-	kunjugCont := controllers.NewKunjunganController(kunjugServ)
+	kunjugCont := controllers.NewKunjunganController(kunjugServ, submitServ)
 	paramDCont := controllers.NewParameterPemeriksaanDarahController(parmDhServ)
 	exportCont := controllers.NewExportController(exportServ)
 

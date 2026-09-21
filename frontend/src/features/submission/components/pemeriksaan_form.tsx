@@ -14,19 +14,16 @@ import PatientSection from "./pasien_section";
 import KunjunganSection from "./kunjungan_section";
 import PemeriksaanSection from "./pemeriksaan_section";
 import KomposisiTubuhSection from "./komposisi_tubuh_section";
-import DataLabSection from "./data_lab_section";
 import {
   PemeriksaanFormSchema,
   PemeriksaanFormValues,
 } from "../schema/pemeriksaan_form_schema";
 import { postSubmit } from "@/services/submit";
-import { toast } from "sonner";
 import { Dialog } from "@/components/ui/dialog";
-import { AxiosError } from "axios";
 import { handleApiError, showToastFromResponse } from "@/lib/utils";
-import { useEffect } from "react";
 import { MetodePembayaran } from "@/enum/metode_pembayaran";
 import TagihanSection from "./tagihan_section";
+import DataLabSection from "./data_lab_section";
 
 export default function PemeriksaanForm() {
   const defaultFormValues: PemeriksaanFormValues = {
@@ -97,7 +94,7 @@ export default function PemeriksaanForm() {
           })}
           className="mx-auto max-w-7xl space-y-6 p-4 sm:p-6"
         >
-          <PatientSection form={form} />
+          <PatientSection />
 
           <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
             <KunjunganSection />
@@ -106,7 +103,7 @@ export default function PemeriksaanForm() {
 
           <PemeriksaanSection />
 
-          <DataLabSection form={form} />
+          <DataLabSection />
 
           <TagihanSection />
 

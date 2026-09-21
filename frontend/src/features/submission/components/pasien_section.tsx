@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Controller, UseFormReturn } from "react-hook-form";
+import { Controller, useFormContext, UseFormReturn } from "react-hook-form";
 
 import { AddPekerjaan, getPekerjaan } from "@/services/pekerjaan";
 import {
@@ -45,11 +45,13 @@ import { AlergiPasienSection } from "./alergi_pasien_section";
 import { PantanganSection } from "./pantangan_pasien_section";
 import { RiwayatPenyakitSection } from "./riwayat_penyakit_section";
 
-interface Props {
-  form: UseFormReturn<PemeriksaanFormValues>;
-}
+// interface Props {
+//   form: UseFormReturn<PemeriksaanFormValues>;
+// }
 
-export default function PatientSection({ form }: Props) {
+export default function PatientSection() {
+  // { form }: Props
+  const form = useFormContext<PemeriksaanFormValues>();
   const { watch, control } = form;
 
   const [openTanggal, setTanggalOpen] = useState(false);

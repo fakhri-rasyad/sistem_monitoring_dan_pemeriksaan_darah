@@ -2,17 +2,15 @@ import { FormProvider, useForm } from "react-hook-form";
 import KomposisiTubuhSection from "./komposisi_tubuh_section";
 import KunjunganSection from "./kunjungan_section";
 import PemeriksaanSection from "./pemeriksaan_section";
-import DataLabSection from "./data_lab_section";
 import { Button } from "@/components/ui/button";
 import {
   KunjunganFormSchema,
   KunjunganFormValue,
 } from "../schema/kunjungan_form_schema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import KunjunganDataLabSection from "./data_lab_kunjugan_section";
+import DataLabSection from "./data_lab_section";
 import { postKunjunganSubmit } from "@/services/submit";
 import { handleApiError, showToastFromResponse } from "@/lib/utils";
-import { error } from "console";
 import { MetodePembayaran } from "@/enum/metode_pembayaran";
 import TagihanSection from "./tagihan_section";
 
@@ -89,7 +87,7 @@ export default function KunjunganForm({
 
         <PemeriksaanSection />
 
-        <KunjunganDataLabSection form={form} />
+        <DataLabSection />
 
         <TagihanSection />
 

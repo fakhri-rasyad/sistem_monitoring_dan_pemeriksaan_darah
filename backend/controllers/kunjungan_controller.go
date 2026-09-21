@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"errors"
+	"fakhri-rasyad/sistem_monitoring_darah/dto"
 	"fakhri-rasyad/sistem_monitoring_darah/services"
 	"fakhri-rasyad/sistem_monitoring_darah/utils"
 
@@ -12,11 +13,28 @@ import (
 type KunjunganController interface {
 	GetKunjunganByPublicID(ctx fiber.Ctx) error
 	GetKunjunganList(ctx fiber.Ctx) error
+	Update(ctx fiber.Ctx) error
 	Delete(ctx fiber.Ctx) error
 }
 
 type KunjunganControllerImpl struct {
-	s services.KunjunganService
+	s  services.KunjunganService
+	ss services.SubmitService
+}
+
+func (c *KunjunganControllerImpl) Update(ctx fiber.Ctx) error {
+	data := &dto.KunjunganUpdate{}
+
+	if err := ctx.Bind().Body(data); err != nil {
+		return utils.BadRequest(ctx, "Input tidak valid", err)
+	}
+
+	if err := c.ss.UpdateKunjungan(data); err != nil {
+		return utils.InternalError(ctx, "Gagal mengupdate kunjungan", err)
+	}
+
+	return utils.SuccessResponse(ctx, "Sukses mengupdate kunjungan pasien", true)
+
 }
 
 // CreateSubmit godoc
@@ -78,6 +96,6 @@ func (c *KunjunganControllerImpl) Delete(ctx fiber.Ctx) error {
 	return utils.SuccessResponse(ctx, "Sukses menghapus kunjungan", nil)
 }
 
-func NewKunjunganController(s services.KunjunganService) KunjunganController {
-	return &KunjunganControllerImpl{s: s}
+func NewKunjunganController(s services.KunjunganService, ss services.SubmitService) KunjunganController {
+	return &KunjunganControllerImpl{s: s, ss: ss}
 }
