@@ -119,7 +119,7 @@ export default function TagihanSection() {
             control={control}
             render={({ field, fieldState }) => (
               <Field>
-                <FieldLabel>Metode Pembayaran</FieldLabel>
+                <FieldLabel>Metode</FieldLabel>
                 <FieldContent>
                   <Select
                     name={field.name}

@@ -42,6 +42,7 @@ export default function KunjunganDetail({
   const publicId = use(params);
   const [kunjungan, setKunjungan] = useState<KunjunganData>();
   const [loading, setLoading] = useState<boolean>(false);
+  const router = useRouter();
 
   useEffect(() => {
     async function load() {
@@ -72,7 +73,6 @@ export default function KunjunganDetail({
   if (!kunjungan) {
     return <div className="p-6">Data kunjungan tidak ditemukan.</div>;
   }
-  const router = useRouter();
 
   return (
     <div className="mx-auto max-w-7xl space-y-6 p-6">
@@ -161,7 +161,11 @@ export default function KunjunganDetail({
               </TableHeader>
               <TableBody>
                 {kunjungan.data_lab.length === 0 ? (
-                  <TableCell>Tidak ada data laboratorium.</TableCell>
+                  <TableRow>
+                    <TableCell colSpan={3} align="center">
+                      Tidak ada data laboratorium.
+                    </TableCell>
+                  </TableRow>
                 ) : (
                   kunjungan.data_lab.map((lab) => (
                     <TableRow key={lab.public_id}>

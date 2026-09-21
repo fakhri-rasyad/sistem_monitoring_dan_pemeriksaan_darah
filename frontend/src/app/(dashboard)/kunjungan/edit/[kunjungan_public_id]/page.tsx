@@ -1,7 +1,6 @@
 "use client";
 
 import { useParams, useRouter } from "next/navigation";
-import KunjunganForm from "@/features/submission/components/kunjungan_form";
 import { MetodePembayaran } from "@/enum/metode_pembayaran";
 import {
   KunjunganUpdateSchema,
@@ -9,7 +8,7 @@ import {
 } from "@/features/submission/schema/kunjungan_update_schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { handleApiError, showToastFromResponse } from "@/lib/utils";
-import { postKunjunganSubmit, updateKunjunganSubmit } from "@/services/submit";
+import { updateKunjunganSubmit } from "@/services/submit";
 import { FormProvider, useForm } from "react-hook-form";
 import KunjunganSection from "@/features/submission/components/kunjungan_section";
 import KomposisiTubuhSection from "@/features/submission/components/komposisi_tubuh_section";
@@ -145,7 +144,16 @@ export default function EditKunjunganPage() {
 
         <TagihanSection />
 
-        <div className="flex justify-end">
+        <div className="flex justify-end gap-2">
+          <Button
+            variant={"outline"}
+            size={"lg"}
+            onClick={() => {
+              router.back();
+            }}
+          >
+            Batal
+          </Button>
           <Button type="submit" size="lg">
             Simpan perubahan
           </Button>

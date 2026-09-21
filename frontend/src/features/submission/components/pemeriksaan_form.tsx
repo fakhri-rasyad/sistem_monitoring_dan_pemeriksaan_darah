@@ -24,6 +24,9 @@ import { handleApiError, showToastFromResponse } from "@/lib/utils";
 import { MetodePembayaran } from "@/enum/metode_pembayaran";
 import TagihanSection from "./tagihan_section";
 import DataLabSection from "./data_lab_section";
+import { SectionCard } from "@/components/shared/section_card";
+import { ClipboardClock } from "lucide-react";
+import { Separator } from "@/components/ui/separator";
 
 export default function PemeriksaanForm() {
   const defaultFormValues: PemeriksaanFormValues = {
@@ -96,16 +99,18 @@ export default function PemeriksaanForm() {
         >
           <PatientSection />
 
-          <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
-            <KunjunganSection />
-            <KomposisiTubuhSection />
-          </div>
+          <SectionCard icon={ClipboardClock} title="Data Kunjungan">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+              <KunjunganSection />
+              <KomposisiTubuhSection />
 
-          <PemeriksaanSection />
+              <PemeriksaanSection />
 
-          <DataLabSection />
+              <DataLabSection />
 
-          <TagihanSection />
+              <TagihanSection />
+            </div>
+          </SectionCard>
 
           <div className="flex justify-end">
             <Button type="submit" size="lg">
