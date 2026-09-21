@@ -1,16 +1,17 @@
 import z from "zod"
+import { PasienSchema } from "./pasien_schema"
+import { AlergiPasienSchema } from "./alergi_pasien_schema"
+import { PantanganPasienSchema } from "./pantangan_pasien_schema"
+import { RiwayatPenyakitPasienSchema } from "./riwayat_penyakit_pasien_schema"
 
 export const PasienUpdate = z.object({
-  public_id: z.string("Wajib diisi"),
-  nama: z.string().min(1, "Nama wajib diisi").optional(),
-  alamat: z.string().min(1, "Alamat wajib diisi").optional(),
-  tempat_lahir: z.string().min(1, "Tempat lahir wajib diisi").optional(),
-  tanggal_lahir: z
-    .iso.datetime("Tanggal lahir wajib diisi").optional(),
-  nomor_hp: z.string("Nomor tidak boleh kosong").min(8, "Nomor HP tidak valid").optional(),
-  email: z.email("Email tidak valid").optional(),
+  pasien: PasienSchema,
 
-  pekerjaan_public_id: z.guid("Pekerjaan wajib dipilih").optional(),
+  alergi_pasiens: z.array(AlergiPasienSchema),
+
+  pantangan_pasiens: z.array(PantanganPasienSchema),
+
+  riwayat_penyakit_pasiens: z.array(RiwayatPenyakitPasienSchema),
 })
 
 

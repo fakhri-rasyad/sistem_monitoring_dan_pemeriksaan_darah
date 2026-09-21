@@ -1,16 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useParams } from "next/navigation";
-import { Controller, useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import z from "zod";
+import { useParams, useRouter } from "next/navigation";
 
-import {
-  getPasienDetail,
-  PasienDetailResponse,
-  updatePasien,
-} from "@/services/pasien";
+import { getPasienDetail, PasienDetailResponse } from "@/services/pasien";
 import { DeleteKunjungan } from "@/services/kunjungan";
 
 import { Spinner } from "@/components/ui/spinner";
@@ -26,52 +19,12 @@ import {
   User,
   UtensilsCrossed,
   Pencil,
-  LucideCalendar,
 } from "lucide-react";
 
 import { toast } from "sonner";
 import { DeleteConfirmationDialog } from "@/components/shared/delete_confirmation_dialog";
 import { DownloadUserDetail } from "@/services/export";
 import { Button } from "@/components/ui/button";
-
-import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-
-import {
-  Field,
-  FieldContent,
-  FieldError,
-  FieldLabel,
-} from "@/components/ui/field";
-
-import { Input } from "@/components/ui/input";
-import {
-  PasienUpdate,
-  PasienUpdateValue,
-} from "@/features/submission/schema/pasien_update_schema";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { Calendar } from "@/components/ui/calendar";
-import { PekerjaanResponse } from "@/features/dashboard/types/pekerjaan_response";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { getPekerjaan } from "@/services/pekerjaan";
 
 export default function PasienDetailPage() {
   const params = useParams<{ public_id: string }>();
@@ -80,44 +33,13 @@ export default function PasienDetailPage() {
   const [loading, setLoading] = useState(true);
 
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const router = useRouter();
 
   const [selectedKunjunganId, setSelectedKunjunganId] = useState<string | null>(
     null,
   );
 
   const [downloadLoading, setDownloadLoading] = useState(false);
-  const [updateLoading, setUpdateLoading] = useState(false);
-  const [pasienEditStatus, setPasienEditStatus] = useState(false);
-  const [openTanggal, setTanggalOpen] = useState(false);
-
-  const [jobs, setJobs] = useState<PekerjaanResponse[]>([]);
-
-  const defaultValue = {
-    public_id: params.public_id,
-    nama: "",
-    alamat: "",
-    tempat_lahir: "",
-    tanggal_lahir: "",
-    nomor_hp: "",
-    email: "",
-    pekerjaan_public_id: "",
-  };
-
-  const {
-    watch,
-    handleSubmit,
-    reset,
-    formState: { errors },
-    control,
-  } = useForm<PasienUpdateValue>({
-    resolver: zodResolver(PasienUpdate),
-    defaultValues: defaultValue,
-  });
-
-  const selectedPekerjaan = watch("pekerjaan_public_id");
-  const currentPekerjaan = jobs.find(
-    (value) => value.public_id == selectedPekerjaan,
-  );
 
   const handleDelete = (publicId: string) => {
     setSelectedKunjunganId(publicId);
@@ -142,6 +64,7 @@ export default function PasienDetailPage() {
       });
 
       toast.success("Sukses menghapus kunjungan");
+
       setSelectedKunjunganId(null);
       setDeleteDialogOpen(false);
     } catch (error) {
@@ -153,24 +76,8 @@ export default function PasienDetailPage() {
   useEffect(() => {
     async function load() {
       try {
-        const [data, pekerjaan] = await Promise.all([
-          getPasienDetail(params.public_id),
-          getPekerjaan(),
-        ]);
-
+        const data = await getPasienDetail(params.public_id);
         setPasien(data);
-        setJobs(pekerjaan);
-
-        reset({
-          public_id: data.public_id,
-          nama: data.nama ?? "",
-          alamat: data.alamat ?? "",
-          tempat_lahir: data.tempat_lahir ?? "",
-          tanggal_lahir: data.tanggal_lahir ?? "",
-          nomor_hp: data.nomor_hp ?? "",
-          email: data.email ?? "",
-          pekerjaan_public_id: data.pekerjaan.public_id ?? "",
-        });
       } catch (error) {
         console.error(error);
       } finally {
@@ -179,58 +86,8 @@ export default function PasienDetailPage() {
     }
 
     load();
-  }, [params.public_id, reset]);
+  }, [params.public_id]);
 
-  const handleCancelEdit = () => {
-    if (!pasien) return;
-
-    reset({
-      public_id: pasien.public_id,
-      nama: pasien.nama ?? "",
-      alamat: pasien.alamat ?? "",
-      tempat_lahir: pasien.tempat_lahir ?? "",
-      tanggal_lahir: pasien.tanggal_lahir ?? "",
-      nomor_hp: pasien.nomor_hp ?? "",
-      email: pasien.email ?? "",
-      pekerjaan_public_id: pasien.pekerjaan.public_id ?? "",
-    });
-
-    setPasienEditStatus(false);
-  };
-
-  const handleUpdatePasien = async (data: PasienUpdateValue) => {
-    console.log("SUBMIT DATA:", data);
-
-    setUpdateLoading(true);
-
-    try {
-      await updatePasien(data);
-
-      // setPasien((current) => {
-      //   if (!current) return current;
-
-      //   return {
-      //     ...current,
-      //     public_id: data.public_id,
-      //     nama: data.nama ?? current.nama,
-      //     alamat: data.alamat ?? current.alamat,
-      //     tempat_lahir: data.tempat_lahir ?? current.tempat_lahir,
-      //     tanggal_lahir: data.tanggal_lahir ?? current.tanggal_lahir,
-      //     nomor_hp: data.nomor_hp ?? current.nomor_hp,
-      //     email: data.email ?? current.email,
-      //     pekerjaan: current.pekerjaan,
-      //   };
-      // });
-
-      toast.success("Sukses memperbarui data pasien");
-      setPasienEditStatus(false);
-    } catch (error) {
-      console.error("UPDATE PASIEN ERROR:", error);
-      toast.error("Gagal memperbarui data pasien");
-    } finally {
-      setUpdateLoading(false);
-    }
-  };
   const export_user_data = async () => {
     setDownloadLoading(true);
 
@@ -267,10 +124,10 @@ export default function PasienDetailPage() {
           <div className="flex flex-wrap gap-2">
             <Button
               variant="outline"
-              onClick={() => setPasienEditStatus(!pasienEditStatus)}
+              onClick={() => router.push(`/pasien/edit/${params.public_id}`)}
             >
               <Pencil />
-              {pasienEditStatus ? "Sedang mengedit" : "Edit"}
+              Edit
             </Button>
 
             <Button onClick={export_user_data} disabled={downloadLoading}>
@@ -286,260 +143,23 @@ export default function PasienDetailPage() {
           </div>
         }
       >
-        <div className="gap-4">
-          <form
-            onSubmit={handleSubmit(handleUpdatePasien, (errors) => {
-              console.log("Validation errors:", errors);
-            })}
-            className="space-y-4"
-          >
-            <div className="grid grid-cols-2 gap-4">
-              <Controller
-                control={control}
-                name={"nama"}
-                render={({ field, fieldState }) => (
-                  <Field data-invalid={fieldState.invalid}>
-                    <FieldLabel>Nama Pasien</FieldLabel>
-                    <Input
-                      {...field}
-                      aria-invalid={fieldState.invalid}
-                      id="nama"
-                      readOnly={!pasienEditStatus}
-                    />
-                    {fieldState.invalid && (
-                      <FieldError errors={[fieldState.error]} />
-                    )}
-                  </Field>
-                )}
-              />
-              <Controller
-                name={"alamat"}
-                control={control}
-                render={({ field, fieldState }) => (
-                  <Field data-invalid={fieldState.invalid}>
-                    <FieldLabel>Alamat Pasien</FieldLabel>
-                    <Input
-                      {...field}
-                      aria-invalid={fieldState.invalid}
-                      id="alamat"
-                      readOnly={!pasienEditStatus}
-                    />
-                    {fieldState.invalid && (
-                      <FieldError errors={[fieldState.error]} />
-                    )}
-                  </Field>
-                )}
-              />
-            </div>
-            <div className="grid grid-cols-1 gap-4">
-              <Controller
-                name={"tempat_lahir"}
-                control={control}
-                render={({ field, fieldState }) => (
-                  <Field data-invalid={fieldState.invalid}>
-                    <FieldLabel>Tempat Lahir Pasien</FieldLabel>
-                    <Input
-                      {...field}
-                      aria-invalid={fieldState.invalid}
-                      id="tempat_lahir"
-                      readOnly={!pasienEditStatus}
-                    />
-                    {fieldState.invalid && (
-                      <FieldError errors={[fieldState.error]} />
-                    )}
-                  </Field>
-                )}
-              />
-              <Controller
-                name={"tanggal_lahir"}
-                control={control}
-                render={({ field, fieldState }) => {
-                  const today = new Date();
-                  today.setHours(23, 59, 59, 999);
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+          <Info label="Nama" value={pasien.nama} />
 
-                  return (
-                    <Field data-invalid={fieldState.invalid}>
-                      <FieldLabel htmlFor="tanggal_lahir">
-                        Tanggal Lahir
-                      </FieldLabel>
+          <Info label="Nomor HP" value={pasien.nomor_hp} />
 
-                      <Popover open={openTanggal} onOpenChange={setTanggalOpen}>
-                        <PopoverTrigger
-                          disabled={!pasienEditStatus}
-                          render={
-                            <Button
-                              variant="outline"
-                              id="tanggal_lahir"
-                              className="w-full justify-start"
-                              aria-invalid={fieldState.invalid}
-                            >
-                              <LucideCalendar data-icon="inline-start" />
-                              {field.value
-                                ? new Date(field.value).toLocaleDateString(
-                                    "id-ID",
-                                    {
-                                      timeZone: "Asia/Makassar",
-                                    },
-                                  )
-                                : "Pilih tanggal lahir"}
-                            </Button>
-                          }
-                        />
+          <Info label="Email" value={pasien.email} />
 
-                        <PopoverContent
-                          className="w-auto overflow-hidden p-0"
-                          align="start"
-                        >
-                          <Calendar
-                            mode="single"
-                            selected={
-                              field.value ? new Date(field.value) : undefined
-                            }
-                            onSelect={(date) => {
-                              if (!date) return;
+          <Info label="Pekerjaan" value={pasien.pekerjaan?.nama} />
 
-                              const isoDate = new Date(
-                                Date.UTC(
-                                  date.getFullYear(),
-                                  date.getMonth(),
-                                  date.getDate(),
-                                ),
-                              ).toISOString();
+          <Info label="Tempat Lahir" value={pasien.tempat_lahir} />
 
-                              field.onChange(isoDate);
-                              setTanggalOpen(false);
-                            }}
-                            disabled={[
-                              {
-                                before: new Date(1920, 0, 1),
-                              },
-                              {
-                                after: today,
-                              },
-                            ]}
-                            captionLayout="dropdown"
-                          />
-                        </PopoverContent>
-                      </Popover>
+          <Info
+            label="Tanggal Lahir"
+            value={formatDate(pasien.tanggal_lahir)}
+          />
 
-                      {fieldState.invalid && (
-                        <FieldError errors={[fieldState.error]} />
-                      )}
-                    </Field>
-                  );
-                }}
-              />
-            </div>
-            <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
-              <Controller
-                name={"nomor_hp"}
-                control={control}
-                render={({ field, fieldState }) => (
-                  <Field data-invalid={fieldState.invalid}>
-                    <FieldLabel>Nomor Handphone Pasien</FieldLabel>
-                    <Input
-                      {...field}
-                      aria-invalid={fieldState.invalid}
-                      id="nomor_hp"
-                      readOnly={!pasienEditStatus}
-                    />
-                    {fieldState.invalid && (
-                      <FieldError errors={[fieldState.error]} />
-                    )}
-                  </Field>
-                )}
-              />
-              <Controller
-                name={"email"}
-                control={control}
-                render={({ field, fieldState }) => (
-                  <Field data-invalid={fieldState.invalid}>
-                    <FieldLabel>Email Pasien</FieldLabel>
-                    <Input
-                      {...field}
-                      aria-invalid={fieldState.invalid}
-                      id="email"
-                      readOnly={!pasienEditStatus}
-                    />
-                    {fieldState.invalid && (
-                      <FieldError errors={[fieldState.error]} />
-                    )}
-                  </Field>
-                )}
-              />
-            </div>
-
-            {pasienEditStatus ? (
-              <Controller
-                control={control}
-                name="pekerjaan_public_id"
-                render={({ field, fieldState }) => (
-                  <Field data-invalid={fieldState.invalid}>
-                    <FieldLabel>Pekerjaan</FieldLabel>
-                    <FieldContent>
-                      <div className="grid grid-cols-4 gap-4 lg:grid-cols-8">
-                        <div className="col-span-3 lg:col-span-7">
-                          <Select
-                            value={field.value}
-                            onValueChange={field.onChange}
-                          >
-                            <SelectTrigger
-                              aria-invalid={fieldState.invalid}
-                              className="w-full"
-                            >
-                              <SelectValue
-                                placeholder={currentPekerjaan?.nama ?? ""}
-                              >
-                                {currentPekerjaan?.nama ?? "Pilih pekerjaan"}
-                              </SelectValue>
-                            </SelectTrigger>
-
-                            <SelectContent>
-                              {jobs.map((job) => (
-                                <SelectItem
-                                  key={job.public_id}
-                                  value={job.public_id}
-                                >
-                                  {job.nama}
-                                </SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
-                        </div>
-                      </div>
-                    </FieldContent>
-
-                    {fieldState.invalid && (
-                      <FieldError errors={[fieldState.error]} />
-                    )}
-                  </Field>
-                )}
-              />
-            ) : (
-              <Info label="Pekerjaan" value={currentPekerjaan?.nama} />
-            )}
-            {pasienEditStatus && (
-              <div className="flex flex-row-reverse gap-2">
-                <Button type="submit" disabled={updateLoading}>
-                  {updateLoading ? (
-                    <>
-                      <Spinner />
-                      Menyimpan...
-                    </>
-                  ) : (
-                    "Simpan"
-                  )}
-                </Button>
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={handleCancelEdit}
-                >
-                  Cancel
-                </Button>
-              </div>
-            )}
-          </form>
+          <Info label="Alamat" value={pasien.alamat} />
         </div>
       </SectionCard>
 
@@ -623,7 +243,6 @@ export default function PasienDetailPage() {
           actionLink={`/kunjungan/create/${params.public_id}`}
         />
       </div>
-
       <DeleteConfirmationDialog
         open={deleteDialogOpen}
         onOpenChange={setDeleteDialogOpen}

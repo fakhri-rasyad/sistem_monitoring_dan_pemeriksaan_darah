@@ -86,7 +86,7 @@ func main() {
 	pantanServ := services.NewPantanganService(pantanRepo)
 	rwytPyktServ := services.NewRiwayatPenyakitService(rwytPyktRepo)
 	pekerjServ := services.NewPekerjaanService(pekerjRepo)
-	pasienServ := services.NewPasienService(pasienRepo, pekerjRepo)
+	pasienServ := services.NewPasienService(pasienRepo, pekerjRepo, alergiRepo, alePasRepo, pantanRepo, panPasRepo, rwytPyktRepo, rwytPytkPasRepo)
 	kunjugServ := services.NewKunjunganService(kunjunRepo)
 	parmDhServ := services.NewParameterPemeriksaanDarahService(pemeDhRepo)
 	exportServ := services.NewExportService(pasienRepo)

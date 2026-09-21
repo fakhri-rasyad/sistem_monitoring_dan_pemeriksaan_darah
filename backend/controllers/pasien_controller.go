@@ -150,7 +150,7 @@ func (c *PasienControllerImpl) Update(ctx fiber.Ctx) error {
 		return utils.InternalError(ctx, "Gagal memperbarui Pasien", err)
 	}
 
-	return utils.SuccessResponse(ctx, "Alamat berhasil diperbarui", nil)
+	return utils.SuccessResponse(ctx, "Pasien berhasil diperbarui", nil)
 }
 
 func NewPasienController(s services.PasienService) PasienController {

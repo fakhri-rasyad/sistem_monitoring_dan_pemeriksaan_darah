@@ -208,13 +208,13 @@ export async function getPasienDetail(
   }
 }
 
-export async function updatePasien(data: PasienUpdateValue): Promise<null> {
+export async function updatePasien(data: PasienUpdateValue): Promise<ApiResponse<boolean>> {
   try {
-    const res = await api.patch<ApiResponse<null>>(
+    const res = await api.put<ApiResponse<boolean>>(
       "/api/v1/pasien", data
     );
 
-    return res.data.Data;
+    return res.data;
   } catch (err) {
     if (axios.isAxiosError(err)) {
       console.error("Status:", err.response?.status);

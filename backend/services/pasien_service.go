@@ -5,8 +5,10 @@ import (
 	"fakhri-rasyad/sistem_monitoring_darah/mapper"
 	"fakhri-rasyad/sistem_monitoring_darah/models"
 	"fakhri-rasyad/sistem_monitoring_darah/repositories"
+	"fmt"
 
 	"github.com/google/uuid"
+	"gorm.io/gorm"
 )
 
 type PasienService interface {
@@ -20,8 +22,14 @@ type PasienService interface {
 }
 
 type PasienServiceImpl struct {
-	r  repositories.PasienRepo
-	pr repositories.RepoBase[models.Pekerjaan]
+	r    repositories.PasienRepo
+	pr   repositories.RepoBase[models.Pekerjaan]
+	ar   repositories.AlergiRepoImpl
+	apr  repositories.AlergiPasienRepoImpl
+	ptr  repositories.PantanganRepoImpl
+	ptpr repositories.PantanganPasienRepoImpl
+	rpr  repositories.RiwayatPenyakitRepoImpl
+	rppr repositories.RiwayatPenyakitPasienRepoImpl
 }
 
 func (a *PasienServiceImpl) Create(create *dto.PasienCreate) error {
@@ -100,28 +108,136 @@ func (a *PasienServiceImpl) Delete(publicID uuid.UUID) error {
 }
 
 func (a *PasienServiceImpl) Update(update *dto.PasienUpdate) error {
-	pasien, err := a.r.GetByPublicID(nil, update.PublicID)
+	wf := beginWorkflow()
+
+	defer func() {
+		if r := recover(); r != nil {
+			fmt.Printf("PANIC: %v\n", r)
+			wf.Rollback()
+		}
+	}()
+
+	pasienId, err := a.resolvePasien(wf.tx, &update.Pasien)
 
 	if err != nil {
 		return err
 	}
 
-	pasien.Nama = update.Nama
-	pasien.Alamat = update.Alamat
-	pasien.TempatLahir = update.TempatLahir
-	pasien.TanggalLahir = update.TanggalLahir
-	pasien.NomorHP = update.NomorHP
-	pasien.Email = update.Email
-
-	pekerjaan, err := a.pr.GetByPublicID(nil, update.PekerjaanPubID)
-	if err != nil {
+	if err = a.resolveAlergiPasien(wf.tx, *pasienId, update.AlergiPasiens); err != nil {
 		return err
+	}
+
+	if err = a.resolvePantanganPasien(wf.tx, *pasienId, update.PantanganPasiens); err != nil {
+		return err
+	}
+
+	if err = a.resolveRiwayatPenyakitPasien(wf.tx, *pasienId, update.RiwayatPenyakitPasiens); err != nil {
+		return err
+	}
+
+	wf.Commit()
+
+	return nil
+}
+
+func (s *PasienServiceImpl) resolvePasien(tx *gorm.DB, update *dto.PasienReference) (*int, error) {
+	pasien, err := s.r.GetByPublicID(tx, *update.PublicID)
+
+	if err != nil {
+		return nil, err
+	}
+
+	pasien.Nama = update.Create.Nama
+	pasien.Alamat = update.Create.Alamat
+	pasien.TempatLahir = update.Create.TempatLahir
+	pasien.TanggalLahir = update.Create.TanggalLahir
+	pasien.NomorHP = update.Create.NomorHP
+	pasien.Email = update.Create.Email
+
+	pekerjaan, err := s.pr.GetByPublicID(tx, update.Create.PekerjaanPublicID)
+	if err != nil {
+		return nil, err
 	}
 
 	pasien.PekerjaanID = pekerjaan.InternalID
 
-	if err := a.r.Update(nil, pasien); err != nil {
+	if err := s.r.Update(tx, pasien); err != nil {
+		return nil, err
+	}
+
+	return &pasien.InternalID, nil
+}
+
+func (s *PasienServiceImpl) resolveAlergiPasien(tx *gorm.DB, pasienID int, ref []dto.AlergiPasienCreate) error {
+	if err := s.apr.BatchDelete(tx, pasienID); err != nil {
 		return err
+	}
+
+	for _, item := range ref {
+		alergi, err := s.ar.GetByPublicID(tx, item.AlergiPublicID)
+		if err != nil {
+			return err
+		}
+
+		alergiPasien := &models.AlergiPasiens{
+			PasienID: pasienID,
+			AlergiID: alergi.InternalID,
+		}
+
+		if _, err := s.apr.Create(tx, alergiPasien); err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (s *PasienServiceImpl) resolvePantanganPasien(tx *gorm.DB, pasienID int, ref []dto.PantanganPasienCreate) error {
+	if err := s.ptpr.BatchDelete(tx, pasienID); err != nil {
+		return err
+	}
+
+	for _, item := range ref {
+		pantangan, err := s.ptr.GetByPublicID(tx, item.PantanganPublicID)
+		if err != nil {
+			return err
+		}
+
+		pantanganPasien := &models.PantanganPasien{
+			PasienID:    pasienID,
+			PantanganID: pantangan.InternalID,
+		}
+
+		if _, err := s.ptpr.Create(tx, pantanganPasien); err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (s *PasienServiceImpl) resolveRiwayatPenyakitPasien(tx *gorm.DB, pasienID int, ref []dto.RiwayatPenyakitPasienCreate) error {
+	if err := s.rppr.BatchDelete(tx, pasienID); err != nil {
+		return err
+	}
+
+	for _, item := range ref {
+		riwayatPenyakit, err := s.rpr.GetByPublicID(tx, item.RiwayatPenyakitPublicID)
+
+		if err != nil {
+			return err
+		}
+
+		model := &models.RiwayatPenyakitPasien{
+			PasienID:          pasienID,
+			RiwayatPenyakitID: riwayatPenyakit.InternalID,
+		}
+
+		_, err = s.rppr.Create(tx, model)
+
+		if err != nil {
+			return err
+		}
 	}
 
 	return nil
@@ -130,9 +246,22 @@ func (a *PasienServiceImpl) Update(update *dto.PasienUpdate) error {
 func NewPasienService(
 	r repositories.PasienRepo,
 	pr repositories.RepoBase[models.Pekerjaan],
+	ar repositories.AlergiRepoImpl,
+	apr repositories.AlergiPasienRepoImpl,
+	ptr repositories.PantanganRepoImpl,
+	ptpr repositories.PantanganPasienRepoImpl,
+	rpr repositories.RiwayatPenyakitRepoImpl,
+	rppr repositories.RiwayatPenyakitPasienRepoImpl,
+
 ) PasienService {
 	return &PasienServiceImpl{
-		r:  r,
-		pr: pr,
+		r:    r,
+		pr:   pr,
+		ar:   ar,
+		apr:  apr,
+		ptr:  ptr,
+		ptpr: ptpr,
+		rpr:  rpr,
+		rppr: rppr,
 	}
 }
