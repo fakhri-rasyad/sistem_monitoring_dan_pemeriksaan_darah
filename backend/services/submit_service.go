@@ -202,8 +202,6 @@ func (s *SubmitServiceImpl) UpdateDataLab(tx *gorm.DB, kunjunganID int, update [
 		_, err = s.dataLabRepo.Create(tx, gormModel)
 		if err != nil {
 			return err
-		} else {
-			return nil
 		}
 
 	}
