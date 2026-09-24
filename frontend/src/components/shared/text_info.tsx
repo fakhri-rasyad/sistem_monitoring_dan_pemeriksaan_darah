@@ -9,8 +9,8 @@ export default function TextInfo({
     <div>
       <p className="mb-1 text-sm text-muted-foreground">{label}</p>
 
-      <div className="rounded-md border bg-muted/30 p-3 text-sm">
-        {value || "-"}
+      <div className="rounded-md border bg-muted/30 p-3 text-sm text-wrap break-words">
+        <p className="">{value || "-"}</p>
       </div>
     </div>
   );

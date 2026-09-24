@@ -104,7 +104,9 @@ export default function PemeriksaanForm() {
               <KunjunganSection />
               <KomposisiTubuhSection />
 
-              <PemeriksaanSection />
+              <div className="col-span-2">
+                <PemeriksaanSection />
+              </div>
 
               <DataLabSection />
 
