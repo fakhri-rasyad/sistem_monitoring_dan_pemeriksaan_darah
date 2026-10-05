@@ -13,6 +13,7 @@ import { postKunjunganSubmit } from "@/services/submit";
 import { handleApiError, showToastFromResponse } from "@/lib/utils";
 import { MetodePembayaran } from "@/enum/metode_pembayaran";
 import TagihanSection from "./tagihan_section";
+import { useRouter } from "next/navigation";
 
 interface KunjunganFormProps {
   pasien_public_id: string;
@@ -21,6 +22,7 @@ interface KunjunganFormProps {
 export default function KunjunganForm({
   pasien_public_id,
 }: KunjunganFormProps) {
+  const router = useRouter();
   const defaultValue = {
     pasien_public_id: pasien_public_id,
     kunjungan: {
@@ -66,6 +68,7 @@ export default function KunjunganForm({
       showToastFromResponse(res);
       if (res.StatusCode >= 200 && res.StatusCode < 300) {
         form.reset(defaultValue);
+        router.back();
       }
     } catch (e) {
       handleApiError(e);

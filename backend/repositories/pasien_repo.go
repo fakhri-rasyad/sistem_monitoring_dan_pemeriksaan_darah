@@ -1,6 +1,7 @@
 package repositories
 
 import (
+	"errors"
 	"fakhri-rasyad/sistem_monitoring_darah/models"
 	"fakhri-rasyad/sistem_monitoring_darah/utils"
 
@@ -11,6 +12,7 @@ import (
 type PasienRepo interface {
 	RepoBase[models.Pasien]
 
+	Create(tx *gorm.DB, m *models.Pasien) (*models.Pasien, error)
 	GetByPublicIDWithPreload(publicID uuid.UUID) (*models.Pasien, error)
 	GetByNama(nama string) ([]models.Pasien, error)
 	GetAllWithPreload() ([]models.Pasien, error)
@@ -63,6 +65,18 @@ func (r *PasienRepoImpl) ExportUserData(publicID uuid.UUID) (*models.Pasien, err
 	}
 
 	return pasien, nil
+}
+
+func (r *PasienRepoImpl) Create(tx *gorm.DB, m *models.Pasien) (*models.Pasien, error) {
+
+	if err := r.getDB(tx).Create(m).Error; err != nil {
+		if errors.Is(err, gorm.ErrDuplicatedKey) {
+			return nil, errors.New("Email sudah dipakai")
+		}
+		return nil, utils.ParseGormError(err)
+	}
+
+	return m, nil
 }
 
 func (r *PasienRepoImpl) GetByNama(nama string) ([]models.Pasien, error) {

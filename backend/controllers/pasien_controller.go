@@ -147,6 +147,9 @@ func (c *PasienControllerImpl) Update(ctx fiber.Ctx) error {
 	}
 
 	if err := c.s.Update(update); err != nil {
+		if err.Error() == "Email sudah dipakai" {
+			return utils.InternalError(ctx, err.Error(), err)
+		}
 		return utils.InternalError(ctx, "Gagal memperbarui Pasien", err)
 	}
 

@@ -38,6 +38,9 @@ func (c *SubmissionControllerImpl) FirstKunjunganSubmissionCreate(ctx fiber.Ctx)
 	}
 
 	if err := c.s.FirstSubmissionCreation(submit); err != nil {
+		if err.Error() == "Email sudah dipakai" {
+			return utils.InternalError(ctx, err.Error(), err)
+		}
 		return utils.InternalError(ctx, "Gagal menambahkan kunjungan", err)
 	}
 

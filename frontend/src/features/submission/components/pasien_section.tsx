@@ -280,6 +280,10 @@ export default function PatientSection() {
                   {...field}
                   aria-invalid={fieldState.invalid}
                   id="pasien.pasien_create.email"
+                  onChange={(e) => {
+                    const val = e.target.value;
+                    field.onChange(val === "" ? undefined : val);
+                  }}
                 />
                 {fieldState.invalid && (
                   <FieldError errors={[fieldState.error]} />

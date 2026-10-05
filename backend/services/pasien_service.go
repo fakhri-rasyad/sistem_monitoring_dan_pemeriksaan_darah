@@ -1,6 +1,7 @@
 package services
 
 import (
+	"errors"
 	"fakhri-rasyad/sistem_monitoring_darah/dto"
 	"fakhri-rasyad/sistem_monitoring_darah/mapper"
 	"fakhri-rasyad/sistem_monitoring_darah/models"
@@ -162,6 +163,9 @@ func (s *PasienServiceImpl) resolvePasien(tx *gorm.DB, update *dto.PasienReferen
 	pasien.PekerjaanID = pekerjaan.InternalID
 
 	if err := s.r.Update(tx, pasien); err != nil {
+		if errors.Is(err, gorm.ErrDuplicatedKey) {
+			return nil, errors.New("Email sudah dipakai")
+		}
 		return nil, err
 	}
 

@@ -13,7 +13,7 @@ export const PasienSchema = z.object({
 
     nomor_hp: z.string("Nomor tidak boleh kosong").min(8, "Nomor HP tidak valid"),
 
-    email: z.email("Email tidak valid"),
+    email: z.email("Email tidak valid").optional(),
 
     pekerjaan_public_id: z.guid("Pekerjaan wajib dipilih"),
   }),

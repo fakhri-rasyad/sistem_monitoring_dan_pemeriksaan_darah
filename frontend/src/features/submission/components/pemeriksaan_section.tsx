@@ -28,6 +28,7 @@ import { File, LucideCalendar } from "lucide-react";
 import { Calendar } from "@/components/ui/calendar";
 import { useState } from "react";
 import { SectionCard } from "@/components/shared/section_card";
+import { Separator } from "@/components/ui/separator";
 
 export default function PemeriksaanSection() {
   const { control, register } = useFormContext();
@@ -41,7 +42,7 @@ export default function PemeriksaanSection() {
       icon={File}
     >
       <FieldGroup>
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 gap-6">
           <Controller
             control={control}
             name="pemeriksaan.subjective"
